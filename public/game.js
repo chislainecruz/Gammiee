@@ -80,7 +80,9 @@ function create() {
 }
 
 function update() {
-  console.log(this.player);
+  let onGround =
+    this.player.body.blocked.down || this.player.body.touching.down;
+
   if (this.cursors.left.isDown) {
     this.player.body.setVelocityX(-350);
 
@@ -101,5 +103,16 @@ function update() {
     this.player.anims.stop('walking');
     //default pose
     this.player.setFrame(1);
+  }
+  // handle jumping
+  if (onGround && (this.cursors.space.isDown || this.cursors.up.isDown)) {
+    // give the player a velocity in Y
+    this.player.body.setVelocityY(-600);
+
+    // stop the walking animation
+    this.player.anims.stop('walking');
+
+    // change frame
+    this.player.setFrame(2);
   }
 }
