@@ -26,8 +26,8 @@ let player;
 function preload() {
   this.load.image("background", "./assets/background.png");
   this.load.spritesheet("yeti", "./assets/yeti.png", {
-    frameWidth: 62,
-    frameHeight: 62,
+    frameWidth: 60,
+    frameHeight: 55,
   });
   this.load.spritesheet("husky", "./assets/husky.png", {
     frameWidth: 62,
