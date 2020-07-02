@@ -77,6 +77,16 @@ function create() {
     // yoyo: true,
     repeat: -1,
   });
+  this.anims.create({
+    key: 'jumping',
+    frames: this.anims.generateFrameNames('alien', {
+      //frames that are moving
+      frames: 4
+    }),
+    frameRate: 8,
+    // yoyo: true,
+    repeat: -1,
+  });
 }
 
 function update() {
@@ -110,7 +120,10 @@ function update() {
     this.player.body.setVelocityY(-600);
 
     // stop the walking animation
-    this.player.anims.stop('walking');
+    if (this.player.anims.isPlaying) {
+      this.player.anims.play('jumping');
+    } else
+      this.player.anims.play('walking');
 
     // change frame
     this.player.setFrame(2);
