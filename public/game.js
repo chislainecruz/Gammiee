@@ -80,9 +80,22 @@ function create() {
     // yoyo: true,
     repeat: -1,
   });
+  this.anims.create({
+    key: "jumping",
+    frames: this.anims.generateFrameNames("alien", {
+      //frames that are moving
+      frames: 4,
+    }),
+    frameRate: 8,
+    // yoyo: true,
+    repeat: -1,
+  });
 }
 
 function update() {
+  let onGround =
+    this.player.body.blocked.down || this.player.body.touching.down;
+
   if (this.cursors.left.isDown) {
     this.player.body.setVelocityX(-350);
 
@@ -103,5 +116,18 @@ function update() {
     this.player.anims.stop("walking");
     //default pose
     this.player.setFrame(1);
+  }
+  // handle jumping
+  if (onGround && (this.cursors.space.isDown || this.cursors.up.isDown)) {
+    // give the player a velocity in Y
+    this.player.body.setVelocityY(-600);
+
+    // stop the walking animation
+    if (this.player.anims.isPlaying) {
+      this.player.anims.play("jumping");
+    } else this.player.anims.play("walking");
+
+    // change frame
+    this.player.setFrame(2);
   }
 }
