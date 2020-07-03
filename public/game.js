@@ -2,27 +2,28 @@
 // Initialize the Phaser Game object and set default game window size;
 //Walking animation
 
-var config = {
-  type: Phaser.AUTO,
-  width: 1300,
-  height: 900,
-  physics: {
-    default: "arcade",
-    arcade: {
-      gravity: { y: 800 },
-      debug: true,
-    },
-  },
-  scene: {
-    preload: preload,
-    create: create,
-    update: update,
-  },
+var gameScene = new Phaser.Scene("Game");
+
+gameScene.init = function () {
+  this.levelData = {
+    platforms: [
+      {
+        x: 50,
+        y: 750,
+        numTiles: 4,
+        key: "tiles",
+      },
+      {
+        x: 300,
+        y: 350,
+        numTiles: 6,
+        key: "tiles",
+      },
+    ],
+  };
 };
 
-var gameScene = new Phaser.Game(config);
-
-function preload() {
+gameScene.preload = function () {
   this.load.image("background", "./assets/background.png");
   this.load.spritesheet("yeti", "./assets/yeti.png", {
     frameWidth: 60,
@@ -42,9 +43,9 @@ function preload() {
     margin: 1,
     spacing: 1,
   });
-}
+};
 
-function create() {
+gameScene.create = function () {
   let bg = this.add.sprite(0, 400, "background");
   bg.setOrigin(0, 0);
   bg.setScale(1.7);
@@ -57,6 +58,11 @@ function create() {
 
   ground.body.allowGravity = false;
   ground.body.immovable = true;
+
+  //add floating platforms
+
+  this.setupLevel();
+  console.log(this);
 
   this.player = this.physics.add.sprite(600, 790, "alien", 1);
   this.player.body.bounce.y = 0.2;
@@ -90,9 +96,9 @@ function create() {
     // yoyo: true,
     repeat: -1,
   });
-}
+};
 
-function update() {
+gameScene.update = function () {
   let onGround =
     this.player.body.blocked.down || this.player.body.touching.down;
 
@@ -130,4 +136,34 @@ function update() {
     // change frame
     this.player.setFrame(2);
   }
-}
+};
+
+gameScene.setupLevel = function () {
+  for (let i = 0; i < this.levelData.platforms.length; i++) {
+    let curr = this.levelData.platforms[i];
+    let width = this.textures.get(curr.key).get(0).width;
+    let height = this.textures.get(curr.key).get(0).height;
+    let platform = this.add
+      .tileSprite(curr.x, curr.y, curr.numTiles * width, height, curr.key)
+      .setOrigin(0);
+
+    //enable physics
+    this.physics.add.existing(platform, true);
+  }
+};
+
+var config = {
+  type: Phaser.AUTO,
+  width: 1300,
+  height: 900,
+  physics: {
+    default: "arcade",
+    arcade: {
+      gravity: { y: 800 },
+      debug: true,
+    },
+  },
+  scene: gameScene,
+};
+
+let game = new Phaser.Game(config);
