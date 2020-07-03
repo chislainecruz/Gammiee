@@ -21,8 +21,8 @@ var game = new Phaser.Game(config);
 
 gameScene.init = function () {
   // player parameters
-  this.playerSpeed = 150;
-  this.jumpSpeed = -600;
+  this.playerSpeed = 350;
+  this.jumpSpeed = -800;
 };
 
 gameScene.preload = function () {
@@ -76,6 +76,7 @@ gameScene.create = function () {
 
   //makes the player and ground collide
   this.physics.add.collider(ground, this.player);
+  this.physics.add.collider(this.platforms, this.player);
 
   this.cursors = this.input.keyboard.createCursorKeys();
 
