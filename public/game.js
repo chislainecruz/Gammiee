@@ -28,15 +28,18 @@ gameScene.init = function () {
 gameScene.preload = function () {
   this.load.image('background', './assets/background.png');
   this.load.image('platform', './assets/platform.png');
+  this.load.image('block', './assets/block.png');
 
   this.load.spritesheet('yeti', './assets/yeti.png', {
     frameWidth: 60,
     frameHeight: 55,
   });
 
-  this.load.spritesheet('husky', './assets/husky.png', {
-    frameWidth: 62,
-    frameHeight: 62,
+  this.load.spritesheet('balrug', './assets/balrog.png', {
+    frameWidth: 190,
+    frameHeight: 190,
+    margin: 1,
+    spacing: 1,
   });
 
   this.load.spritesheet('tiles', './assets/tiles.png', {
@@ -60,23 +63,31 @@ gameScene.create = function () {
   bg.setScale(1.6);
   //creates 7 ground blocks that are the width of the block. 1 is for the height
   //the first 2 nums are the position on the screen
-  let ground = this.add.tileSprite(500, 650, 12 * 100, 1 * 60, 'tiles');
+  let ground = this.add.tileSprite(610, 667, 12 * 100, 1 * 60, 'tiles');
   // the true parameter makes the ground static
   this.physics.add.existing(ground, true);
 
   ground.body.allowGravity = false;
   ground.body.immovable = true;
 
+  //* Level Setup
   this.level();
 
-  this.player = this.physics.add.sprite(200, 450, 'alien', 1);
+  //* Player attributes
+  this.player = this.physics.add.sprite(400, 450, 'alien', 1);
   this.player.body.bounce.y = 0.2;
   this.player.body.gravity.y = 800;
   this.player.body.collideWorldBounds = true;
+  this.player.setScale(0.7);
 
-  //makes the player and ground collide
   this.physics.add.collider(ground, this.player);
   this.physics.add.collider(this.platforms, this.player);
+
+  //* Boss attributes
+  this.boss = this.physics.add.sprite(1100, 15, 'balrug', 0);
+  this.physics.add.collider(ground, this.boss);
+  this.physics.add.collider(this.platforms, this.boss);
+  this.boss.setScale(0.7);
 
   this.cursors = this.input.keyboard.createCursorKeys();
 
