@@ -1,0 +1,34 @@
+{
+  "platforms": [
+    {
+      "x": 72,
+      "y": 450,
+      "numTiles": 6,
+      "key": "tiles"
+    },
+    {
+      "x": 0,
+      "y": 330,
+      "numTiles": 8,
+      "key": "tiles"
+    },
+    {
+      "x": 72,
+      "y": 210,
+      "numTiles": 8,
+      "key": "tiles"
+    },
+    {
+      "x": 0,
+      "y": 90,
+      "numTiles": 7,
+      "key": "tiles"
+    },
+    {
+      "x": 1080,
+      "y": 420,
+      "numTiles": 2,
+      "key": "tiles"
+    }
+  ]
+}

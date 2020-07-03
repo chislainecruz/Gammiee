@@ -1,52 +1,60 @@
 // Linted with standardJS - https://standardjs.com/
-// Initialize the Phaser Game object and set default game window size;
-//Walking animation
 
-var gameScene = new Phaser.Scene("Game");
+let gameScene = new Phaser.Scene("Game");
+
+var config = {
+  type: Phaser.AUTO,
+  width: 1200,
+  height: 700,
+  scene: gameScene,
+  physics: {
+    default: "arcade",
+    arcade: {
+      gravity: { y: 800 },
+      debug: true,
+    },
+  },
+};
+
+var game = new Phaser.Game(config);
 
 gameScene.init = function () {
-  this.levelData = {
-    platforms: [
-      {
-        x: 50,
-        y: 750,
-        numTiles: 4,
-        key: "tiles",
-      },
-      {
-        x: 300,
-        y: 350,
-        numTiles: 6,
-        key: "tiles",
-      },
-    ],
-  };
+  // player parameters
+  this.playerSpeed = 350;
+  this.jumpSpeed = -800;
 };
 
 gameScene.preload = function () {
   this.load.image("background", "./assets/background.png");
+  this.load.image("platform", "./assets/platform.png");
+
   this.load.spritesheet("yeti", "./assets/yeti.png", {
     frameWidth: 60,
     frameHeight: 55,
   });
+
   this.load.spritesheet("husky", "./assets/husky.png", {
     frameWidth: 62,
     frameHeight: 62,
   });
+
   this.load.spritesheet("tiles", "./assets/tiles.png", {
     frameWidth: 100,
     frameHeight: 60,
   });
+
   this.load.spritesheet("alien", "assets/Alien.png", {
     frameWidth: 90,
     frameHeight: 120,
     margin: 1,
     spacing: 1,
   });
+
+  this.load.json("levelData", "json/levelData.json");
 };
 
 gameScene.create = function () {
-  let bg = this.add.sprite(0, 400, "background");
+  let bg = this.add.sprite(0, 200, "background");
   bg.setOrigin(0, 0);
   bg.setScale(1.7);
   //creates 7 ground blocks that are the width of the block. 1 is for the height
@@ -59,12 +67,9 @@ gameScene.create = function () {
   ground.body.allowGravity = false;
   ground.body.immovable = true;
 
-  //add floating platforms
+  this.level();
 
-  this.setupLevel();
-  console.log(this);
-
-  this.player = this.physics.add.sprite(600, 790, "alien", 1);
+  this.player = this.physics.add.sprite(750, 110, "alien", 1);
   this.player.body.bounce.y = 0.2;
   this.player.body.gravity.y = 800;
   this.player.body.collideWorldBounds = true;
@@ -73,24 +78,19 @@ gameScene.create = function () {
   this.player.setScale(0.5);
   //makes the player and ground collide
   this.physics.add.collider(ground, this.player);
+  this.physics.add.collider(this.platforms, this.player);
 
   this.cursors = this.input.keyboard.createCursorKeys();
+
+  this.input.on("pointerdown", function (pointer) {
+    console.log(pointer.x, pointer.y);
+  });
 
   this.anims.create({
     key: "walking",
     frames: this.anims.generateFrameNames("alien", {
       //frames that are moving
       frames: [0, 1, 2, 3],
-    }),
-    frameRate: 8,
-    // yoyo: true,
-    repeat: -1,
-  });
-  this.anims.create({
-    key: "jumping",
-    frames: this.anims.generateFrameNames("alien", {
-      //frames that are moving
-      frames: 4,
     }),
     frameRate: 8,
     // yoyo: true,
@@ -103,7 +103,7 @@ gameScene.update = function () {
     this.player.body.blocked.down || this.player.body.touching.down;
 
   if (this.cursors.left.isDown) {
-    this.player.body.setVelocityX(-350);
+    this.player.body.setVelocityX(-this.playerSpeed);
 
     this.player.flipX = false;
 
@@ -111,7 +111,7 @@ gameScene.update = function () {
       this.player.anims.play("walking");
     }
   } else if (this.cursors.right.isDown) {
-    this.player.body.setVelocityX(350);
+    this.player.body.setVelocityX(this.playerSpeed);
     this.player.flipX = true;
 
     if (!this.player.anims.isPlaying) {
@@ -126,7 +126,7 @@ gameScene.update = function () {
   // handle jumping
   if (onGround && (this.cursors.space.isDown || this.cursors.up.isDown)) {
     // give the player a velocity in Y
-    this.player.body.setVelocityY(-600);
+    this.player.body.setVelocityY(this.jumpSpeed);
 
     // stop the walking animation
     if (this.player.anims.isPlaying) {
@@ -138,32 +138,44 @@ gameScene.update = function () {
   }
 };
 
-gameScene.setupLevel = function () {
-  for (let i = 0; i < this.levelData.platforms.length; i++) {
-    let curr = this.levelData.platforms[i];
-    let width = this.textures.get(curr.key).get(0).width;
-    let height = this.textures.get(curr.key).get(0).height;
-    let platform = this.add
-      .tileSprite(curr.x, curr.y, curr.numTiles * width, height, curr.key)
-      .setOrigin(0);
+// sets up all the elements in the level
+gameScene.level = function () {
+  this.platforms = this.add.group();
 
-    //enable physics
-    this.physics.add.existing(platform, true);
+  // parse json data
+  this.levelData = this.cache.json.get("levelData");
+
+  // create all the platforms
+  for (let i = 0; i < this.levelData.platforms.length; i++) {
+    let platform = this.levelData.platforms[i];
+
+    let newObj;
+
+    // create object
+    if (platform.numTiles == 1) {
+      // create sprite
+      newObj = this.add
+        .sprite(platform.x, platform.y, platform.key)
+        .setOrigin(0);
+    } else {
+      // create tilesprite
+      let width = this.textures.get(platform.key).get(0).width;
+      let height = this.textures.get(platform.key).get(0).height;
+      newObj = this.add
+        .tileSprite(
+          platform.x,
+          platform.y,
+          platform.numTiles * width,
+          height,
+          platform.key
+        )
+        .setOrigin(0);
+    }
+
+    // enable physics
+    this.physics.add.existing(newObj, true);
+
+    // add to the group
+    this.platforms.add(newObj);
   }
 };
-
-var config = {
-  type: Phaser.AUTO,
-  width: 1300,
-  height: 900,
-  physics: {
-    default: "arcade",
-    arcade: {
-      gravity: { y: 800 },
-      debug: true,
-    },
-  },
-  scene: gameScene,
-};
-
-let game = new Phaser.Game(config);
