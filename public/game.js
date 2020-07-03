@@ -1,5 +1,13 @@
 // Linted with standardJS - https://standardjs.com/
 
+class Game extends Phaser.Game {
+  constructor() {
+    super(config);
+    const socket = io("http://localhost:8081");
+    this.globals = { socket };
+  }
+}
+
 let gameScene = new Phaser.Scene("Game");
 
 var config = {
@@ -16,7 +24,7 @@ var config = {
   },
 };
 
-var game = new Phaser.Game(config);
+var game = new Game(config);
 
 gameScene.init = function () {
   // player parameters
