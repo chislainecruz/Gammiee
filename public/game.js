@@ -6,7 +6,7 @@ let gameScene = new Phaser.Scene('Game');
 var config = {
   type: Phaser.AUTO,
   width: 1200,
-  height: 700,
+  height: 1800,
   scene: gameScene,
   physics: {
     default: "arcade",
@@ -70,9 +70,9 @@ gameScene.preload = function () {
 };
 
 gameScene.create = function () {
-  let bg = this.add.sprite(0, 200, 'background');
+  let bg = this.add.sprite(-700, 100, 'background');
   bg.setOrigin(0, 0);
-  bg.setScale(1.7);
+  bg.setScale(3.6);
   //creates 7 ground blocks that are the width of the block. 1 is for the height
   //the first 2 nums are the position on the screen
   let ground = this.add.tileSprite(600, 667, 400, 30, 'tiles');
@@ -134,6 +134,7 @@ gameScene.update = function () {
   let onGround =
     this.player.body.blocked.down || this.player.body.touching.down;
 
+  //respawn when falling
   if (this.player.body.position.y > 600) {
     this.player.x = 600
     this.player.y = 500
