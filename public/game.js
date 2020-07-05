@@ -5,7 +5,7 @@ let gameScene = new Phaser.Scene('Game');
 
 var config = {
   type: Phaser.AUTO,
-  width: 1400,
+  width: 2300,
   height: 2600,
   scene: gameScene,
   physics: {
@@ -75,7 +75,7 @@ gameScene.create = function () {
   bg.setScale(3.6);
   //creates 7 ground blocks that are the width of the block. 1 is for the height
   //the first 2 nums are the position on the screen
-  let ground = this.add.tileSprite(600, 2400, 400, 30, 'tiles');
+  let ground = this.add.tileSprite(1100, 2400, 400, 30, 'tiles');
   // the true parameter makes the ground static
   this.physics.add.existing(ground, true);
 
@@ -86,7 +86,7 @@ gameScene.create = function () {
   this.level();
 
   //* Player attributes
-  this.player = this.physics.add.sprite(600, 500, 'alien', 1);
+  this.player = this.physics.add.sprite(1100, 2300, 'alien', 1);
   this.player.body.bounce.y = 0.2;
   this.player.body.gravity.y = 800;
   this.player.body.collideWorldBounds = true;
@@ -96,7 +96,7 @@ gameScene.create = function () {
   this.physics.add.collider(this.platforms, this.player);
 
   //* Boss attributes
-  this.boss = this.physics.add.sprite(1100, 15, 'balrug', 0);
+  this.boss = this.physics.add.sprite(1400, 15, 'balrug', 0);
   this.physics.add.collider(ground, this.boss);
   this.physics.add.collider(this.platforms, this.boss);
   this.boss.setScale(0.7);
@@ -136,7 +136,7 @@ gameScene.update = function () {
 
   // respawn when falling
   if (this.player.body.position.y > 2400) {
-    this.player.x = 600
+    this.player.x = 1100
     this.player.y = 2300
   }
 
