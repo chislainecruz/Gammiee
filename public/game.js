@@ -32,12 +32,12 @@ gameScene.preload = function () {
   this.load.image('platform', './assets/platform.png');
   this.load.image('block', './assets/block.png');
 
-  // this.load.spritesheet('fire', './assets/fire.png'), {
-  //   frameWidth: 64,
-  //   frameHeight: 64,
-  //   margin: 1,
-  //   spacing: 1
-  // }
+  this.load.spritesheet('fire', './assets/fire.png', {
+    frameWidth: 64,
+    frameHeight: 64,
+    margin: 1,
+    spacing: 1
+  })
 
 
   this.load.spritesheet('yeti', './assets/yeti.png', {
@@ -82,6 +82,15 @@ gameScene.create = function () {
   ground.body.allowGravity = false;
   ground.body.immovable = true;
 
+  this.anims.create({
+    key: 'burning',
+    frames: this.anims.generateFrameNames('fire', {
+      frames: [0]
+    }),
+    frameRate: 4,
+    repeat: -1
+  });
+
   //* Level Setup
   this.level();
 
@@ -117,14 +126,6 @@ gameScene.create = function () {
     // yoyo: true,
     repeat: -1,
   });
-  // this.anims.create({
-  //   key: 'burning',
-  //   frames: this.anims.generateFrameNames('fire', {
-  //     frames: [0]
-  //   }),
-  //   frameRate: 4,
-  //   repeat: -1
-  // });
   this.cameras.main.startFollow(this.player)
 
 };
