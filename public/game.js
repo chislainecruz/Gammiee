@@ -6,7 +6,7 @@ let gameScene = new Phaser.Scene('Game');
 var config = {
   type: Phaser.AUTO,
   width: 2300,
-  height: 2600,
+  height: 2500,
   scene: gameScene,
   physics: {
     default: "arcade",
@@ -14,6 +14,12 @@ var config = {
       gravity: { y: 1600 },
       debug: true,
     },
+    scale: {
+      mode: Phaser.DOM.FIT,
+      autoCenter: Phaser.DOM.CENTER,
+      width: 900,
+      height: 1000
+    }
   },
 };
 
@@ -36,7 +42,7 @@ gameScene.preload = function () {
     frameWidth: 64,
     frameHeight: 64,
     margin: 1,
-    spacing: 1
+
   })
 
 
@@ -70,9 +76,10 @@ gameScene.preload = function () {
 };
 
 gameScene.create = function () {
-  let bg = this.add.sprite(-700, 1800, 'background');
+  let bg = this.add.sprite(-900, 2000, 'background');
   bg.setOrigin(0, 0);
-  bg.setScale(3.6);
+  bg.setScale(5);
+
   //creates 7 ground blocks that are the width of the block. 1 is for the height
   //the first 2 nums are the position on the screen
   let ground = this.add.tileSprite(1100, 2400, 400, 30, 'tiles');
@@ -85,9 +92,9 @@ gameScene.create = function () {
   this.anims.create({
     key: 'burning',
     frames: this.anims.generateFrameNames('fire', {
-      frames: [0]
+      frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60]
     }),
-    frameRate: 4,
+    frameRate: 10,
     repeat: -1
   });
 
@@ -95,7 +102,7 @@ gameScene.create = function () {
   this.level();
 
   //* Player attributes
-  this.player = this.physics.add.sprite(1100, 2300, 'alien', 1);
+  this.player = this.physics.add.sprite(1100, 1000, 'alien', 1);
   this.player.body.bounce.y = 0.2;
   this.player.body.gravity.y = 800;
   this.player.body.collideWorldBounds = true;
@@ -108,7 +115,7 @@ gameScene.create = function () {
   this.boss = this.physics.add.sprite(1400, 15, 'balrug', 0);
   this.physics.add.collider(ground, this.boss);
   this.physics.add.collider(this.platforms, this.boss);
-  this.boss.setScale(0.7);
+  this.boss.setScale(0.9);
 
   this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -126,7 +133,18 @@ gameScene.create = function () {
     // yoyo: true,
     repeat: -1,
   });
+  this.anims.create({
+    key: "jumping",
+    frames: this.anims.generateFrameNames("alien", {
+      //frames that are moving
+      frames: 4,
+    }),
+    frameRate: 8,
+    // yoyo: true,
+    repeat: -1,
+  });
   this.cameras.main.startFollow(this.player)
+  this.cameras.main.zoom = 1;
 
 };
 
@@ -230,7 +248,7 @@ gameScene.level = function () {
     newObj.body.immovable = true;
 
     //   // play burning animation
-    // newObj.anims.play('burning');
+    newObj.anims.play('burning');
 
     //   // add to the group
     this.fires.add(newObj);
