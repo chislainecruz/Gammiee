@@ -1,5 +1,5 @@
 // Linted with standardJS - https://standardjs.com/
-
+import io from 'socket.io-client'
 class Game extends Phaser.Game {
   constructor() {
     super(config);
@@ -13,12 +13,12 @@ let gameScene = new Phaser.Scene("Game");
 var config = {
   type: Phaser.AUTO,
   width: 1200,
-  height: 700,
+  height: 1800,
   scene: gameScene,
   physics: {
     default: "arcade",
     arcade: {
-      gravity: { y: 800 },
+      gravity: { y: 1600 },
       debug: true,
     },
   },
@@ -26,19 +26,32 @@ var config = {
 
 var game = new Game(config);
 
+
 gameScene.init = function () {
   // player parameters
   this.playerSpeed = 350;
   this.jumpSpeed = -800;
+  this.socket = this.sys.game.globals.socket
+  this.listenForSocketEvents()
 };
-
+gameScene.listenForSocketEvents = function() {
+  this.socket.on('test', (test) => {
+    console.log('IT WORKS', test)
+  })
+  
+}
 gameScene.preload = function () {
   this.load.image('background', './assets/background.png');
   this.load.image('platform', './assets/platform.png');
   this.load.image('block', './assets/block.png');
-  this.load.audio('temple', './assets/TimeTemple.mp3')
-  this.load.audio('jump', './assets/jump-sfx.mp3')
-  this.load.spritesheet("yeti", "./assets/yeti.png", {
+
+  this.load.spritesheet('fire', './assets/fire.png', {
+    frameWidth: 64,
+    frameHeight: 64,
+  })
+
+
+  this.load.spritesheet('yeti', './assets/yeti.png', {
     frameWidth: 60,
     frameHeight: 55,
   });
@@ -55,74 +68,31 @@ gameScene.preload = function () {
     frameHeight: 60,
   });
 
-  this.load.spritesheet("alien", "assets/Alien.png", {
+  this.load.spritesheet('alien', 'assets/Alien.png', {
     frameWidth: 90,
     frameHeight: 120,
     margin: 1,
     spacing: 1,
   });
 
-  this.load.json("levelData", "json/levelData.json");
+
+
+  this.load.json('levelData', 'json/levelData.json');
 };
 
 gameScene.create = function () {
-  let bg = this.add.sprite(0, 200, "background");
+ 
+  let bg = this.add.sprite(-700, 100, 'background');
   bg.setOrigin(0, 0);
-  bg.setScale(1.7);
-  this.jump = this.sound.add('jump')
-  music = this.sound.add('temple')
-  let button = document.createElement('button')
-  button.id = 'music'
-  button.innerText = 'Turn Music on'
-  button.addEventListener('click', function(){
-    if (music.isPlaying){
-      music.pause()
-      button.innerText = 'Turn Music On'
-    }
-    else if (music.isPaused){
-      music.resume()
-      button.innerText = 'Turn Music Off'
-    }
-    else {
-      music.play()
-      button.innerText = 'Turn Music Off'
-    }
-  })
-  document.body.appendChild(button)
+  bg.setScale(3.6);
   //creates 7 ground blocks that are the width of the block. 1 is for the height
   //the first 2 nums are the position on the screen
-  let ground = this.add.tileSprite(610, 667, 12 * 100, 1 * 60, 'tiles');
+  let ground = this.add.tileSprite(600, 667, 400, 30, 'tiles');
   // the true parameter makes the ground static
   this.physics.add.existing(ground, true);
 
   ground.body.allowGravity = false;
   ground.body.immovable = true;
-
-  //* Level Setup
-  this.level();
-
-  //* Player attributes
-  this.player = this.physics.add.sprite(400, 450, 'alien', 1);
-  this.player.body.bounce.y = 0.2;
-  this.player.body.gravity.y = 800;
-  this.player.body.collideWorldBounds = true;
-  this.player.setScale(0.7);
-
-  this.physics.add.collider(ground, this.player);
-  this.physics.add.collider(this.platforms, this.player);
-
-  //* Boss attributes
-  this.boss = this.physics.add.sprite(1100, 15, 'balrug', 0);
-  this.physics.add.collider(ground, this.boss);
-  this.physics.add.collider(this.platforms, this.boss);
-  this.boss.setScale(0.7);
-
-  this.cursors = this.input.keyboard.createCursorKeys();
-
-  this.input.on("pointerdown", function (pointer) {
-    console.log(pointer.x, pointer.y);
-  });
-
   this.anims.create({
     key: "walking",
     frames: this.anims.generateFrameNames("alien", {
@@ -133,12 +103,56 @@ gameScene.create = function () {
     // yoyo: true,
     repeat: -1,
   });
+ 
+  this.anims.create({
+    key: 'burning',
+    frames: this.anims.generateFrameNames('fire', {start: 0, end: 59}),
+    frameRate: 120,
+    repeat: -1
+  });
+  //* Level Setup
+  this.level();
+  
+  //* Player attributes
+  this.player = this.physics.add.sprite(600, 500, 'alien', 1);
+  this.player.body.bounce.y = 0.2;
+  this.player.body.gravity.y = 800;
+  this.player.body.collideWorldBounds = true;
+  this.player.setScale(0.7);
+  this.socket.emit('newPlayer', this.player)
+  console.log('BBBB', this.player.frame = 2)
+  this.physics.add.collider(ground, this.player);
+  this.physics.add.collider(this.platforms, this.player);
+  
+  //* Boss attributes
+  this.boss = this.physics.add.sprite(1100, 15, 'balrug', 0);
+  this.physics.add.collider(ground, this.boss);
+  this.physics.add.collider(this.platforms, this.boss);
+  this.boss.setScale(0.7);
+ 
+  this.cursors = this.input.keyboard.createCursorKeys();
+
+  this.input.on("pointerdown", function (pointer) {
+    console.log(pointer.x, pointer.y);
+  });
+
+  
+  console.log('create', this)
+  this.cameras.main.startFollow(this.player)
+
 };
 
 // eslint-disable-next-line complexity
 gameScene.update = function () {
+
   let onGround =
     this.player.body.blocked.down || this.player.body.touching.down;
+
+  //respawn when falling
+  if (this.player.body.position.y > 600) {
+    this.player.x = 600
+    this.player.y = 500
+  }
 
   if (this.cursors.left.isDown) {
     this.player.body.setVelocityX(-this.playerSpeed);
@@ -164,7 +178,6 @@ gameScene.update = function () {
   // handle jumping
   if (onGround && (this.cursors.space.isDown || this.cursors.up.isDown)) {
     // give the player a velocity in Y
-    this.jump.play()
     this.player.body.setVelocityY(this.jumpSpeed);
 
     // stop the walking animation
@@ -175,12 +188,14 @@ gameScene.update = function () {
     // change frame
     this.player.setFrame(2);
   }
+  console.log(this.player.frame.name)
 };
-
+console.log('a')
 // sets up all the elements in the level
 gameScene.level = function () {
+  
   this.platforms = this.add.group();
-
+  
   // parse json data
   this.levelData = this.cache.json.get("levelData");
 
@@ -216,5 +231,28 @@ gameScene.level = function () {
 
     // add to the group
     this.platforms.add(newObj);
+  }
+  // create all the fire
+  this.fires = this.add.group();
+  for (let i = 0; i < this.levelData.fires.length; i++) {
+    let curr = this.levelData.fires[i];
+
+    let newObj = this.add.sprite(curr.x, curr.y, 'fire').setOrigin(0);
+
+    //   // enable physics
+    this.physics.add.existing(newObj);
+    newObj.body.allowGravity = false;
+    newObj.body.immovable = true;
+
+    //   // play burning animation
+    console.log('test', this)
+    newObj.anims.play('burning');
+
+    //   // add to the group
+    this.fires.add(newObj);
+
+    // this is for level creation
+    newObj.setInteractive();
+    this.input.setDraggable(newObj);
   }
 };

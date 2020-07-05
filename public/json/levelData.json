@@ -1,15 +1,15 @@
 {
   "platforms": [
     {
-      "x": 72,
-      "y": 450,
+      "x": 120,
+      "y": 580,
       "numTiles": 6,
       "key": "block"
     },
     {
       "x": 0,
       "y": 330,
-      "numTiles": 8,
+      "numTiles": 6,
       "key": "block"
     },
     {
@@ -19,22 +19,58 @@
       "key": "block"
     },
     {
-      "x": 0,
-      "y": 90,
-      "numTiles": 7,
-      "key": "block"
-    },
-    {
-      "x": 1080,
-      "y": 420,
+      "x": 500,
+      "y": 300,
       "numTiles": 2,
       "key": "block"
     },
     {
-      "x": 1000,
+      "x": 990,
       "y": 150,
-      "numTiles": 5,
+      "numTiles": 4,
       "key": "block"
+    },
+    {
+      "x": 200,
+      "y": 450,
+      "numTiles": 8,
+      "key": "block"
+    },
+    {
+      "x": 790,
+      "y": 490,
+      "numTiles": 4,
+      "key": "block"
+    },
+    {
+      "x": 1020,
+      "y": 410,
+      "numTiles": 4,
+      "key": "block"
+    },
+    {
+      "x": 900,
+      "y": 280,
+      "numTiles": 4,
+      "key": "block"
+    }
+  ],
+  "fires": [
+    {
+      "x": 12.9,
+      "y": 538.4
+    },
+    {
+      "x": 328,
+      "y": 188
+    },
+    {
+      "x": 68.3,
+      "y": 307
+    },
+    {
+      "x": 87.7,
+      "y": 427
     }
   ]
 }
