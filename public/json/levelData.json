@@ -1,4 +1,9 @@
 {
+  "spawner": {
+    "interval": 1000,
+    "speed": 200,
+    "lifespan": 5000
+  },
   "goal": {
     "x": 1400,
     "y": 15
