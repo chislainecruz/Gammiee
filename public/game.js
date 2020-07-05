@@ -51,7 +51,7 @@ gameScene.preload = function () {
     frameHeight: 55,
   });
 
-  this.load.spritesheet('balrug', './assets/balrog.png', {
+  this.load.spritesheet('goal', './assets/balrog.png', {
     frameWidth: 190,
     frameHeight: 190,
     margin: 1,
@@ -102,7 +102,7 @@ gameScene.create = function () {
   this.level();
 
   //* Player attributes
-  this.player = this.physics.add.sprite(1100, 1000, 'alien', 1);
+  this.player = this.physics.add.sprite(1100, 00, 'alien', 1);
   this.player.body.bounce.y = 0.2;
   this.player.body.gravity.y = 800;
   this.player.body.collideWorldBounds = true;
@@ -112,10 +112,10 @@ gameScene.create = function () {
   this.physics.add.collider(this.platforms, this.player);
 
   //* Boss attributes
-  this.boss = this.physics.add.sprite(1400, 15, 'balrug', 0);
-  this.physics.add.collider(ground, this.boss);
-  this.physics.add.collider(this.platforms, this.boss);
-  this.boss.setScale(0.9);
+  // this.boss = this.physics.add.sprite(1400, 15, 'balrog', 0);
+  // this.physics.add.collider(ground, this.boss);
+  // this.physics.add.collider(this.platforms, this.boss);
+  // this.boss.setScale(0.9);
 
   this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -236,16 +236,14 @@ gameScene.level = function () {
     this.platforms.add(newObj);
   }
   // create all the fire
-  this.fires = this.add.group();
+  this.fires = this.physics.add.group({
+    allowGravity: false,
+    immovable: true,
+  });
   for (let i = 0; i < this.levelData.fires.length; i++) {
     let curr = this.levelData.fires[i];
 
-    let newObj = this.add.sprite(curr.x, curr.y, 'fire').setOrigin(0);
-
-    //   // enable physics
-    this.physics.add.existing(newObj);
-    newObj.body.allowGravity = false;
-    newObj.body.immovable = true;
+    let newObj = this.add.sprite(curr.x, curr.y, 'fire').setOrigin(0)
 
     //   // play burning animation
     newObj.anims.play('burning');
@@ -256,5 +254,10 @@ gameScene.level = function () {
     // this is for level creation
     newObj.setInteractive();
     this.input.setDraggable(newObj);
+
+    // goal
+    this.goal = this.add.sprite(this.levelData.goal.x, this.levelData.goal.y, 'goal');
+    this.physics.add.existing(this.goal);
+
   }
 };
