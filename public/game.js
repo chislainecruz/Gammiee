@@ -12,7 +12,7 @@ var config = {
     default: "arcade",
     arcade: {
       gravity: { y: 1600 },
-      debug: true,
+      // debug: true,
     },
     scale: {
       mode: Phaser.DOM.FIT,
@@ -34,7 +34,7 @@ gameScene.init = function () {
 };
 
 gameScene.preload = function () {
-  this.load.image('background', './assets/background.png');
+  this.load.image('background', './assets/testback.png');
   this.load.image('platform', './assets/platform.png');
   this.load.image('block', './assets/block.png');
 
@@ -69,8 +69,8 @@ gameScene.preload = function () {
   });
 
   this.load.spritesheet('minion', './assets/babyBalrog.png', {
-    frameWidth: 96,
-    frameHeight: 99,
+    frameWidth: 94,
+    frameHeight: 95.1,
   });
 
   this.load.spritesheet('tiles', './assets/tiles.png', {
@@ -91,7 +91,7 @@ gameScene.preload = function () {
 };
 
 gameScene.create = function () {
-  let bg = this.add.sprite(-900, 2000, 'background');
+  let bg = this.add.sprite(-600, 0, 'background');
   bg.setOrigin(0, 0);
   bg.setScale(5);
 
@@ -385,7 +385,7 @@ gameScene.level = function () {
     })
   }
 
-
+  //minion attack
   gameScene.minionAttack = function () {
     for (let i = 0; i < this.levelData.minions.length; i++) {
       let curr = this.levelData.minions[i];
