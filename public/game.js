@@ -111,6 +111,8 @@ gameScene.create = function () {
 
   this.setupSpawner()
 
+  this.minionAttack()
+
   //* Player attributes
   this.player = this.physics.add.sprite(1100, 600, 'alien', 1);
   this.player.body.bounce.y = 0.2;
@@ -326,35 +328,42 @@ gameScene.level = function () {
   }
 
 
-  gameScene.setupSpawner = function () {
-    this.flames = this.physics.add.group({
-      bounceY: 0.1,
-      bounceX: 1,
-      collideWorldBounds: true
-    })
-    let spawnEvent = this.time.addEvent({
-      delay: this.levelData.spawner.interval,
-      loop: true,
-      callbackScope: this,
-      callback: function () {
-        let flame = this.flames.create(this.goal.x, this.goal.y, 'flame');
-        flame.setVelocityX(-this.levelData.spawner.speed);
+  gameScene.minionAttack = function () {
+    for (let i = 0; i < this.levelData.minions.length; i++) {
+      let curr = this.levelData.minions[i];
+      this.flames = this.physics.add.group({
+        bounceY: 0.1,
+        bounceX: 1,
+        collideWorldBounds: true
+      })
+      let spawnEvent = this.time.addEvent({
+        delay: curr.interval,
+        loop: true,
+        callbackScope: this,
+        callback: function () {
+          let flame = this.flames.create(curr.x, curr.y, 'flame').setSize(35, 35);
 
-        this.time.addEvent({
-          delay: this.levelData.spawner.lifespan,
-          repeat: 0,
-          callbackScope: this,
-          callback: function () {
-            flame.destroy();
+          if (curr.flipX === true) {
+            flame.flipX = true
           }
-        });
+          flame.setVelocityX(curr.speed);
 
-      }
-    })
+          this.time.addEvent({
+            delay: curr.lifespan,
+            repeat: 0,
+            callbackScope: this,
+            callback: function () {
+              flame.destroy();
+            }
+          });
+
+        }
+      })
+    }
+
+    gameScene.winGame = function (sourceSprite, targetSprite) {
+
+
+    }
   }
-
-  gameScene.winGame = function (sourceSprite, targetSprite) {
-
-
-  }
-};
+}
