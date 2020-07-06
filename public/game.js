@@ -1,7 +1,9 @@
 // Linted with standardJS - https://standardjs.com/
-// Initialize the Phaser Game object and set default game window size;
-//Walking animation
-let gameScene = new Phaser.Scene('Game');
+import io from "socket.io-client";
+
+
+let gameScene = new Phaser.Scene("Game");
+let music;
 
 var config = {
   type: Phaser.AUTO,
@@ -12,7 +14,7 @@ var config = {
     default: "arcade",
     arcade: {
       gravity: { y: 1600 },
-      // debug: true,
+      debug: true,
     },
     scale: {
       mode: Phaser.DOM.FIT,
@@ -58,7 +60,7 @@ gameScene.preload = function () {
   })
 
 
-  this.load.spritesheet('yeti', './assets/yeti.png', {
+  this.load.spritesheet("yeti", "./assets/yeti.png", {
     frameWidth: 60,
     frameHeight: 55,
   });
@@ -73,7 +75,7 @@ gameScene.preload = function () {
     frameHeight: 95.1,
   });
 
-  this.load.spritesheet('tiles', './assets/tiles.png', {
+  this.load.spritesheet("tiles", "./assets/tiles.png", {
     frameWidth: 100,
     frameHeight: 60,
   });
@@ -91,18 +93,22 @@ gameScene.preload = function () {
 };
 
 gameScene.create = function () {
+  let self = this;
+  this.socket = io("http://localhost:8082");
+  this.otherPlayers = this.physics.add.group();
   let bg = this.add.sprite(-600, 0, 'background');
   bg.setOrigin(0, 0);
   bg.setScale(5);
 
+
   //creates 7 ground blocks that are the width of the block. 1 is for the height
   //the first 2 nums are the position on the screen
-  let ground = this.add.tileSprite(1100, 2400, 400, 30, 'tiles');
+  this.ground = this.add.tileSprite(1100, 2400, 400, 30, 'tiles');
   // the true parameter makes the ground static
-  this.physics.add.existing(ground, true);
+  this.physics.add.existing(this.ground, true);
 
-  ground.body.allowGravity = false;
-  ground.body.immovable = true;
+  this.ground.body.allowGravity = false;
+  this.ground.body.immovable = true;
 
   this.anims.create({
     key: 'burning',
@@ -151,34 +157,16 @@ gameScene.create = function () {
   });
 
   //* Level Setup
-  this.level();
-
-  this.bossAttack()
-
-  this.minionAttack()
-
-  //* Player attributes
-  this.player = this.physics.add.sprite(1100, 600, 'alien', 1);
-  this.player.body.bounce.y = 0.2;
-  this.player.body.gravity.y = 800;
-  this.player.body.collideWorldBounds = true;
-  this.player.setScale(0.7);
-  this.player.setSize(80, 110)
+  // this.level();
 
 
-  // collision detection
-  this.physics.add.collider(ground, [this.player, this.goal, this.minion]);
-  this.physics.add.collider([this.player, this.goal, this.flames, this.minion], this.platforms);
 
-  //overlaps
-  this.physics.add.overlap(this.player, [this.fires, this.flames], this.restartGame, null, this);
 
   this.cursors = this.input.keyboard.createCursorKeys();
 
   this.input.on('pointerdown', function (pointer) {
     console.log(pointer.x, pointer.y);
   });
-
   this.anims.create({
     key: "walking",
     frames: this.anims.generateFrameNames("alien", {
@@ -188,67 +176,198 @@ gameScene.create = function () {
     frameRate: 8,
     repeat: -1,
   });
-  // this.anims.create({
-  //   key: "jumping",
-  //   frames: this.anims.generateFrameNames("alien", {
-  //     //frames that are moving
-  //     frames: 4,
-  //   }),
-  //   frameRate: 8,
-  //   repeat: -1,
-  // });
-  this.cameras.main.startFollow(this.player)
-  this.cameras.main.zoom = 1;
 
-};
+  this.anims.create({
+    key: "burning",
+    frames: this.anims.generateFrameNames("fire", { start: 0, end: 59 }),
+    frameRate: 120,
+    repeat: -1,
+  });
+  //* Level Setup
+  this.level();
+  this.bossAttack()
+  this.minionAttack()
 
+  //* Player attributes
+  this.socket.on("currentPlayers", (players) => {
+    Object.keys(players).forEach(function (id) {
+      if (players[id].playerId === self.socket.id) {
+        addPlayer(self, players[id]);
+      } else {
+        addOtherPlayers(self, players[id]);
+      }
+    });
+  });
+
+  this.socket.on("newPlayer", (playerInfo) => {
+    addOtherPlayers(self, playerInfo);
+  });
+  this.socket.on("disconnect", (playerId) => {
+    self.otherPlayers.getChildren().forEach((otherPlayer) => {
+      if (playerId === otherPlayer.playerId) {
+        otherPlayer.destroy();
+      }
+    });
+  });
+  this.socket.on("playerMoved", (playerInfo) => {
+    self.otherPlayers.getChildren().forEach((otherPlayer) => {
+      if (playerInfo.playerId === otherPlayer.playerId) {
+        otherPlayer.setPosition(playerInfo.x, playerInfo.y);
+        otherPlayer.flipX = playerInfo.flipX;
+      }
+    });
+  });
+}
+
+// eslint-disable-next-line complexity
 gameScene.update = function () {
+  if (this.player) {
+    let x = this.player.x;
+    let y = this.player.y;
+    let flipX = this.player.flipX;
+    let onGround =
+      this.player.body.blocked.down || this.player.body.touching.down;
+    //respawn when falling
+    if (this.player.body.position.y > 2400) {
+      this.player.x = 1100
+      this.player.y = 2300
+    }
+    if (
+      this.player.oldPosition &&
+      (x !== this.player.oldPosition.x ||
+        y !== this.player.oldPosition.y ||
+        flipX !== this.player.oldPosition.flipX)
+    ) {
+      this.socket.emit("playerMovement", {
+        x: this.player.x,
+        y: this.player.y,
+        flipX: this.player.flipX,
+      });
+    }
 
-
-  let onGround =
-    this.player.body.blocked.down || this.player.body.touching.down;
-
-  // respawn when falling
-  if (this.player.body.position.y > 2400) {
-    this.player.x = 1100
-    this.player.y = 2300
-  }
-
-  if (this.cursors.left.isDown) {
-    this.player.body.setVelocityX(-this.playerSpeed);
-
-    this.player.flipX = false;
-
+    this.player.oldPosition = {
+      x: this.player.x,
+      y: this.player.y,
+      flipX: this.player.flipX,
+    };
     if (!this.player.anims.isPlaying) {
       this.player.anims.play("walking");
     }
-  } else if (this.cursors.right.isDown) {
-    this.player.body.setVelocityX(this.playerSpeed);
-    this.player.flipX = true;
+    if (this.cursors.left.isDown) {
+      this.player.body.setVelocityX(-this.playerSpeed);
 
-    if (!this.player.anims.isPlaying) {
-      this.player.anims.play("walking");
+      this.player.flipX = false;
+    } else if (this.cursors.right.isDown) {
+      this.player.body.setVelocityX(this.playerSpeed);
+      this.player.flipX = true;
+
+      if (!this.player.anims.isPlaying) {
+        this.player.anims.play("walking");
+      }
+    } else {
+      this.player.body.setVelocityX(0);
+      this.player.anims.stop("walking");
+      //default pose
+      this.player.setFrame(1);
     }
-  } else {
-    this.player.body.setVelocityX(0);
-    this.player.anims.stop("walking");
-    //default pose
-    this.player.setFrame(1);
-  }
-  // handle jumping
-  if (onGround && (this.cursors.space.isDown || this.cursors.up.isDown)) {
-    // give the player a velocity in Y
-    this.player.body.setVelocityY(this.jumpSpeed);
+    // handle jumping
+    if (onGround && (this.cursors.space.isDown || this.cursors.up.isDown)) {
+      // give the player a velocity in Y
+      this.player.body.setVelocityY(this.jumpSpeed);
 
-    // stop the walking animation
-    // if (this.player.anims.isPlaying) {
-    //   this.player.anims.play("jumping");
-    // } else this.player.anims.play("walking");
+      // stop the walking animation
+      if (this.player.anims.isPlaying) {
+        this.player.anims.play("jumping");
+      } else this.player.anims.play("walking");
 
-    // change frame
-    this.player.setFrame(2);
+      // change frame
+      this.player.setFrame(2);
+    }
   }
 };
+
+// restart game (game over + you won!)
+gameScene.restartGame = function (sourceSprite, targetSprite) {
+  // fade out
+  this.player.x = 1100
+  this.player.y = 2300
+
+};
+
+// boss attack
+gameScene.bossAttack = function () {
+  this.flames = this.physics.add.group({
+    bounceY: 0.1,
+    bounceX: 1,
+    collideWorldBounds: true
+  })
+  let spawnEvent = this.time.addEvent({
+    delay: this.levelData.spawner.interval,
+    loop: true,
+    callbackScope: this,
+    callback: function () {
+
+      let flame = this.flames.create(this.goal.x, this.goal.y, 'bossAttack');
+
+
+
+      flame.anims.play('bossAttacking');
+
+
+      flame.setVelocityX(-this.levelData.spawner.speed);
+
+      this.time.addEvent({
+        delay: this.levelData.spawner.lifespan,
+        repeat: 0,
+        callbackScope: this,
+        callback: function () {
+          flame.destroy();
+        }
+      });
+
+    }
+  })
+}
+
+//minion attack
+gameScene.minionAttack = function () {
+  for (let i = 0; i < this.levelData.minions.length; i++) {
+    let curr = this.levelData.minions[i];
+    this.flames = this.physics.add.group({
+      bounceY: 0.1,
+      bounceX: 1,
+      collideWorldBounds: true
+    })
+    let spawnEvent = this.time.addEvent({
+      delay: curr.interval,
+      loop: true,
+      callbackScope: this,
+      callback: function () {
+
+        let flame = this.flames.create(curr.x, curr.y, 'flame').setSize(35, 35);
+
+        flame.anims.play('flaming');
+
+
+        if (curr.flipX === true) {
+          flame.flipX = true
+        }
+        flame.setVelocityX(curr.speed);
+
+        this.time.addEvent({
+          delay: curr.lifespan,
+          repeat: 0,
+          callbackScope: this,
+          callback: function () {
+            flame.destroy();
+          }
+        });
+
+      }
+    })
+  }
+}
+
 
 // sets up all the elements in the level
 gameScene.level = function () {
@@ -256,7 +375,7 @@ gameScene.level = function () {
 
 
   // parse json data
-  this.levelData = this.cache.json.get('levelData');
+  this.levelData = this.cache.json.get("levelData");
 
   // create all the platforms
   for (let i = 0; i < this.levelData.platforms.length; i++) {
@@ -336,91 +455,41 @@ gameScene.level = function () {
     this.fires.add(newObj);
 
   }
+}
+  ;
 
-  // restart game (game over + you won!)
-  gameScene.restartGame = function (sourceSprite, targetSprite) {
-    // fade out
-    this.player.x = 1100
-    this.player.y = 2300
-
-  };
-
-  // boss attack
-  gameScene.bossAttack = function () {
-    this.flames = this.physics.add.group({
-      bounceY: 0.1,
-      bounceX: 1,
-      collideWorldBounds: true
-    })
-    let spawnEvent = this.time.addEvent({
-      delay: this.levelData.spawner.interval,
-      loop: true,
-      callbackScope: this,
-      callback: function () {
-
-        let flame = this.flames.create(this.goal.x, this.goal.y, 'bossAttack');
+function addPlayer(self, playerInfo) {
+  self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
+  // self.physics.add.collider(self.ground, self.player);
+  // self.physics.add.collider(self.platforms, self.player);
+  self.physics.add.collider(self.ground, [self.player, self.goal, self.minion]);
+  self.physics.add.collider([self.player, self.goal, self.flames, self.minion], self.platforms);
+  self.player.body.bounce.y = 0.2;
+  self.player.body.gravity.y = 800;
+  self.player.body.collideWorldBounds = true;
+  self.player.setScale(0.7);
+  //overlaps
+  self.physics.add.overlap(self.player, [self.fires, self.flames], self.restartGame, null, self);
 
 
+  self.cameras.main.startFollow(self.player);
+}
 
-        flame.anims.play('bossAttacking');
+function addOtherPlayers(self, playerInfo) {
+  const otherPlayer = self.physics.add.sprite(
+    playerInfo.x,
+    playerInfo.y,
+    "alien",
+    1
+  );
+  otherPlayer.flipX = playerInfo.flipX;
 
-
-        flame.setVelocityX(-this.levelData.spawner.speed);
-
-        this.time.addEvent({
-          delay: this.levelData.spawner.lifespan,
-          repeat: 0,
-          callbackScope: this,
-          callback: function () {
-            flame.destroy();
-          }
-        });
-
-      }
-    })
-  }
-
-  //minion attack
-  gameScene.minionAttack = function () {
-    for (let i = 0; i < this.levelData.minions.length; i++) {
-      let curr = this.levelData.minions[i];
-      this.flames = this.physics.add.group({
-        bounceY: 0.1,
-        bounceX: 1,
-        collideWorldBounds: true
-      })
-      let spawnEvent = this.time.addEvent({
-        delay: curr.interval,
-        loop: true,
-        callbackScope: this,
-        callback: function () {
-
-          let flame = this.flames.create(curr.x, curr.y, 'flame').setSize(35, 35);
-
-          flame.anims.play('flaming');
-
-
-          if (curr.flipX === true) {
-            flame.flipX = true
-          }
-          flame.setVelocityX(curr.speed);
-
-          this.time.addEvent({
-            delay: curr.lifespan,
-            repeat: 0,
-            callbackScope: this,
-            callback: function () {
-              flame.destroy();
-            }
-          });
-
-        }
-      })
-    }
-
-    gameScene.winGame = function (sourceSprite, targetSprite) {
-
-
-    }
-  }
+  self.physics.add.collider(self.ground, otherPlayer);
+  self.physics.add.collider(self.platforms, otherPlayer);
+  otherPlayer.body.bounce.y = 0.2;
+  otherPlayer.body.gravity.y = 800;
+  otherPlayer.body.collideWorldBounds = true;
+  otherPlayer.setScale(0.7);
+  otherPlayer.playerId = playerInfo.playerId;
+  self.otherPlayers.add(otherPlayer);
 }
