@@ -1,14 +1,76 @@
 {
   "spawner": {
-    "interval": 1000,
-    "speed": 200,
-    "lifespan": 5000
+    "interval": 3000,
+    "speed": 300,
+    "lifespan": 3000
   },
   "goal": {
     "x": 1400,
     "y": 15
   },
+  "minions": [
+    {
+      "x": 800,
+      "y": 1460,
+      "interval": 3000,
+      "speed": 300,
+      "lifespan": 3000,
+      "flipX": true
+    },
+    {
+      "x": 1800,
+      "y": 900,
+      "interval": 3000,
+      "speed": 300,
+      "lifespan": 3000,
+      "flipX": false
+    },
+    {
+      "x": 460,
+      "y": 660,
+      "interval": 3000,
+      "speed": 300,
+      "lifespan": 3000,
+      "flipX": true
+    },
+    {
+      "x": 460,
+      "y": 660,
+      "interval": 3000,
+      "speed": 300,
+      "lifespan": 3000,
+      "flipX": true
+    },
+    {
+      "x": 1360,
+      "y": 530,
+      "interval": 3000,
+      "speed": 300,
+      "lifespan": 3000,
+      "flipX": false
+    },
+    {
+      "x": 960,
+      "y": 330,
+      "interval": 3000,
+      "speed": 300,
+      "lifespan": 3000,
+      "flipX": true
+    }
+  ],
   "platforms": [
+    {
+      "x": 1800,
+      "y": 1000,
+      "numTiles": 6,
+      "key": "block"
+    },
+    {
+      "x": 460,
+      "y": 750,
+      "numTiles": 3,
+      "key": "block"
+    },
     {
       "x": 620,
       "y": 2280,
