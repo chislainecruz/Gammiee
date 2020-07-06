@@ -153,7 +153,7 @@ gameScene.create = function () {
   //* Level Setup
   this.level();
 
-  this.setupSpawner()
+  this.bossAttack()
 
   this.minionAttack()
 
@@ -188,15 +188,15 @@ gameScene.create = function () {
     frameRate: 8,
     repeat: -1,
   });
-  this.anims.create({
-    key: "jumping",
-    frames: this.anims.generateFrameNames("alien", {
-      //frames that are moving
-      frames: 4,
-    }),
-    frameRate: 8,
-    repeat: -1,
-  });
+  // this.anims.create({
+  //   key: "jumping",
+  //   frames: this.anims.generateFrameNames("alien", {
+  //     //frames that are moving
+  //     frames: 4,
+  //   }),
+  //   frameRate: 8,
+  //   repeat: -1,
+  // });
   this.cameras.main.startFollow(this.player)
   this.cameras.main.zoom = 1;
 
@@ -241,9 +241,9 @@ gameScene.update = function () {
     this.player.body.setVelocityY(this.jumpSpeed);
 
     // stop the walking animation
-    if (this.player.anims.isPlaying) {
-      this.player.anims.play("jumping");
-    } else this.player.anims.play("walking");
+    // if (this.player.anims.isPlaying) {
+    //   this.player.anims.play("jumping");
+    // } else this.player.anims.play("walking");
 
     // change frame
     this.player.setFrame(2);
@@ -352,7 +352,7 @@ gameScene.level = function () {
   };
 
   // boss attack
-  gameScene.setupSpawner = function () {
+  gameScene.bossAttack = function () {
     this.flames = this.physics.add.group({
       bounceY: 0.1,
       bounceX: 1,
