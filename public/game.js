@@ -69,7 +69,7 @@ gameScene.preload = function () {
   });
 
   this.load.spritesheet('minion', './assets/babyBalrog.png', {
-    frameWidth: 94,
+    frameWidth: 94.1,
     frameHeight: 95.1,
   });
 
@@ -158,7 +158,7 @@ gameScene.create = function () {
   this.minionAttack()
 
   //* Player attributes
-  this.player = this.physics.add.sprite(1100, 600, 'alien', 1);
+  this.player = this.physics.add.sprite(1100, 2600, 'alien', 1);
   this.player.body.bounce.y = 0.2;
   this.player.body.gravity.y = 800;
   this.player.body.collideWorldBounds = true;
@@ -203,6 +203,7 @@ gameScene.create = function () {
 };
 
 gameScene.update = function () {
+
 
   let onGround =
     this.player.body.blocked.down || this.player.body.touching.down;
