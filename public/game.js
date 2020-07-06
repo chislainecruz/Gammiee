@@ -37,7 +37,11 @@ gameScene.preload = function () {
   this.load.image('background', './assets/background.png');
   this.load.image('platform', './assets/platform.png');
   this.load.image('block', './assets/block.png');
-  this.load.image('bossAttack', './assets/bossAttack.png')
+
+  this.load.spritesheet('bossAttack', './assets/bossAttack.png', {
+    frameWidth: 110,
+    frameHeight: 130
+  })
 
 
   this.load.spritesheet('flame', './assets/flame.png', {
@@ -116,6 +120,15 @@ gameScene.create = function () {
   this.anims.create({
     key: 'flaming',
     frames: this.anims.generateFrameNames('flame', {
+      frames: [0, 1, 2]
+    }),
+    frameRate: 10,
+    repeat: -1
+  });
+
+  this.anims.create({
+    key: 'bossAttacking',
+    frames: this.anims.generateFrameNames('bossAttack', {
       frames: [0, 1, 2]
     }),
     frameRate: 10,
@@ -316,6 +329,7 @@ gameScene.level = function () {
 
   };
 
+  // boss attack
   gameScene.setupSpawner = function () {
     this.flames = this.physics.add.group({
       bounceY: 0.1,
@@ -328,9 +342,9 @@ gameScene.level = function () {
       callbackScope: this,
       callback: function () {
 
-        let flame = this.flames.create(this.goal.x, this.goal.y, 'flame');
+        let flame = this.flames.create(this.goal.x, this.goal.y, 'bossAttack');
 
-        flame.anims.play('flaming');
+        flame.anims.play('bossAttacking');
 
 
         flame.setVelocityX(-this.levelData.spawner.speed);
