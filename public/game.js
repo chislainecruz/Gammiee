@@ -4,8 +4,6 @@ import io from "socket.io-client";
 class Game extends Phaser.Game {
   constructor() {
     super(config);
-    //const socket = io("http://localhost:8082");
-    //this.globals = { socket };
   }
 }
 let music;
