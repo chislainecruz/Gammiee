@@ -37,7 +37,14 @@ gameScene.preload = function () {
   this.load.image('background', './assets/background.png');
   this.load.image('platform', './assets/platform.png');
   this.load.image('block', './assets/block.png');
-  this.load.image('flame', './assets/flame.png')
+  this.load.image('bossAttack', './assets/bossAttack.png')
+
+
+  this.load.spritesheet('flame', './assets/flame.png', {
+    frameWidth: 75,
+    frameHeight: 50,
+    margin: 1,
+  })
 
   this.load.spritesheet('fire', './assets/fire.png', {
     frameWidth: 64,
@@ -101,6 +108,15 @@ gameScene.create = function () {
     key: 'burning',
     frames: this.anims.generateFrameNames('fire', {
       frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60]
+    }),
+    frameRate: 10,
+    repeat: -1
+  });
+
+  this.anims.create({
+    key: 'flaming',
+    frames: this.anims.generateFrameNames('flame', {
+      frames: [0, 1, 2]
     }),
     frameRate: 10,
     repeat: -1
@@ -311,7 +327,12 @@ gameScene.level = function () {
       loop: true,
       callbackScope: this,
       callback: function () {
+
         let flame = this.flames.create(this.goal.x, this.goal.y, 'flame');
+
+        flame.anims.play('flaming');
+
+
         flame.setVelocityX(-this.levelData.spawner.speed);
 
         this.time.addEvent({
@@ -341,7 +362,11 @@ gameScene.level = function () {
         loop: true,
         callbackScope: this,
         callback: function () {
+
           let flame = this.flames.create(curr.x, curr.y, 'flame').setSize(35, 35);
+
+          flame.anims.play('flaming');
+
 
           if (curr.flipX === true) {
             flame.flipX = true
