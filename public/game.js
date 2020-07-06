@@ -113,9 +113,10 @@ gameScene.create = function () {
   this.anims.create({
     key: 'burning',
     frames: this.anims.generateFrameNames('fire', {
-      frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60]
+      start: 0,
+      end: 60
     }),
-    frameRate: 10,
+    frameRate: 30,
     repeat: -1
   });
 
@@ -134,7 +135,7 @@ gameScene.create = function () {
     frames: this.anims.generateFrameNames('flame', {
       frames: [0, 1, 2]
     }),
-    frameRate: 10,
+    frameRate: 30,
     repeat: -1
   });
 
@@ -156,8 +157,7 @@ gameScene.create = function () {
     repeat: -1
   });
 
-  //* Level Setup
-  // this.level();
+
 
 
 
@@ -275,10 +275,10 @@ gameScene.update = function () {
       // give the player a velocity in Y
       this.player.body.setVelocityY(this.jumpSpeed);
 
-      // stop the walking animation
-      if (this.player.anims.isPlaying) {
-        this.player.anims.play("jumping");
-      } else this.player.anims.play("walking");
+      // // stop the walking animation
+      // if (this.player.anims.isPlaying) {
+      //   this.player.anims.play("jumping");
+      // } else this.player.anims.play("walking");
 
       // change frame
       this.player.setFrame(2);
@@ -460,8 +460,7 @@ gameScene.level = function () {
 
 function addPlayer(self, playerInfo) {
   self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
-  // self.physics.add.collider(self.ground, self.player);
-  // self.physics.add.collider(self.platforms, self.player);
+
   self.physics.add.collider(self.ground, [self.player, self.goal, self.minion]);
   self.physics.add.collider([self.player, self.goal, self.flames, self.minion], self.platforms);
   self.player.body.bounce.y = 0.2;
