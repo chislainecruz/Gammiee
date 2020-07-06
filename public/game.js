@@ -12,7 +12,7 @@ var config = {
     default: "arcade",
     arcade: {
       gravity: { y: 1600 },
-      // debug: true,
+      debug: true,
     },
     scale: {
       mode: Phaser.DOM.FIT,
@@ -64,10 +64,8 @@ gameScene.preload = function () {
   });
 
   this.load.spritesheet('goal', './assets/balrog.png', {
-    frameWidth: 190,
-    frameHeight: 190,
-    margin: 1,
-    spacing: 1,
+    frameWidth: 200,
+    frameHeight: 180,
   });
 
   this.load.spritesheet('minion', './assets/babyBalrog.png', {
@@ -131,6 +129,15 @@ gameScene.create = function () {
       frames: [0, 1, 2]
     }),
     frameRate: 10,
+    repeat: -1
+  });
+
+  this.anims.create({
+    key: 'boss',
+    frames: this.anims.generateFrameNames('goal', {
+      frames: [0, 1, 2, 3, 3, 3, 3, 3, 3]
+    }),
+    frameRate: 8,
     repeat: -1
   });
 
@@ -297,6 +304,9 @@ gameScene.level = function () {
 
   // create goal/boss
   this.goal = this.add.sprite(this.levelData.goal.x, this.levelData.goal.y, 'goal');
+
+  this.goal.anims.play('boss')
+
   this.physics.add.existing(this.goal);
 
   // create minions
@@ -354,6 +364,8 @@ gameScene.level = function () {
       callback: function () {
 
         let flame = this.flames.create(this.goal.x, this.goal.y, 'bossAttack');
+
+
 
         flame.anims.play('bossAttacking');
 
