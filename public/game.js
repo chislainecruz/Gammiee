@@ -322,12 +322,6 @@ gameScene.level = function () {
 
     this.minions.add(newObj);
   }
-  // minion = this.add.sprite(this.levelData.minion.x, this.levelData.minion.y, 'minion');
-  // this.physics.add.existing(this.minion);
-  // if (this.levelData.minion.flipX === true) {
-  //   this.minion.flipX = true
-  // }
-
 
 
   for (let i = 0; i < this.levelData.fires.length; i++) {
