@@ -158,7 +158,7 @@ gameScene.create = function () {
   this.minionAttack()
 
   //* Player attributes
-  this.player = this.physics.add.sprite(1100, 2600, 'alien', 1);
+  this.player = this.physics.add.sprite(1100, 600, 'alien', 1);
   this.player.body.bounce.y = 0.2;
   this.player.body.gravity.y = 800;
   this.player.body.collideWorldBounds = true;
