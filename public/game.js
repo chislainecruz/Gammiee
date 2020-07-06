@@ -27,13 +27,16 @@ var config = {
 
 var game = new Game(config);
 
+
 gameScene.init = function () {
   // player parameters
   this.playerSpeed = 350;
   this.jumpSpeed = -800;
+
 };
 
 gameScene.preload = function () {
+
   this.load.image("background", "./assets/background.png");
   this.load.image("platform", "./assets/platform.png");
   this.load.image("block", "./assets/block.png");
@@ -43,12 +46,16 @@ gameScene.preload = function () {
     frameHeight: 64,
   });
 
+
   this.load.spritesheet("yeti", "./assets/yeti.png", {
     frameWidth: 60,
     frameHeight: 55,
   });
 
-  this.load.spritesheet("balrug", "./assets/balrog.png", {
+
+
+  this.load.spritesheet('balrug', './assets/balrog.png', {
+
     frameWidth: 190,
     frameHeight: 190,
     margin: 1,
@@ -67,7 +74,9 @@ gameScene.preload = function () {
     spacing: 1,
   });
 
+
   this.load.json("levelData", "json/levelData.json");
+
 };
 
 gameScene.create = function () {
@@ -76,10 +85,12 @@ gameScene.create = function () {
   this.otherPlayers = this.physics.add.group();
   let bg = this.add.sprite(-700, 100, "background");
   bg.setOrigin(0, 0);
+
   bg.setScale(3.6);
   //creates 7 ground blocks that are the width of the block. 1 is for the height
   //the first 2 nums are the position on the screen
   this.ground = this.add.tileSprite(600, 667, 400, 30, "tiles");
+
   // the true parameter makes the ground static
   this.physics.add.existing(this.ground, true);
 
@@ -96,16 +107,19 @@ gameScene.create = function () {
     repeat: -1,
   });
 
+
   this.anims.create({
     key: "burning",
     frames: this.anims.generateFrameNames("fire", { start: 0, end: 59 }),
     frameRate: 120,
     repeat: -1,
   });
+
   //* Level Setup
   this.level();
 
   //* Player attributes
+
   this.socket.on("currentPlayers", (players) => {
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
@@ -146,10 +160,12 @@ gameScene.create = function () {
   this.input.on("pointerdown", function (pointer) {
     console.log(pointer.x, pointer.y);
   });
+
 };
 
 // eslint-disable-next-line complexity
 gameScene.update = function () {
+
   if (this.player) {
     let x = this.player.x;
     let y = this.player.y;
@@ -168,6 +184,8 @@ gameScene.update = function () {
       });
     }
 
+
+
     this.player.oldPosition = {
       x: this.player.x,
       y: this.player.y,
@@ -180,7 +198,12 @@ gameScene.update = function () {
     if (this.player.body.position.y > 600) {
       this.player.x = 600;
       this.player.y = 500;
+
+    if (!this.player.anims.isPlaying) {
+      this.player.anims.play("walking");
+
     }
+
 
     if (this.cursors.left.isDown) {
       this.player.body.setVelocityX(-this.playerSpeed);
@@ -212,6 +235,8 @@ gameScene.update = function () {
       if (this.player.anims.isPlaying) {
         this.player.anims.play("jumping");
       } else this.player.anims.play("walking");
+
+
 
       // change frame
       this.player.setFrame(2);
@@ -264,7 +289,9 @@ gameScene.level = function () {
   for (let i = 0; i < this.levelData.fires.length; i++) {
     let curr = this.levelData.fires[i];
 
+
     let newObj = this.add.sprite(curr.x, curr.y, "fire").setOrigin(0);
+
 
     //   // enable physics
     this.physics.add.existing(newObj);
@@ -273,7 +300,10 @@ gameScene.level = function () {
 
     //   // play burning animation
 
+
     newObj.anims.play("burning");
+
+
 
     //   // add to the group
     this.fires.add(newObj);
