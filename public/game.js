@@ -96,7 +96,7 @@ gameScene.create = function () {
   alien.visible = true
   alien.active = true
   alien.enableBody(true, 990, 1223, true, true)
-  console.log('test', alien)
+  console.log('waiting room alien', alien)
   let self = this;
   this.socket = io(`http://localhost:${PORT}`);
   this.otherPlayers = this.physics.add.group();
@@ -226,6 +226,7 @@ gameScene.create = function () {
     });
   });
   console.log('body', this)
+  console.log('this.player', this.player)
 }
 
 // eslint-disable-next-line complexity
