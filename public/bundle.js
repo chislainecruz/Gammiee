@@ -21685,7 +21685,6 @@ __webpack_require__.r(__webpack_exports__);
 // hello world
 
 
-
 let gameScene = new Phaser.Scene("Game");
 let music;
 
@@ -21704,57 +21703,47 @@ var config = {
       mode: Phaser.DOM.FIT,
       autoCenter: Phaser.DOM.CENTER,
       width: 900,
-      height: 1000
-    }
+      height: 1000,
+    },
   },
 };
 
 var game = new Phaser.Game(config);
 
-
 gameScene.init = function () {
   // player parameters
   this.playerSpeed = 350;
   this.jumpSpeed = -800;
-
 };
 
 gameScene.preload = function () {
-  this.load.image('background', './assets/testback.png');
-  this.load.image('platform', './assets/platform.png');
-  this.load.image('block', './assets/block.png');
+  this.load.image("background", "./assets/testback.png");
+  this.load.image("platform", "./assets/platform.png");
+  this.load.image("block", "./assets/block.png");
 
-  this.load.spritesheet('bossAttack', './assets/bossAttack.png', {
+  this.load.spritesheet("bossAttack", "./assets/bossAttack.png", {
     frameWidth: 110,
-    frameHeight: 130
-  })
+    frameHeight: 130,
+  });
 
-
-  this.load.spritesheet('flame', './assets/flame.png', {
+  this.load.spritesheet("flame", "./assets/flame.png", {
     frameWidth: 75,
     frameHeight: 50,
     margin: 1,
-  })
+  });
 
-  this.load.spritesheet('fire', './assets/fire.png', {
+  this.load.spritesheet("fire", "./assets/fire.png", {
     frameWidth: 64,
     frameHeight: 64,
     margin: 1,
-
-  })
-
-
-  this.load.spritesheet("yeti", "./assets/yeti.png", {
-    frameWidth: 60,
-    frameHeight: 55,
   });
 
-  this.load.spritesheet('goal', './assets/balrog.png', {
+  this.load.spritesheet("goal", "./assets/balrog.png", {
     frameWidth: 200,
     frameHeight: 180,
   });
 
-  this.load.spritesheet('minion', './assets/babyBalrog.png', {
+  this.load.spritesheet("minion", "./assets/babyBalrog.png", {
     frameWidth: 94.1,
     frameHeight: 95.1,
   });
@@ -21764,30 +21753,27 @@ gameScene.preload = function () {
     frameHeight: 60,
   });
 
-  this.load.spritesheet('alien', 'assets/Alien.png', {
+  this.load.spritesheet("alien", "assets/Alien.png", {
     frameWidth: 90,
     frameHeight: 120,
     margin: 1,
     spacing: 1,
   });
 
-
-
-  this.load.json('levelData', 'json/levelData.json');
+  this.load.json("levelData", "json/levelData.json");
 };
 
 gameScene.create = function () {
   let self = this;
   this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_0___default()("http://localhost:8082");
   this.otherPlayers = this.physics.add.group();
-  let bg = this.add.sprite(-600, 0, 'background');
+  let bg = this.add.sprite(-600, 0, "background");
   bg.setOrigin(0, 0);
   bg.setScale(5);
 
-
-  //creates 7 ground blocks that are the width of the block. 1 is for the height
+  //creates ground blocks
   //the first 2 nums are the position on the screen
-  this.ground = this.add.tileSprite(1100, 2400, 400, 30, 'tiles');
+  this.ground = this.add.tileSprite(1100, 2400, 400, 30, "tiles");
   // the true parameter makes the ground static
   this.physics.add.existing(this.ground, true);
 
@@ -21795,60 +21781,54 @@ gameScene.create = function () {
   this.ground.body.immovable = true;
 
   this.anims.create({
-    key: 'burning',
-    frames: this.anims.generateFrameNames('fire', {
+    key: "burning",
+    frames: this.anims.generateFrameNames("fire", {
       start: 0,
-      end: 60
+      end: 60,
     }),
     frameRate: 30,
-    repeat: -1
+    repeat: -1,
   });
 
-
   this.anims.create({
-    key: 'floating',
-    frames: this.anims.generateFrameNames('minion', {
-      frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    key: "floating",
+    frames: this.anims.generateFrameNames("minion", {
+      frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
     }),
     frameRate: 10,
-    repeat: -1
+    repeat: -1,
   });
 
   this.anims.create({
-    key: 'flaming',
-    frames: this.anims.generateFrameNames('flame', {
-      frames: [0, 1, 2]
+    key: "flaming",
+    frames: this.anims.generateFrameNames("flame", {
+      frames: [0, 1, 2],
     }),
     frameRate: 30,
-    repeat: -1
+    repeat: -1,
   });
 
   this.anims.create({
-    key: 'boss',
-    frames: this.anims.generateFrameNames('goal', {
-      frames: [0, 1, 2, 3, 3, 3, 3, 3, 3]
+    key: "boss",
+    frames: this.anims.generateFrameNames("goal", {
+      frames: [0, 1, 2, 3, 3, 3, 3, 3, 3],
     }),
     frameRate: 8,
-    repeat: -1
+    repeat: -1,
   });
 
   this.anims.create({
-    key: 'bossAttacking',
-    frames: this.anims.generateFrameNames('bossAttack', {
-      frames: [0, 1, 2]
+    key: "bossAttacking",
+    frames: this.anims.generateFrameNames("bossAttack", {
+      frames: [0, 1, 2],
     }),
     frameRate: 10,
-    repeat: -1
+    repeat: -1,
   });
-
-
-
-
-
 
   this.cursors = this.input.keyboard.createCursorKeys();
 
-  this.input.on('pointerdown', function (pointer) {
+  this.input.on("pointerdown", function (pointer) {
     console.log(pointer.x, pointer.y);
   });
   this.anims.create({
@@ -21869,8 +21849,8 @@ gameScene.create = function () {
   });
   //* Level Setup
   this.level();
-  this.bossAttack()
-  this.minionAttack()
+  this.bossAttack();
+  this.minionAttack();
 
   //* Player attributes
   this.socket.on("currentPlayers", (players) => {
@@ -21898,10 +21878,14 @@ gameScene.create = function () {
       if (playerInfo.playerId === otherPlayer.playerId) {
         otherPlayer.setPosition(playerInfo.x, playerInfo.y);
         otherPlayer.flipX = playerInfo.flipX;
+
+        if (playerInfo.frame) {
+          otherPlayer.setFrame(playerInfo.frame);
+        }
       }
     });
   });
-}
+};
 
 // eslint-disable-next-line complexity
 gameScene.update = function () {
@@ -21909,23 +21893,26 @@ gameScene.update = function () {
     let x = this.player.x;
     let y = this.player.y;
     let flipX = this.player.flipX;
+    let frame;
     let onGround =
       this.player.body.blocked.down || this.player.body.touching.down;
     //respawn when falling
     if (this.player.body.position.y > 2400) {
-      this.player.x = 1100
-      this.player.y = 2300
+      this.player.x = 1100;
+      this.player.y = 2300;
     }
     if (
       this.player.oldPosition &&
       (x !== this.player.oldPosition.x ||
         y !== this.player.oldPosition.y ||
-        flipX !== this.player.oldPosition.flipX)
+        flipX !== this.player.oldPosition.flipX ||
+        frame !== this.player.anims.currentFrame.index)
     ) {
       this.socket.emit("playerMovement", {
         x: this.player.x,
         y: this.player.y,
         flipX: this.player.flipX,
+        frame: this.player.anims.currentFrame.index,
       });
     }
 
@@ -21934,6 +21921,7 @@ gameScene.update = function () {
       y: this.player.y,
       flipX: this.player.flipX,
     };
+
     if (!this.player.anims.isPlaying) {
       this.player.anims.play("walking");
     }
@@ -21973,9 +21961,8 @@ gameScene.update = function () {
 // restart game (game over + you won!)
 gameScene.restartGame = function (sourceSprite, targetSprite) {
   // fade out
-  this.player.x = 1100
-  this.player.y = 2300
-
+  this.player.x = 1100;
+  this.player.y = 2300;
 };
 
 // boss attack
@@ -21983,20 +21970,16 @@ gameScene.bossAttack = function () {
   this.flames = this.physics.add.group({
     bounceY: 0.1,
     bounceX: 1,
-    collideWorldBounds: true
-  })
+    collideWorldBounds: true,
+  });
   let spawnEvent = this.time.addEvent({
     delay: this.levelData.spawner.interval,
     loop: true,
     callbackScope: this,
     callback: function () {
+      let flame = this.flames.create(this.goal.x, this.goal.y, "bossAttack");
 
-      let flame = this.flames.create(this.goal.x, this.goal.y, 'bossAttack');
-
-
-
-      flame.anims.play('bossAttacking');
-
+      flame.anims.play("bossAttacking");
 
       flame.setVelocityX(-this.levelData.spawner.speed);
 
@@ -22006,12 +21989,11 @@ gameScene.bossAttack = function () {
         callbackScope: this,
         callback: function () {
           flame.destroy();
-        }
+        },
       });
-
-    }
-  })
-}
+    },
+  });
+};
 
 //minion attack
 gameScene.minionAttack = function () {
@@ -22020,21 +22002,19 @@ gameScene.minionAttack = function () {
     this.flames = this.physics.add.group({
       bounceY: 0.1,
       bounceX: 1,
-      collideWorldBounds: true
-    })
+      collideWorldBounds: true,
+    });
     let spawnEvent = this.time.addEvent({
       delay: curr.interval,
       loop: true,
       callbackScope: this,
       callback: function () {
+        let flame = this.flames.create(curr.x, curr.y, "flame").setSize(35, 35);
 
-        let flame = this.flames.create(curr.x, curr.y, 'flame').setSize(35, 35);
-
-        flame.anims.play('flaming');
-
+        flame.anims.play("flaming");
 
         if (curr.flipX === true) {
-          flame.flipX = true
+          flame.flipX = true;
         }
         flame.setVelocityX(curr.speed);
 
@@ -22044,19 +22024,16 @@ gameScene.minionAttack = function () {
           callbackScope: this,
           callback: function () {
             flame.destroy();
-          }
+          },
         });
-
-      }
-    })
+      },
+    });
   }
-}
-
+};
 
 // sets up all the elements in the level
 gameScene.level = function () {
   this.platforms = this.add.group();
-
 
   // parse json data
   this.levelData = this.cache.json.get("levelData");
@@ -22107,56 +22084,68 @@ gameScene.level = function () {
   });
 
   // create goal/boss
-  this.goal = this.add.sprite(this.levelData.goal.x, this.levelData.goal.y, 'goal');
+  this.goal = this.add.sprite(
+    this.levelData.goal.x,
+    this.levelData.goal.y,
+    "goal"
+  );
 
-  this.goal.anims.play('boss')
+  this.goal.anims.play("boss");
 
   this.physics.add.existing(this.goal);
 
   // create minions
   for (let i = 0; i < this.levelData.minions.length; i++) {
     let curr = this.levelData.minions[i];
-    let newObj = this.minions.create(curr.x, curr.y, 'minion').setOrigin(0)
+    let newObj = this.minions.create(curr.x, curr.y, "minion").setOrigin(0);
     if (curr.flipX === true) {
-      newObj.flipX = true
+      newObj.flipX = true;
     }
 
-    newObj.anims.play('floating');
+    newObj.anims.play("floating");
 
     this.minions.add(newObj);
   }
 
-
   for (let i = 0; i < this.levelData.fires.length; i++) {
     let curr = this.levelData.fires[i];
 
-    let newObj = this.fires.create(curr.x, curr.y, 'fire').setOrigin(0).setSize(30, 30)
+    let newObj = this.fires
+      .create(curr.x, curr.y, "fire")
+      .setOrigin(0)
+      .setSize(30, 30);
 
     //   // play burning animation
-    newObj.anims.play('burning');
+    newObj.anims.play("burning");
 
     //   // add to the group
     this.fires.add(newObj);
-
   }
-}
-  ;
+};
 
 function addPlayer(self, playerInfo) {
   self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
 
   self.physics.add.collider(self.ground, [self.player, self.goal, self.minion]);
-  self.physics.add.collider([self.player, self.goal, self.flames, self.minion], self.platforms);
+  self.physics.add.collider(
+    [self.player, self.goal, self.flames, self.minion],
+    self.platforms
+  );
   self.player.body.bounce.y = 0.2;
   self.player.body.gravity.y = 800;
   self.player.body.collideWorldBounds = true;
   self.player.setScale(0.7);
   //overlaps
-  self.physics.add.overlap(self.player, [self.fires, self.flames], self.restartGame, null, self);
-
+  self.physics.add.overlap(
+    self.player,
+    [self.fires, self.flames],
+    self.restartGame,
+    null,
+    self
+  );
 
   self.cameras.main.startFollow(self.player);
-  self.cameras.main.setZoom(1.6)
+  self.cameras.main.setZoom(1.6);
 }
 
 function addOtherPlayers(self, playerInfo) {

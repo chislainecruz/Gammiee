@@ -19,8 +19,8 @@ io.on("connection", function (socket) {
   // create a new player and add it to our players object
 
   players[socket.id] = {
-    x: Math.random() * (800 - 400) + 400,
-    y: 2600,
+    x: Math.random() * (1300 - 850) + 850,
+    y: 2300,
     playerId: socket.id,
   };
 
@@ -43,6 +43,8 @@ io.on("connection", function (socket) {
     players[socket.id].x = data.x;
     players[socket.id].y = data.y;
     players[socket.id].flipX = data.flipX;
+
+    players[socket.id].frame = data.frame;
     //emit msg to all players about the player that moved
     socket.broadcast.emit("playerMoved", players[socket.id]);
   });
