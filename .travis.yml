@@ -19,7 +19,6 @@ deploy: # see README for details on these keys
   skip_cleanup: true
   provider: heroku
   # app should be your heroku app name; see README
-  app:
+  app: demon-dash
   # the secure key indicates an encrypted value; see README
-  api_key:
-    secure: FAoLVGGCDRmFAtjGIM3UYTmNZ289ypaqRHCRQXAhMmq3YD1lQfrV/ovrU6RzEhnioe2WIzSypfgpLoQ8kRNObHuNsL0m3ID2F1YGxcSPthZHR9JVDcbm9PMeLCqh6mhYCQ/3ouHStQDVIZ7zXv9PazNhrXX9ZCAk41/tTTBO6Y0cHPGkJDatmPm+98PDw1hx1lq7E6kU4tHYnHWDOhJvLN+0ni3S3af0TKEqoYZtF2UXnlO7hafQLLPDWcPeGRXGNdN2zn8mqt9AUkbaa1xJWBM8WesW1bZ9TTEFFYmqib9u8ED23uCoLoj4XqSJ0anqZ1lstcAg2v16H7JRTva8Yc6Iz45FZngG6VGSwqxVGoWsppZ28tvwv1CiRb7hGWjr4ZcF4Xztk/3ROhAD3WJaIldhq6s9rGZCxsia6GlX5jRlvY5qKvAWtzRfyBl45CDqAhOl6InYtvP0x+wqfHwgBi//zYklIeTrvfM1zEiugiW/Y8c2KbbH1OQlwy58i9v3yhwq/YJd/dlVYFHu7pNm+pVoQULBp5XSStnsB0sEz0vFj7p8zC2fRKcz5V/oYv0VhTnJFZfdoWmIWrxmLGB23OGRnst+OZZcwwe5IZMAwAuBGpLSYfwhBh0pHJqZTTR1k75h+kpCPAI9VvP+0LWMmgDfSl2rXgfpKTxOOcfRp5A=
+  api_key: 843a8ab5-1aac-4fe9-a423-dee547234ea7
