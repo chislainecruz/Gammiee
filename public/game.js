@@ -287,11 +287,11 @@ gameScene.update = function () {
   }
 };
 
-// restart game (game over + you won!)
+// this runs when player gets hit by object
 gameScene.restartGame = function (sourceSprite, targetSprite) {
   // fade out
   this.player.x = 1100
-  this.player.y = 2300
+  this.player.y = 30
 
 };
 
@@ -456,8 +456,13 @@ gameScene.level = function () {
     this.fires.add(newObj);
 
   }
+};
+var ui_camera;
+gameScene.winGame = function (sourceSprite, targetSprite) {
+  var wintext = this.add.text(1000, 10, 'you win!').setOrigin(0.0).setScale(5);
+  var ui_camera = this.cameras.add().setScroll(0, 10);
+  this.scene.restart()
 }
-  ;
 
 function addPlayer(self, playerInfo) {
   self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
@@ -470,7 +475,7 @@ function addPlayer(self, playerInfo) {
   self.player.setScale(0.7);
   //overlaps
   self.physics.add.overlap(self.player, [self.fires, self.flames], self.restartGame, null, self);
-
+  self.physics.add.overlap(self.player, [self.goal], self.winGame, null, self);
 
   self.cameras.main.startFollow(self.player);
   self.cameras.main.setZoom(1.6)
