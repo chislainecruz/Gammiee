@@ -1,6 +1,6 @@
 {
   "spawner": {
-    "interval": 3000,
+    "interval": 8000,
     "speed": 300,
     "lifespan": 3000
   },
@@ -12,7 +12,7 @@
     {
       "x": 800,
       "y": 1460,
-      "interval": 6000,
+      "interval": 8000,
       "speed": 400,
       "lifespan": 3000,
       "flipX": true
@@ -28,7 +28,7 @@
     {
       "x": 460,
       "y": 660,
-      "interval": 3000,
+      "interval": 8000,
       "speed": 300,
       "lifespan": 3000,
       "flipX": true
@@ -36,7 +36,7 @@
     {
       "x": 460,
       "y": 660,
-      "interval": 3000,
+      "interval": 8000,
       "speed": 300,
       "lifespan": 3000,
       "flipX": true
@@ -44,7 +44,7 @@
     {
       "x": 1360,
       "y": 530,
-      "interval": 3000,
+      "interval": 8000,
       "speed": -300,
       "lifespan": 3000,
       "flipX": false
@@ -52,7 +52,7 @@
     {
       "x": 960,
       "y": 330,
-      "interval": 3000,
+      "interval": 8000,
       "speed": 300,
       "lifespan": 3000,
       "flipX": true
