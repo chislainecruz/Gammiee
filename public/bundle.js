@@ -22155,6 +22155,7 @@ function addPlayer(self, playerInfo) {
 
 
   self.cameras.main.startFollow(self.player);
+  self.cameras.main.setZoom(1.6)
 }
 
 function addOtherPlayers(self, playerInfo) {
