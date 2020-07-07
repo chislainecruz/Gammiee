@@ -7,8 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-client": "webpack",
     "build-watch": "webpack -w",
-    "start": "node server.js & npm run build-client",
-    "start-dev": "nodemon server.js & npm run build-watch"
+    "start": "nodemon server.js & npm run build-watch"
   },
   "keywords": [],
   "author": "",
