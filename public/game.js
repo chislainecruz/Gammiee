@@ -3,7 +3,9 @@
 import io from 'socket.io-client';
 const PORT = process.env.PORT || 8080;
 
+
 let gameScene = new Phaser.Scene("Game");
+
 let music;
 
 var config = {
@@ -35,6 +37,8 @@ gameScene.init = function () {
 };
 
 gameScene.preload = function () {
+  this.load.audio('music', './assets/TimeTemple.mp3')
+  this.load.audio('jump', './assets/jump-sfx.mp3')
   this.load.image("background", "./assets/testback.png");
   this.load.image("platform", "./assets/platform.png");
   this.load.image("block", "./assets/block.png");
@@ -78,18 +82,24 @@ gameScene.preload = function () {
     spacing: 1,
   });
 
-  this.load.json('levelData', 'json/levelData.json');
+
+  this.load.json("levelData", "json/levelData.json");
+
+
 };
 
 gameScene.create = function () {
+  var ourMusic = this.sound.add('music')
   let self = this;
   this.socket = io(`http://localhost:${PORT}`);
   this.otherPlayers = this.physics.add.group();
   let bg = this.add.sprite(-600, 0, "background");
   bg.setOrigin(0, 0);
   bg.setScale(5);
+  this.jump = this.sound.add('jump')
 
   //creates ground blocks
+
   //the first 2 nums are the position on the screen
   this.ground = this.add.tileSprite(1100, 2400, 400, 30, "tiles");
   // the true parameter makes the ground static
@@ -109,8 +119,8 @@ gameScene.create = function () {
   });
 
   this.anims.create({
-    key: "floating",
-    frames: this.anims.generateFrameNames("minion", {
+    key: 'floating',
+    frames: this.anims.generateFrameNames('minion', {
       frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
     }),
     frameRate: 10,
@@ -118,8 +128,10 @@ gameScene.create = function () {
   });
 
   this.anims.create({
+
     key: "flaming",
     frames: this.anims.generateFrameNames("flame", {
+
       frames: [0, 1, 2],
     }),
     frameRate: 30,
@@ -175,6 +187,7 @@ gameScene.create = function () {
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
         addPlayer(self, players[id]);
+        ourMusic.play()
       } else {
         addOtherPlayers(self, players[id]);
       }
@@ -263,6 +276,7 @@ gameScene.update = function () {
     }
     // handle jumping
     if (onGround && (this.cursors.space.isDown || this.cursors.up.isDown)) {
+      this.jump.play()
       // give the player a velocity in Y
       this.player.body.setVelocityY(this.jumpSpeed);
 
@@ -296,9 +310,11 @@ gameScene.bossAttack = function () {
     loop: true,
     callbackScope: this,
     callback: function () {
+
       let flame = this.flames.create(this.goal.x, this.goal.y, "bossAttack");
 
       flame.anims.play("bossAttacking");
+
 
       flame.setVelocityX(-this.levelData.spawner.speed);
 
@@ -328,9 +344,11 @@ gameScene.minionAttack = function () {
       loop: true,
       callbackScope: this,
       callback: function () {
+
         let flame = this.flames.create(curr.x, curr.y, "flame").setSize(35, 35);
 
         flame.anims.play("flaming");
+
 
         if (curr.flipX === true) {
           flame.flipX = true;
@@ -408,7 +426,6 @@ gameScene.level = function () {
     this.levelData.goal.y,
     "goal"
   );
-
   this.goal.anims.play("boss");
 
   this.physics.add.existing(this.goal);
