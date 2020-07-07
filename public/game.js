@@ -207,6 +207,7 @@ gameScene.create = function () {
 
 // eslint-disable-next-line complexity
 gameScene.update = function () {
+  console.log(this.player)
   if (this.player) {
     let x = this.player.x;
     let y = this.player.y;
@@ -441,6 +442,7 @@ gameScene.level = function () {
   }
 };
 var ui_camera;
+
 gameScene.winGame = function (sourceSprite, targetSprite) {
 
   var wintext = this.add.text(1000, 10, 'you win!').setOrigin(0.0).setScale(5);
@@ -466,9 +468,7 @@ function addPlayer(self, playerInfo) {
   self.cameras.main.startFollow(self.player);
   self.cameras.main.setZoom(1.6);
 
-  if (self.player.win !== true) {
-    self.player.win === false
-  }
+
 }
 
 function addOtherPlayers(self, playerInfo) {
