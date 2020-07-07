@@ -4,7 +4,7 @@ var server = require('http').Server(app);
 const PORT = process.env.PORT || 8080;
 var io = require('socket.io').listen(server);
 
-//We will use this object to keep track of all the players that are currently in the game
+//We will use this object to keep track of all the players that are currently in the games
 let players = {};
 
 app.use(express.static(__dirname + '/public'));
