@@ -37,6 +37,8 @@ gameScene.init = function () {
 };
 
 gameScene.preload = function () {
+  this.load.audio('music', './assets/TimeTemple.mp3')
+  this.load.audio('jump', './assets/jump-sfx.mp3')
   this.load.image("background", "./assets/testback.png");
   this.load.image("platform", "./assets/platform.png");
   this.load.image("block", "./assets/block.png");
@@ -58,10 +60,9 @@ gameScene.preload = function () {
     margin: 1,
   });
 
-
-  this.load.spritesheet("goal", "./assets/balrog.png", {
-    frameWidth: 200,
-    frameHeight: 180,
+  this.load.spritesheet("goal", "./assets/levelBoss.png", {
+    frameWidth: 180,
+    frameHeight: 207,
   });
 
   this.load.spritesheet("minion", "./assets/babyBalrog.png", {
@@ -88,13 +89,14 @@ gameScene.preload = function () {
 };
 
 gameScene.create = function () {
+  var ourMusic = this.sound.add('music')
   let self = this;
   this.socket = io(`http://localhost:${PORT}`);
   this.otherPlayers = this.physics.add.group();
   let bg = this.add.sprite(-600, 0, "background");
   bg.setOrigin(0, 0);
   bg.setScale(5);
-
+  this.jump = this.sound.add('jump')
 
   //creates ground blocks
 
@@ -137,21 +139,18 @@ gameScene.create = function () {
   });
 
   this.anims.create({
-
     key: "boss",
     frames: this.anims.generateFrameNames("goal", {
-
-      frames: [0, 1, 2, 3, 3, 3, 3, 3, 3],
+      frames: [0, 1, 2, 2, 3, 3,],
     }),
-    frameRate: 8,
+    frameRate: 6,
     repeat: -1,
   });
 
   this.anims.create({
     key: "bossAttacking",
     frames: this.anims.generateFrameNames("bossAttack", {
-
-      frames: [0, 1, 2],
+      frames: [0, 1, 2, 3, 4],
     }),
     frameRate: 10,
     repeat: -1,
@@ -188,6 +187,7 @@ gameScene.create = function () {
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
         addPlayer(self, players[id]);
+        ourMusic.play()
       } else {
         addOtherPlayers(self, players[id]);
       }
@@ -220,6 +220,7 @@ gameScene.create = function () {
 
 // eslint-disable-next-line complexity
 gameScene.update = function () {
+  console.log(this.player)
   if (this.player) {
     let x = this.player.x;
     let y = this.player.y;
@@ -275,6 +276,7 @@ gameScene.update = function () {
     }
     // handle jumping
     if (onGround && (this.cursors.space.isDown || this.cursors.up.isDown)) {
+      this.jump.play()
       // give the player a velocity in Y
       this.player.body.setVelocityY(this.jumpSpeed);
 
@@ -289,7 +291,7 @@ gameScene.update = function () {
   }
 };
 
-// restart game (game over + you won!)
+// this runs when player gets hit by object
 gameScene.restartGame = function (sourceSprite, targetSprite) {
   // fade out
   this.player.x = 1100;
@@ -422,11 +424,9 @@ gameScene.level = function () {
   this.goal = this.add.sprite(
     this.levelData.goal.x,
     this.levelData.goal.y,
-
     "goal"
   );
   this.goal.anims.play("boss");
-
 
   this.physics.add.existing(this.goal);
 
@@ -458,6 +458,14 @@ gameScene.level = function () {
     this.fires.add(newObj);
   }
 };
+var ui_camera;
+
+gameScene.winGame = function (sourceSprite, targetSprite) {
+
+  var wintext = this.add.text(1000, 10, 'you win!').setOrigin(0.0).setScale(5);
+  var ui_camera = this.cameras.add().setScroll(0, 10);
+}
+
 
 function addPlayer(self, playerInfo) {
   self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, 'alien', 1);
@@ -472,16 +480,12 @@ function addPlayer(self, playerInfo) {
   self.player.body.collideWorldBounds = true;
   self.player.setScale(0.7);
   //overlaps
-  self.physics.add.overlap(
-    self.player,
-    [self.fires, self.flames],
-    self.restartGame,
-    null,
-    self
-  );
-
+  self.physics.add.overlap(self.player, [self.fires, self.flames], self.restartGame, null, self);
+  self.physics.add.overlap(self.player, [self.goal], self.winGame, null, self);
   self.cameras.main.startFollow(self.player);
   self.cameras.main.setZoom(1.6);
+
+
 }
 
 function addOtherPlayers(self, playerInfo) {
