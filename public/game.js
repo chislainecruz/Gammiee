@@ -1,8 +1,11 @@
 // Linted with standardJS - https://standardjs.com/
 // hello world
-import io from "socket.io-client";
+import io from 'socket.io-client';
+const PORT = process.env.PORT || 8080;
+
 
 let gameScene = new Phaser.Scene("Game");
+
 let music;
 
 var config = {
@@ -11,7 +14,7 @@ var config = {
   height: 2500,
   scene: gameScene,
   physics: {
-    default: "arcade",
+    default: 'arcade',
     arcade: {
       gravity: { y: 1600 },
       debug: true,
@@ -55,6 +58,7 @@ gameScene.preload = function () {
     margin: 1,
   });
 
+
   this.load.spritesheet("goal", "./assets/balrog.png", {
     frameWidth: 200,
     frameHeight: 180,
@@ -65,7 +69,7 @@ gameScene.preload = function () {
     frameHeight: 95.1,
   });
 
-  this.load.spritesheet("tiles", "./assets/tiles.png", {
+  this.load.spritesheet('tiles', './assets/tiles.png', {
     frameWidth: 100,
     frameHeight: 60,
   });
@@ -77,18 +81,23 @@ gameScene.preload = function () {
     spacing: 1,
   });
 
+
   this.load.json("levelData", "json/levelData.json");
+
+
 };
 
 gameScene.create = function () {
   let self = this;
-  this.socket = io("http://localhost:8082");
+  this.socket = io(`http://localhost:${PORT}`);
   this.otherPlayers = this.physics.add.group();
   let bg = this.add.sprite(-600, 0, "background");
   bg.setOrigin(0, 0);
   bg.setScale(5);
 
+
   //creates ground blocks
+
   //the first 2 nums are the position on the screen
   this.ground = this.add.tileSprite(1100, 2400, 400, 30, "tiles");
   // the true parameter makes the ground static
@@ -108,8 +117,8 @@ gameScene.create = function () {
   });
 
   this.anims.create({
-    key: "floating",
-    frames: this.anims.generateFrameNames("minion", {
+    key: 'floating',
+    frames: this.anims.generateFrameNames('minion', {
       frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
     }),
     frameRate: 10,
@@ -117,8 +126,10 @@ gameScene.create = function () {
   });
 
   this.anims.create({
+
     key: "flaming",
     frames: this.anims.generateFrameNames("flame", {
+
       frames: [0, 1, 2],
     }),
     frameRate: 30,
@@ -126,8 +137,10 @@ gameScene.create = function () {
   });
 
   this.anims.create({
+
     key: "boss",
     frames: this.anims.generateFrameNames("goal", {
+
       frames: [0, 1, 2, 3, 3, 3, 3, 3, 3],
     }),
     frameRate: 8,
@@ -137,6 +150,7 @@ gameScene.create = function () {
   this.anims.create({
     key: "bossAttacking",
     frames: this.anims.generateFrameNames("bossAttack", {
+
       frames: [0, 1, 2],
     }),
     frameRate: 10,
@@ -149,8 +163,8 @@ gameScene.create = function () {
     console.log(pointer.x, pointer.y);
   });
   this.anims.create({
-    key: "walking",
-    frames: this.anims.generateFrameNames("alien", {
+    key: 'walking',
+    frames: this.anims.generateFrameNames('alien', {
       //frames that are moving
       frames: [0, 1, 2, 3],
     }),
@@ -159,8 +173,8 @@ gameScene.create = function () {
   });
 
   this.anims.create({
-    key: "burning",
-    frames: this.anims.generateFrameNames("fire", { start: 0, end: 59 }),
+    key: 'burning',
+    frames: this.anims.generateFrameNames('fire', { start: 0, end: 59 }),
     frameRate: 120,
     repeat: -1,
   });
@@ -170,7 +184,7 @@ gameScene.create = function () {
   this.minionAttack();
 
   //* Player attributes
-  this.socket.on("currentPlayers", (players) => {
+  this.socket.on('currentPlayers', players => {
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
         addPlayer(self, players[id]);
@@ -180,18 +194,18 @@ gameScene.create = function () {
     });
   });
 
-  this.socket.on("newPlayer", (playerInfo) => {
+  this.socket.on('newPlayer', playerInfo => {
     addOtherPlayers(self, playerInfo);
   });
-  this.socket.on("disconnect", (playerId) => {
-    self.otherPlayers.getChildren().forEach((otherPlayer) => {
+  this.socket.on('disconnect', playerId => {
+    self.otherPlayers.getChildren().forEach(otherPlayer => {
       if (playerId === otherPlayer.playerId) {
         otherPlayer.destroy();
       }
     });
   });
-  this.socket.on("playerMoved", (playerInfo) => {
-    self.otherPlayers.getChildren().forEach((otherPlayer) => {
+  this.socket.on('playerMoved', playerInfo => {
+    self.otherPlayers.getChildren().forEach(otherPlayer => {
       if (playerInfo.playerId === otherPlayer.playerId) {
         otherPlayer.setPosition(playerInfo.x, playerInfo.y);
         otherPlayer.flipX = playerInfo.flipX;
@@ -225,7 +239,7 @@ gameScene.update = function () {
         flipX !== this.player.oldPosition.flipX ||
         frame !== this.player.anims.currentFrame.index)
     ) {
-      this.socket.emit("playerMovement", {
+      this.socket.emit('playerMovement', {
         x: this.player.x,
         y: this.player.y,
         flipX: this.player.flipX,
@@ -240,7 +254,7 @@ gameScene.update = function () {
     };
 
     if (!this.player.anims.isPlaying) {
-      this.player.anims.play("walking");
+      this.player.anims.play('walking');
     }
     if (this.cursors.left.isDown) {
       this.player.body.setVelocityX(-this.playerSpeed);
@@ -251,11 +265,11 @@ gameScene.update = function () {
       this.player.flipX = true;
 
       if (!this.player.anims.isPlaying) {
-        this.player.anims.play("walking");
+        this.player.anims.play('walking');
       }
     } else {
       this.player.body.setVelocityX(0);
-      this.player.anims.stop("walking");
+      this.player.anims.stop('walking');
       //default pose
       this.player.setFrame(1);
     }
@@ -294,9 +308,11 @@ gameScene.bossAttack = function () {
     loop: true,
     callbackScope: this,
     callback: function () {
+
       let flame = this.flames.create(this.goal.x, this.goal.y, "bossAttack");
 
       flame.anims.play("bossAttacking");
+
 
       flame.setVelocityX(-this.levelData.spawner.speed);
 
@@ -326,9 +342,11 @@ gameScene.minionAttack = function () {
       loop: true,
       callbackScope: this,
       callback: function () {
+
         let flame = this.flames.create(curr.x, curr.y, "flame").setSize(35, 35);
 
         flame.anims.play("flaming");
+
 
         if (curr.flipX === true) {
           flame.flipX = true;
@@ -353,7 +371,7 @@ gameScene.level = function () {
   this.platforms = this.add.group();
 
   // parse json data
-  this.levelData = this.cache.json.get("levelData");
+  this.levelData = this.cache.json.get('levelData');
 
   // create all the platforms
   for (let i = 0; i < this.levelData.platforms.length; i++) {
@@ -404,10 +422,11 @@ gameScene.level = function () {
   this.goal = this.add.sprite(
     this.levelData.goal.x,
     this.levelData.goal.y,
+
     "goal"
   );
-
   this.goal.anims.play("boss");
+
 
   this.physics.add.existing(this.goal);
 
@@ -441,7 +460,7 @@ gameScene.level = function () {
 };
 
 function addPlayer(self, playerInfo) {
-  self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
+  self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, 'alien', 1);
 
   self.physics.add.collider(self.ground, [self.player, self.goal, self.minion]);
   self.physics.add.collider(
@@ -469,7 +488,7 @@ function addOtherPlayers(self, playerInfo) {
   const otherPlayer = self.physics.add.sprite(
     playerInfo.x,
     playerInfo.y,
-    "alien",
+    'alien',
     1
   );
   otherPlayer.flipX = playerInfo.flipX;
