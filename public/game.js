@@ -1,44 +1,24 @@
 // Linted with standardJS - https://standardjs.com/
 // hello world
 import io from "socket.io-client";
-import waitingRoomScene from './waitingRoom'
+
 const PORT = process.env.PORT || 8080;
+var ui_camera;
 
 
-let gameScene = new Phaser.Scene("Game");
-
-let music;
-
-var config = {
-  type: Phaser.AUTO,
-  width: 2300,
-  height: 2500,
-  scene: [waitingRoomScene, gameScene],
-  physics: {
-    default: 'arcade',
-    arcade: {
-      gravity: { y: 1600 },
-      debug: true,
-    },
-    scale: {
-      mode: Phaser.DOM.FIT,
-      autoCenter: Phaser.DOM.CENTER,
-      width: 900,
-      height: 1000,
-    },
-  },
-};
-
-var game = new Phaser.Game(config);
-game.scene.start('waitingRoom')
-
-gameScene.init = function () {
+export default class GameScene extends Phaser.Scene {
+  constructor(key){
+    super(key)
+  }
+init() {
   // player parameters
   this.playerSpeed = 350;
   this.jumpSpeed = -800;
 };
 
-gameScene.preload = function () {
+preload() {
+  this.load.audio('music', './assets/TimeTemple.mp3')
+  this.load.audio('jump', './assets/jump-sfx.mp3')
   this.load.image("background", "./assets/testback.png");
   this.load.image("platform", "./assets/platform.png");
   this.load.image("block", "./assets/block.png");
@@ -60,10 +40,9 @@ gameScene.preload = function () {
     margin: 1,
   });
 
-
-  this.load.spritesheet("goal", "./assets/balrog.png", {
-    frameWidth: 200,
-    frameHeight: 180,
+  this.load.spritesheet("goal", "./assets/levelBoss.png", {
+    frameWidth: 180,
+    frameHeight: 207,
   });
 
   this.load.spritesheet("minion", "./assets/babyBalrog.png", {
@@ -89,29 +68,23 @@ gameScene.preload = function () {
 
 };
 
-gameScene.create = function () {
-  let test = this.scene.get('waitingRoom')
-  
-  let alien = this.physics.add.existing(test.alien)
-  alien.visible = true
-  alien.active = true
-  alien.enableBody(true, 990, 1223, true, true)
-  console.log('waiting room alien', alien)
+create() {
+
+  var ourMusic = this.sound.add('music')
   let self = this;
   this.socket = io(`http://localhost:${PORT}`);
   this.otherPlayers = this.physics.add.group();
   let bg = this.add.sprite(-600, 0, "background");
   bg.setOrigin(0, 0);
   bg.setScale(5);
-  
-
+  this.jump = this.sound.add('jump')
   //creates ground blocks
 
   //the first 2 nums are the position on the screen
   this.ground = this.add.tileSprite(1100, 2400, 400, 30, "tiles");
+  // this.physics.add.collider(this.ground, alien)
   // the true parameter makes the ground static
   this.physics.add.existing(this.ground, true);
-
   this.ground.body.allowGravity = false;
   this.ground.body.immovable = true;
 
@@ -146,21 +119,18 @@ gameScene.create = function () {
   });
 
   this.anims.create({
-
     key: "boss",
     frames: this.anims.generateFrameNames("goal", {
-
-      frames: [0, 1, 2, 3, 3, 3, 3, 3, 3],
+      frames: [0, 1, 2, 2, 3, 3,],
     }),
-    frameRate: 8,
+    frameRate: 6,
     repeat: -1,
   });
 
   this.anims.create({
     key: "bossAttacking",
     frames: this.anims.generateFrameNames("bossAttack", {
-
-      frames: [0, 1, 2],
+      frames: [0, 1, 2, 3, 4],
     }),
     frameRate: 10,
     repeat: -1,
@@ -197,6 +167,7 @@ gameScene.create = function () {
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
         addPlayer(self, players[id]);
+        // ourMusic.play()
       } else {
         addOtherPlayers(self, players[id]);
       }
@@ -230,7 +201,7 @@ gameScene.create = function () {
 }
 
 // eslint-disable-next-line complexity
-gameScene.update = function () {
+update() {
   if (this.player) {
     let x = this.player.x;
     let y = this.player.y;
@@ -286,6 +257,7 @@ gameScene.update = function () {
     }
     // handle jumping
     if (onGround && (this.cursors.space.isDown || this.cursors.up.isDown)) {
+      this.jump.play()
       // give the player a velocity in Y
       this.player.body.setVelocityY(this.jumpSpeed);
 
@@ -300,15 +272,15 @@ gameScene.update = function () {
   }
 };
 
-// restart game (game over + you won!)
-gameScene.restartGame = function (sourceSprite, targetSprite) {
+// this runs when player gets hit by object
+restartGame(sourceSprite, targetSprite) {
   // fade out
   this.player.x = 1100;
   this.player.y = 2300;
 };
 
 // boss attack
-gameScene.bossAttack = function () {
+bossAttack() {
   this.flames = this.physics.add.group({
     bounceY: 0.1,
     bounceX: 1,
@@ -340,7 +312,7 @@ gameScene.bossAttack = function () {
 };
 
 //minion attack
-gameScene.minionAttack = function () {
+minionAttack () {
   for (let i = 0; i < this.levelData.minions.length; i++) {
     let curr = this.levelData.minions[i];
     this.flames = this.physics.add.group({
@@ -378,7 +350,7 @@ gameScene.minionAttack = function () {
 };
 
 // sets up all the elements in the level
-gameScene.level = function () {
+level() {
   this.platforms = this.add.group();
 
   // parse json data
@@ -433,11 +405,9 @@ gameScene.level = function () {
   this.goal = this.add.sprite(
     this.levelData.goal.x,
     this.levelData.goal.y,
-
     "goal"
   );
   this.goal.anims.play("boss");
-
 
   this.physics.add.existing(this.goal);
 
@@ -468,7 +438,17 @@ gameScene.level = function () {
     //   // add to the group
     this.fires.add(newObj);
   }
-};
+}
+
+  winGame(sourceSprite, targetSprite) {
+
+    var wintext = this.add.text(1000, 10, 'you win!').setOrigin(0.0).setScale(5);
+    var ui_camera = this.cameras.add().setScroll(0, 10);
+}
+
+
+
+}
 
 function addPlayer(self, playerInfo) {
   self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, 'alien', 1);
@@ -482,20 +462,17 @@ function addPlayer(self, playerInfo) {
   self.player.body.gravity.y = 800;
   self.player.body.collideWorldBounds = true;
   self.player.setScale(0.7);
+  self.scene.start('waitingRoom')
   //overlaps
-  self.physics.add.overlap(
-    self.player,
-    [self.fires, self.flames],
-    self.restartGame,
-    null,
-    self
-  );
-
+  self.physics.add.overlap(self.player, [self.fires, self.flames], self.restartGame, null, self);
+  self.physics.add.overlap(self.player, [self.goal], self.winGame, null, self);
   self.cameras.main.startFollow(self.player);
   self.cameras.main.setZoom(1.6);
+
+
 }
 
-function addOtherPlayers(self, playerInfo) {
+ function addOtherPlayers(self, playerInfo) {
   const otherPlayer = self.physics.add.sprite(
     playerInfo.x,
     playerInfo.y,
@@ -513,3 +490,27 @@ function addOtherPlayers(self, playerInfo) {
   otherPlayer.playerId = playerInfo.playerId;
   self.otherPlayers.add(otherPlayer);
 }
+import waitingRoomScene from './waitingRoom'
+let gamescene = new GameScene
+var config = {
+  type: Phaser.AUTO,
+  width: 2300,
+  height: 2500,
+  scene: [waitingRoomScene ,gamescene],
+  physics: {
+    default: 'arcade',
+    arcade: {
+      gravity: { y: 1600 },
+      debug: true,
+    },
+    scale: {
+      mode: Phaser.DOM.FIT,
+      autoCenter: Phaser.DOM.CENTER,
+      width: 900,
+      height: 1000,
+    },
+  },
+};
+let music;
+var game = new Phaser.Game(config);
+console.log('gamescene', GameScene)
