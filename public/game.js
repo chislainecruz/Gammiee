@@ -1,6 +1,7 @@
 // Linted with standardJS - https://standardjs.com/
 // hello world
 import io from "socket.io-client";
+import waitingRoomScene from './waitingRoom'
 
 
 let gameScene = new Phaser.Scene("Game");
@@ -10,7 +11,7 @@ var config = {
   type: Phaser.AUTO,
   width: 2300,
   height: 2500,
-  scene: gameScene,
+  scene: [waitingRoomScene, gameScene],
   physics: {
     default: "arcade",
     arcade: {
@@ -27,7 +28,7 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
-
+game.scene.start('waitingRoom')
 
 gameScene.init = function () {
   // player parameters
@@ -94,13 +95,20 @@ gameScene.preload = function () {
 };
 
 gameScene.create = function () {
+  let test = this.scene.get('waitingRoom')
+  
+  let alien = this.physics.add.existing(test.alien)
+  alien.visible = true
+  alien.active = true
+  alien.enableBody(true, 990, 1223, true, true)
+  console.log('test', alien)
   let self = this;
   this.socket = io("http://localhost:8082");
   this.otherPlayers = this.physics.add.group();
   let bg = this.add.sprite(-600, 0, 'background');
   bg.setOrigin(0, 0);
   bg.setScale(5);
-
+  
 
   //creates 7 ground blocks that are the width of the block. 1 is for the height
   //the first 2 nums are the position on the screen
@@ -199,7 +207,7 @@ gameScene.create = function () {
       }
     });
   });
-
+  
   this.socket.on("newPlayer", (playerInfo) => {
     addOtherPlayers(self, playerInfo);
   });
@@ -218,6 +226,7 @@ gameScene.create = function () {
       }
     });
   });
+  console.log('body', this)
 }
 
 // eslint-disable-next-line complexity

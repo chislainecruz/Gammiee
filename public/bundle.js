@@ -21681,8 +21681,10 @@ module.exports = yeast;
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/lib/index.js");
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(socket_io_client__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _waitingRoom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./waitingRoom */ "./public/waitingRoom.js");
 // Linted with standardJS - https://standardjs.com/
 // hello world
+
 
 
 
@@ -21693,7 +21695,7 @@ var config = {
   type: Phaser.AUTO,
   width: 2300,
   height: 2500,
-  scene: gameScene,
+  scene: [_waitingRoom__WEBPACK_IMPORTED_MODULE_1__["default"], gameScene],
   physics: {
     default: "arcade",
     arcade: {
@@ -21710,7 +21712,7 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
-
+game.scene.start('waitingRoom')
 
 gameScene.init = function () {
   // player parameters
@@ -21777,13 +21779,20 @@ gameScene.preload = function () {
 };
 
 gameScene.create = function () {
+  let test = this.scene.get('waitingRoom')
+  
+  let alien = this.physics.add.existing(test.alien)
+  alien.visible = true
+  alien.active = true
+  alien.enableBody(true, 990, 1223, true, true)
+  console.log('test', alien)
   let self = this;
   this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_0___default()("http://localhost:8082");
   this.otherPlayers = this.physics.add.group();
   let bg = this.add.sprite(-600, 0, 'background');
   bg.setOrigin(0, 0);
   bg.setScale(5);
-
+  
 
   //creates 7 ground blocks that are the width of the block. 1 is for the height
   //the first 2 nums are the position on the screen
@@ -21882,7 +21891,7 @@ gameScene.create = function () {
       }
     });
   });
-
+  
   this.socket.on("newPlayer", (playerInfo) => {
     addOtherPlayers(self, playerInfo);
   });
@@ -21901,6 +21910,7 @@ gameScene.create = function () {
       }
     });
   });
+  console.log('body', this)
 }
 
 // eslint-disable-next-line complexity
@@ -22178,6 +22188,87 @@ function addOtherPlayers(self, playerInfo) {
   self.otherPlayers.add(otherPlayer);
 }
 
+
+/***/ }),
+
+/***/ "./public/waitingRoom.js":
+/*!*******************************!*\
+  !*** ./public/waitingRoom.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+let waitingRoomScene = new Phaser.Scene("waitingRoom");
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (waitingRoomScene);
+
+waitingRoomScene.preload = function () {
+    this.load.image('clouds', './assets/background.png');
+    this.load.image('tiles', './assets/tiles.png')
+    this.load.spritesheet('alien', 'assets/Alien.png', {
+        frameWidth: 90,
+        frameHeight: 120,
+        margin: 1,
+        spacing: 1,
+      });
+}
+
+waitingRoomScene.create = function () {
+    let background = this.add.sprite(0, 300, 'clouds')
+    background.setOrigin(0, 0)
+    background.setScale(3)
+    // this.add.sprite(600, 600, 'tiles')
+    let ground = this.add.tileSprite(1150, 1250, 23 * 100, 1 * 60, 'tiles')
+    this.physics.add.existing(ground, true);
+
+    ground.body.allowGravity = false;
+    ground.body.immovable = true;
+    this.alien = this.physics.add.sprite(600, 600, 'alien')
+    this.physics.add.collider(this.alien, ground)
+       
+    var style = {
+        'background-color': 'lime',
+        'width': '220px',
+        'height': '100px',
+        'font': '48px Arial',
+        'font-weight': 'bold'
+    };
+
+    var element = this.add.dom(400, 300, 'div', style, 'Phaser 3');
+    console.log('eh', element)
+    
+    this.input.once('pointerdown', function (event) {
+        
+        console.log('From SceneB to SceneC');
+        console.log(this.scene)
+        this.scene.start('Game');
+
+    }, this);
+    let button = document.createElement('button')
+    button.innerText = 'test'
+    document.body.appendChild(button)
+}
+
+function addPlayer(self, playerInfo) {
+    self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
+  
+    self.physics.add.collider(self.ground, [self.player, self.goal, self.minion]);
+    self.physics.add.collider([self.player, self.goal, self.flames, self.minion], self.platforms);
+    self.player.body.bounce.y = 0.2;
+    self.player.body.gravity.y = 800;
+    self.player.body.collideWorldBounds = true;
+    self.player.setScale(0.7);
+    //overlaps
+    self.physics.add.overlap(self.player, [self.fires, self.flames], self.restartGame, null, self);
+  
+  
+    self.cameras.main.startFollow(self.player);
+    self.cameras.main.setZoom(1.6)
+  }
 
 /***/ }),
 
