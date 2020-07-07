@@ -21,4 +21,5 @@ deploy: # see README for details on these keys
   # app should be your heroku app name; see README
   app: demon-dash
   # the secure key indicates an encrypted value; see README
-  api_key: 843a8ab5-1aac-4fe9-a423-dee547234ea7
+  api_key:
+    secure: 843a8ab5-1aac-4fe9-a423-dee547234ea7
