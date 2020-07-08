@@ -2,7 +2,7 @@
 // hello world
 import io from 'socket.io-client';
 const PORT = process.env.PORT || 8080;
-
+const socket = io()
 let gameScene = new Phaser.Scene('Game');
 
 let music;
@@ -74,7 +74,7 @@ gameScene.preload = function () {
     frameHeight: 60,
   });
 
-  this.load.spritesheet('alien', 'assets/Alien.png', {
+  this.load.spritesheet('alien', 'assets/alien.png', {
     frameWidth: 90,
     frameHeight: 120,
     margin: 1,
@@ -88,11 +88,8 @@ gameScene.create = function () {
   var ourMusic = this.sound.add('music');
   let self = this;
 
-  if (PORT !== 8080) {
-    this.socket = io('https://demon-dash.herokuapp.com/');
-  } else {
-    this.socket = io(`http://localhost:${PORT}`);
-  }
+  this.socket = socket
+  this.socket.emit('hello')
 
   this.otherPlayers = this.physics.add.group();
   let bg = this.add.sprite(-600, 0, 'background');

@@ -26,7 +26,9 @@ io.on('connection', function (socket) {
 
   console.log('a user connected');
   // send the players object to the new player
-  socket.emit('currentPlayers', players);
+  socket.on('hello', function () {
+    socket.emit('currentPlayers', players);
+  })
   //update all other players of the new player
   socket.broadcast.emit('newPlayer', players[socket.id]);
   socket.on('disconnect', function () {
