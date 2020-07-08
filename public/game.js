@@ -5,20 +5,20 @@ import io from "socket.io-client";
 const PORT = process.env.PORT || 8080;
 var ui_camera;
 
-
 export default class GameScene extends Phaser.Scene {
   constructor(key) {
-    super('gameScene')
+    super(key);
   }
   init() {
     // player parameters
     this.playerSpeed = 350;
     this.jumpSpeed = -800;
-  };
+  }
 
   preload() {
-    this.load.audio('music', './assets/TimeTemple.mp3')
-    this.load.audio('jump', './assets/jump-sfx.mp3')
+
+    this.load.audio("music", "./assets/TimeTemple.mp3");
+    this.load.audio("jump", "./assets/jump-sfx.mp3");
     this.load.image("background", "./assets/testback.png");
     this.load.image("platform", "./assets/platform.png");
     this.load.image("block", "./assets/block.png");
@@ -50,7 +50,7 @@ export default class GameScene extends Phaser.Scene {
       frameHeight: 95.1,
     });
 
-    this.load.spritesheet('tiles', './assets/tiles.png', {
+    this.load.spritesheet("tiles", "./assets/tiles.png", {
       frameWidth: 100,
       frameHeight: 60,
     });
@@ -62,15 +62,11 @@ export default class GameScene extends Phaser.Scene {
       spacing: 1,
     });
 
-
     this.load.json("levelData", "json/levelData.json");
-
-
-  };
+  }
 
   create() {
-
-    var ourMusic = this.sound.add('music')
+    var ourMusic = this.sound.add("music");
 
     let self = this;
     this.socket = io(`http://localhost:${PORT}`);
@@ -78,7 +74,7 @@ export default class GameScene extends Phaser.Scene {
     let bg = this.add.sprite(-600, 0, "background");
     bg.setOrigin(0, 0);
     bg.setScale(5);
-    this.jump = this.sound.add('jump')
+    this.jump = this.sound.add("jump");
     //creates ground blocks
 
     //the first 2 nums are the position on the screen
@@ -99,8 +95,8 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.anims.create({
-      key: 'floating',
-      frames: this.anims.generateFrameNames('minion', {
+      key: "floating",
+      frames: this.anims.generateFrameNames("minion", {
         frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
       }),
       frameRate: 10,
@@ -108,10 +104,8 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.anims.create({
-
       key: "flaming",
       frames: this.anims.generateFrameNames("flame", {
-
         frames: [0, 1, 2],
       }),
       frameRate: 30,
@@ -121,7 +115,7 @@ export default class GameScene extends Phaser.Scene {
     this.anims.create({
       key: "boss",
       frames: this.anims.generateFrameNames("goal", {
-        frames: [0, 1, 2, 2, 3, 3,],
+        frames: [0, 1, 2, 2, 3, 3],
       }),
       frameRate: 6,
       repeat: -1,
@@ -142,8 +136,8 @@ export default class GameScene extends Phaser.Scene {
       console.log(pointer.x, pointer.y);
     });
     this.anims.create({
-      key: 'walking',
-      frames: this.anims.generateFrameNames('alien', {
+      key: "walking",
+      frames: this.anims.generateFrameNames("alien", {
         //frames that are moving
         frames: [0, 1, 2, 3],
       }),
@@ -152,8 +146,8 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.anims.create({
-      key: 'burning',
-      frames: this.anims.generateFrameNames('fire', { start: 0, end: 59 }),
+      key: "burning",
+      frames: this.anims.generateFrameNames("fire", { start: 0, end: 59 }),
       frameRate: 120,
       repeat: -1,
     });
@@ -163,7 +157,7 @@ export default class GameScene extends Phaser.Scene {
     this.minionAttack();
 
     //* Player attributes
-    this.socket.on('currentPlayers', players => {
+    this.socket.on("currentPlayers", (players) => {
       Object.keys(players).forEach(function (id) {
         if (players[id].playerId === self.socket.id) {
           addPlayer(self, players[id]);
@@ -174,18 +168,18 @@ export default class GameScene extends Phaser.Scene {
       });
     });
 
-    this.socket.on('newPlayer', playerInfo => {
+    this.socket.on("newPlayer", (playerInfo) => {
       addOtherPlayers(self, playerInfo);
     });
-    this.socket.on('disconnect', playerId => {
-      self.otherPlayers.getChildren().forEach(otherPlayer => {
+    this.socket.on("disconnect", (playerId) => {
+      self.otherPlayers.getChildren().forEach((otherPlayer) => {
         if (playerId === otherPlayer.playerId) {
           otherPlayer.destroy();
         }
       });
     });
-    this.socket.on('playerMoved', playerInfo => {
-      self.otherPlayers.getChildren().forEach(otherPlayer => {
+    this.socket.on("playerMoved", (playerInfo) => {
+      self.otherPlayers.getChildren().forEach((otherPlayer) => {
         if (playerInfo.playerId === otherPlayer.playerId) {
           otherPlayer.setPosition(playerInfo.x, playerInfo.y);
           otherPlayer.flipX = playerInfo.flipX;
@@ -196,13 +190,13 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
-    console.log('body', this)
-    console.log('this.player', this.player)
   }
 
   // eslint-disable-next-line complexity
   update() {
+
     if (this.player) {
+
       let x = this.player.x;
       let y = this.player.y;
       let flipX = this.player.flipX;
@@ -221,7 +215,7 @@ export default class GameScene extends Phaser.Scene {
           flipX !== this.player.oldPosition.flipX ||
           frame !== this.player.anims.currentFrame.index)
       ) {
-        this.socket.emit('playerMovement', {
+        this.socket.emit("playerMovement", {
           x: this.player.x,
           y: this.player.y,
           flipX: this.player.flipX,
@@ -236,7 +230,7 @@ export default class GameScene extends Phaser.Scene {
       };
 
       if (!this.player.anims.isPlaying) {
-        this.player.anims.play('walking');
+        this.player.anims.play("walking");
       }
       if (this.cursors.left.isDown) {
         this.player.body.setVelocityX(-this.playerSpeed);
@@ -247,17 +241,17 @@ export default class GameScene extends Phaser.Scene {
         this.player.flipX = true;
 
         if (!this.player.anims.isPlaying) {
-          this.player.anims.play('walking');
+          this.player.anims.play("walking");
         }
       } else {
         this.player.body.setVelocityX(0);
-        this.player.anims.stop('walking');
+        this.player.anims.stop("walking");
         //default pose
         this.player.setFrame(1);
       }
       // handle jumping
       if (onGround && (this.cursors.space.isDown || this.cursors.up.isDown)) {
-        this.jump.play()
+        this.jump.play();
         // give the player a velocity in Y
         this.player.body.setVelocityY(this.jumpSpeed);
 
@@ -270,14 +264,14 @@ export default class GameScene extends Phaser.Scene {
         this.player.setFrame(2);
       }
     }
-  };
+  }
 
   // this runs when player gets hit by object
   restartGame(sourceSprite, targetSprite) {
     // fade out
     this.player.x = 1100;
     this.player.y = 2300;
-  };
+  }
 
   // boss attack
   bossAttack() {
@@ -291,11 +285,9 @@ export default class GameScene extends Phaser.Scene {
       loop: true,
       callbackScope: this,
       callback: function () {
-
         let flame = this.flames.create(this.goal.x, this.goal.y, "bossAttack");
 
         flame.anims.play("bossAttacking");
-
 
         flame.setVelocityX(-this.levelData.spawner.speed);
 
@@ -309,7 +301,7 @@ export default class GameScene extends Phaser.Scene {
         });
       },
     });
-  };
+  }
 
   //minion attack
   minionAttack() {
@@ -325,11 +317,11 @@ export default class GameScene extends Phaser.Scene {
         loop: true,
         callbackScope: this,
         callback: function () {
-
-          let flame = this.flames.create(curr.x, curr.y, "flame").setSize(35, 35);
+          let flame = this.flames
+            .create(curr.x, curr.y, "flame")
+            .setSize(35, 35);
 
           flame.anims.play("flaming");
-
 
           if (curr.flipX === true) {
             flame.flipX = true;
@@ -347,14 +339,14 @@ export default class GameScene extends Phaser.Scene {
         },
       });
     }
-  };
+  }
 
   // sets up all the elements in the level
   level() {
     this.platforms = this.add.group();
 
     // parse json data
-    this.levelData = this.cache.json.get('levelData');
+    this.levelData = this.cache.json.get("levelData");
 
     // create all the platforms
     for (let i = 0; i < this.levelData.platforms.length; i++) {
@@ -441,17 +433,16 @@ export default class GameScene extends Phaser.Scene {
   }
 
   winGame(sourceSprite, targetSprite) {
-
-    var wintext = this.add.text(1000, 10, 'you win!').setOrigin(0.0).setScale(5);
+    var wintext = this.add
+      .text(1000, 10, "you win!")
+      .setOrigin(0.0)
+      .setScale(5);
     var ui_camera = this.cameras.add().setScroll(0, 10);
   }
-
-
-
 }
 
 function addPlayer(self, playerInfo) {
-  self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, 'alien', 1);
+  self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
 
   self.physics.add.collider(self.ground, [self.player, self.goal, self.minion]);
   self.physics.add.collider(
@@ -462,21 +453,25 @@ function addPlayer(self, playerInfo) {
   self.player.body.gravity.y = 800;
   self.player.body.collideWorldBounds = true;
   self.player.setScale(0.7);
-  self.scene.start('waitingRoom')
+  // self.scene.start("waitingRoom");
   //overlaps
-  self.physics.add.overlap(self.player, [self.fires, self.flames], self.restartGame, null, self);
+  self.physics.add.overlap(
+    self.player,
+    [self.fires, self.flames],
+    self.restartGame,
+    null,
+    self
+  );
   self.physics.add.overlap(self.player, [self.goal], self.winGame, null, self);
   self.cameras.main.startFollow(self.player);
   self.cameras.main.setZoom(1.6);
-
-
 }
 
 function addOtherPlayers(self, playerInfo) {
   const otherPlayer = self.physics.add.sprite(
     playerInfo.x,
     playerInfo.y,
-    'alien',
+    "alien",
     1
   );
   otherPlayer.flipX = playerInfo.flipX;
@@ -491,8 +486,4 @@ function addOtherPlayers(self, playerInfo) {
   self.otherPlayers.add(otherPlayer);
 }
 
-let music;
 // let gamescene = new GameScene
-
-
-// var game = new Phaser.Game(config);
