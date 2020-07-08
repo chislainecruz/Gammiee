@@ -1,13 +1,14 @@
-import GameScene, {gamescene} from './game'
+import GameScene from './game'
 
-class WaitingRoom extends GameScene{
-    constructor(){
+class WaitingRoom extends Phaser.Scene {
+    constructor() {
         super('waitingRoom')
     }
-    preload(){
+    preload() {
+        console.log('hello')
 
     }
-    create(){
+    create() {
         console.log(this)
     }
 }
