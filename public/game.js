@@ -4,6 +4,7 @@ import io from "socket.io-client";
 
 const PORT = process.env.PORT || 8080;
 var ui_camera;
+const socket = io(`http://localhost:${PORT}`);
 
 export default class GameScene extends Phaser.Scene {
   constructor(key) {
@@ -69,7 +70,7 @@ export default class GameScene extends Phaser.Scene {
     var ourMusic = this.sound.add("music");
 
     let self = this;
-    this.socket = io(`http://localhost:${PORT}`);
+    this.socket = socket
     this.otherPlayers = this.physics.add.group();
     let bg = this.add.sprite(-600, 0, "background");
     bg.setOrigin(0, 0);
@@ -78,6 +79,9 @@ export default class GameScene extends Phaser.Scene {
     //creates ground blocks
 
     //the first 2 nums are the position on the screen
+
+
+
     this.ground = this.add.tileSprite(1100, 2400, 400, 30, "tiles");
     // the true parameter makes the ground static
     this.physics.add.existing(this.ground, true);
@@ -190,13 +194,21 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
+    this.input.once('pointerdown', function (event) {
+        
+      console.log('From SceneB to SceneC');
+      console.log('huh', this.scene)
+      
+      this.scene.restart()
+
+  }, this);
   }
 
   // eslint-disable-next-line complexity
   update() {
 
-    if (this.player) {
-
+    if (this.player && this.player.body) {
+      console.log('body', this.player)
       let x = this.player.x;
       let y = this.player.y;
       let flipX = this.player.flipX;
@@ -465,6 +477,7 @@ function addPlayer(self, playerInfo) {
   self.physics.add.overlap(self.player, [self.goal], self.winGame, null, self);
   self.cameras.main.startFollow(self.player);
   self.cameras.main.setZoom(1.6);
+  console.log('WOWLOLOLOL', self.player)
 }
 
 function addOtherPlayers(self, playerInfo) {
