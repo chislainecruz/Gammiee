@@ -220,7 +220,7 @@ gameScene.create = function () {
 
 // eslint-disable-next-line complexity
 gameScene.update = function () {
-  console.log(this.player);
+  // console.log(this.player);
   if (this.player) {
     let x = this.player.x;
     let y = this.player.y;
