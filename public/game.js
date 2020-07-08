@@ -8,7 +8,7 @@ var ui_camera;
 
 export default class GameScene extends Phaser.Scene {
   constructor(key) {
-    super(key)
+    super('gameScene')
   }
   init() {
     // player parameters
@@ -490,27 +490,9 @@ function addOtherPlayers(self, playerInfo) {
   otherPlayer.playerId = playerInfo.playerId;
   self.otherPlayers.add(otherPlayer);
 }
-import waitingRoomScene from './waitingRoom'
-let gamescene = new GameScene
-var config = {
-  type: Phaser.AUTO,
-  width: 2300,
-  height: 2500,
-  scene: [waitingRoomScene, gamescene],
-  physics: {
-    default: 'arcade',
-    arcade: {
-      gravity: { y: 1600 },
-      debug: true,
-    },
-    scale: {
-      mode: Phaser.DOM.FIT,
-      autoCenter: Phaser.DOM.CENTER,
-      width: 900,
-      height: 1000,
-    },
-  },
-};
+
 let music;
-var game = new Phaser.Game(config);
-console.log('gamescene', GameScene)
+// let gamescene = new GameScene
+
+
+// var game = new Phaser.Game(config);
