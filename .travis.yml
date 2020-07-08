@@ -22,4 +22,4 @@ deploy: # see README for details on these keys
   app: demon-dash
   # the secure key indicates an encrypted value; see README
   api_key:
-    secure: 843a8ab5-1aac-4fe9-a423-dee547234ea7
+    secure: 6337933a-5dfc-4aff-8d51-0d8438e0d6eb
