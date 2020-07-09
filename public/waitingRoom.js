@@ -11,6 +11,7 @@ export default class WaitingRoom extends Phaser.Scene {
     this.playerSpeed = 350;
     this.jumpSpeed = -800;
     this.start = false;
+    this.ready = false;
   }
 
   onEvent() {
@@ -20,7 +21,20 @@ export default class WaitingRoom extends Phaser.Scene {
   startGame() {
     console.log("clicked!");
     this.timedEvent = this.time.delayedCall(10000, this.onEvent, [], this);
+    this.readyText = this.add.text(0, -20, "Ready");
+    this.readyText.font = "Arial";
+    //player name will need to be passed in
+    this.playerName = this.add.text(0, 0, "Alan");
+
+    this.container = this.add.container(
+      this.player.x - 20,
+      this.player.y - this.player.height / 2,
+      [this.playerName, this.readyText]
+    );
+    console.log(this.player.x);
+
     this.start = true;
+    this.ready = true;
   }
 
   preload() {
@@ -58,19 +72,22 @@ export default class WaitingRoom extends Phaser.Scene {
     this.ground.body.immovable = true;
     this.cursors = this.input.keyboard.createCursorKeys();
 
+    events(this);
     this.startButton = this.add.sprite(800, 900, "button").setInteractive();
     this.startButton.setScale(0.3);
     this.startButton.on("pointerdown", () => {
       this.startGame();
     });
 
-    events(this);
     this.text = this.add.text(1000, 600, "PRESS START TO BEGIN GAME");
     this.timedEvent;
   }
 
   update() {
     playerMoves(this);
+
+    if (this.ready) {
+    }
 
     if (this.start) {
       this.text.setText(
