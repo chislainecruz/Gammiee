@@ -1,14 +1,14 @@
 // Linted with standardJS - https://standardjs.com/
 
 import io from "socket.io-client";
+import { addOtherPlayers, addPlayer } from "./playerEvents";
 
-const PORT = process.env.PORT || 8080;
-var ui_camera;
-const socket = io(`http://localhost:${PORT}`);
+let ui_camera;
+const socket = io();
 
 export default class GameScene extends Phaser.Scene {
-  constructor(key) {
-    super(key);
+  constructor() {
+    super({ key: "gameScene" });
   }
   init() {
     // player parameters
@@ -17,7 +17,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-
     this.load.audio("music", "./assets/TimeTemple.mp3");
     this.load.audio("jump", "./assets/jump-sfx.mp3");
     this.load.image("background", "./assets/testback.png");
@@ -56,7 +55,7 @@ export default class GameScene extends Phaser.Scene {
       frameHeight: 60,
     });
 
-    this.load.spritesheet("alien", "assets/Alien.png", {
+    this.load.spritesheet("alien", "assets/alien.png", {
       frameWidth: 90,
       frameHeight: 120,
       margin: 1,
@@ -67,10 +66,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    var ourMusic = this.sound.add("music");
-
+    this.socket = socket;
+    let ourMusic = this.sound.add("music");
+    this.socket.emit("hello");
     let self = this;
-    this.socket = socket
     this.otherPlayers = this.physics.add.group();
     let bg = this.add.sprite(-600, 0, "background");
     bg.setOrigin(0, 0);
@@ -79,8 +78,6 @@ export default class GameScene extends Phaser.Scene {
     //creates ground blocks
 
     //the first 2 nums are the position on the screen
-
-
 
     this.ground = this.add.tileSprite(1100, 2400, 400, 30, "tiles");
     // the true parameter makes the ground static
@@ -194,21 +191,21 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
-    this.input.once('pointerdown', function (event) {
-        
-      console.log('From SceneB to SceneC');
-      console.log('huh', this.scene)
-      
-      this.scene.restart()
+    this.input.once(
+      "pointerdown",
+      function (event) {
+        // console.log("From SceneB to SceneC");
+        // console.log("huh", this.scene);
 
-  }, this);
+        this.scene.restart();
+      },
+      this
+    );
   }
 
   // eslint-disable-next-line complexity
   update() {
-
     if (this.player && this.player.body) {
-      console.log('body', this.player)
       let x = this.player.x;
       let y = this.player.y;
       let flipX = this.player.flipX;
@@ -452,51 +449,3 @@ export default class GameScene extends Phaser.Scene {
     var ui_camera = this.cameras.add().setScroll(0, 10);
   }
 }
-
-function addPlayer(self, playerInfo) {
-  self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
-
-  self.physics.add.collider(self.ground, [self.player, self.goal, self.minion]);
-  self.physics.add.collider(
-    [self.player, self.goal, self.flames, self.minion],
-    self.platforms
-  );
-  self.player.body.bounce.y = 0.2;
-  self.player.body.gravity.y = 800;
-  self.player.body.collideWorldBounds = true;
-  self.player.setScale(0.7);
-  // self.scene.start("waitingRoom");
-  //overlaps
-  self.physics.add.overlap(
-    self.player,
-    [self.fires, self.flames],
-    self.restartGame,
-    null,
-    self
-  );
-  self.physics.add.overlap(self.player, [self.goal], self.winGame, null, self);
-  self.cameras.main.startFollow(self.player);
-  self.cameras.main.setZoom(1.6);
-  console.log('WOWLOLOLOL', self.player)
-}
-
-function addOtherPlayers(self, playerInfo) {
-  const otherPlayer = self.physics.add.sprite(
-    playerInfo.x,
-    playerInfo.y,
-    "alien",
-    1
-  );
-  otherPlayer.flipX = playerInfo.flipX;
-
-  self.physics.add.collider(self.ground, otherPlayer);
-  self.physics.add.collider(self.platforms, otherPlayer);
-  otherPlayer.body.bounce.y = 0.2;
-  otherPlayer.body.gravity.y = 800;
-  otherPlayer.body.collideWorldBounds = true;
-  otherPlayer.setScale(0.7);
-  otherPlayer.playerId = playerInfo.playerId;
-  self.otherPlayers.add(otherPlayer);
-}
-
-// let gamescene = new GameScene
