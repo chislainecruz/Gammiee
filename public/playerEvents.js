@@ -1,5 +1,7 @@
 const events = (self) => {
+  self.otherPlayers = self.physics.add.group();
   //* Player attributes
+  console.log("here");
   self.socket.on("currentPlayers", (players) => {
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
@@ -77,6 +79,7 @@ export function addOtherPlayers(self, playerInfo) {
   otherPlayer.setScale(0.7);
   otherPlayer.playerId = playerInfo.playerId;
   self.otherPlayers.add(otherPlayer);
+  console.log("player added");
 }
 
 export default events;

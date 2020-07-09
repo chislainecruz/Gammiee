@@ -26,7 +26,6 @@ const playerMoves = (self) => {
     }
     // handle jumping
     if (onGround && (self.cursors.space.isDown || self.cursors.up.isDown)) {
-      //self.jump.play();
       // give the player a velocity in Y
       self.player.body.setVelocityY(self.jumpSpeed);
 

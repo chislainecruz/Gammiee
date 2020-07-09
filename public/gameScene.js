@@ -1,10 +1,9 @@
 // Linted with standardJS - https://standardjs.com/
 
-import io from "socket.io-client";
+import socket from "./socket";
 import { addOtherPlayers, addPlayer } from "./playerEvents";
 
 let ui_camera;
-const socket = io();
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -68,7 +67,7 @@ export default class GameScene extends Phaser.Scene {
   create() {
     this.socket = socket;
     let ourMusic = this.sound.add("music");
-    this.socket.emit("hello");
+
     let self = this;
     this.otherPlayers = this.physics.add.group();
     let bg = this.add.sprite(-600, 0, "background");
