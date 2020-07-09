@@ -20,7 +20,7 @@ io.on("connection", function (socket) {
 
   players[socket.id] = {
     x: Math.random() * (1300 - 850) + 850,
-    y: 400,
+    y: 1000,
     playerId: socket.id,
   };
 

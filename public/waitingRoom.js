@@ -10,7 +10,33 @@ export default class WaitingRoom extends Phaser.Scene {
     // player parameters
     this.playerSpeed = 350;
     this.jumpSpeed = -800;
+    this.start = false;
+    this.ready = false;
   }
+
+  onEvent() {
+    this.scene.switch("gameScene");
+  }
+
+  startGame() {
+    console.log("clicked!");
+    this.timedEvent = this.time.delayedCall(10000, this.onEvent, [], this);
+    this.readyText = this.add.text(0, -20, "Ready");
+    this.readyText.font = "Arial";
+    //player name will need to be passed in
+    this.playerName = this.add.text(0, 0, "Alan");
+
+    this.container = this.add.container(
+      this.player.x - 20,
+      this.player.y - this.player.height / 2,
+      [this.playerName, this.readyText]
+    );
+    console.log(this.player.x);
+
+    this.start = true;
+    this.ready = true;
+  }
+
   preload() {
     this.load.image("clouds", "./assets/background.png");
     this.load.image("tiles", "./assets/tiles.png");
@@ -20,10 +46,12 @@ export default class WaitingRoom extends Phaser.Scene {
       margin: 1,
       spacing: 1,
     });
+    this.load.image("button", "assets/startButton.png");
   }
   create() {
     this.socket = socket;
     this.socket.emit("hello");
+
     this.anims.create({
       key: "walking",
       frames: this.anims.generateFrameNames("alien", {
@@ -42,22 +70,35 @@ export default class WaitingRoom extends Phaser.Scene {
 
     this.ground.body.allowGravity = false;
     this.ground.body.immovable = true;
-
-    //this.physics.add.collider(this.player, this.ground);
     this.cursors = this.input.keyboard.createCursorKeys();
-    this.text = this.add.text(1150, 1000);
-    this.timedEvent = this.time.delayedCall(100, this.onEvent, [], this);
+
+
+
     events(this);
+    this.startButton = this.add.sprite(800, 900, "button").setInteractive();
+    this.startButton.setScale(0.3);
+    this.startButton.on("pointerdown", () => {
+      this.startGame();
+    });
+
+    this.text = this.add.text(1000, 600, "PRESS START TO BEGIN GAME");
+    this.timedEvent;
   }
 
   update() {
-    this.text.setText(
-      "10 seconds till start" +
-      this.timedEvent.getProgress().toString().substr(0, 4)
-    );
+
     playerMoves(this);
-  }
-  onEvent() {
-    this.scene.switch("gameScene");
+
+    if (this.ready) {
+    }
+
+    if (this.start) {
+      this.text.setText(
+        `THE GAME WILL START IN   ${
+          10 -
+          Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
+        }`
+      );
+    }
   }
 }

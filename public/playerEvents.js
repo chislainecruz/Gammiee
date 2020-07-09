@@ -53,7 +53,7 @@ export function addPlayer(self, playerInfo) {
     self.physics.add.collider(self.ground, self.player);
   }
 
-  self.player.body.bounce.y = 0.2;
+  self.player.body.bounce.y = 0.1;
   self.player.body.gravity.y = 800;
   self.player.body.collideWorldBounds = true;
   self.player.setScale(0.7);

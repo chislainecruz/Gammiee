@@ -203,10 +203,8 @@ export default class GameScene extends Phaser.Scene {
     this.input.on(
       "pointerdown",
       function (event) {
-        // console.log("From SceneB to SceneC");
-        // console.log("huh", this.scene);
-
-        this.scene.switch("WaitingRoom");
+        //this click should be on a button once the winner banner appears. Then they can go back to WaitingRoom
+        //this.scene.switch("WaitingRoom");
       },
       this
     );
