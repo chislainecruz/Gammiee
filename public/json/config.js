@@ -1,5 +1,5 @@
-import GameScene from "./gameScene";
-import WaitingRoom from "./waitingRoom";
+import GameScene from "./game"
+import WaitingRoom from "./waitingRoom"
 
 const gameScene = new GameScene();
 const waitingRoom = new WaitingRoom();
@@ -9,7 +9,6 @@ const config = {
   width: 2300,
   height: 2500,
   scene: [waitingRoom, gameScene],
-  "transparent": true,
   physics: {
     default: "arcade",
     arcade: {
@@ -22,13 +21,6 @@ const config = {
       width: 900,
       height: 1000,
     },
-
   },
 };
-
-let game = new Phaser.Game(config);
-
-//load scenes
-
-//start waiting room
-game.scene.start("WaitingRoom");
+new Phaser.Game(config)

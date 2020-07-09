@@ -72,6 +72,8 @@ export default class WaitingRoom extends Phaser.Scene {
     this.ground.body.immovable = true;
     this.cursors = this.input.keyboard.createCursorKeys();
 
+
+
     events(this);
     this.startButton = this.add.sprite(800, 900, "button").setInteractive();
     this.startButton.setScale(0.3);
@@ -84,6 +86,7 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   update() {
+
     playerMoves(this);
 
     if (this.ready) {

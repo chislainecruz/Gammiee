@@ -8,6 +8,7 @@ let ui_camera;
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super({ key: "gameScene" });
+
   }
   init() {
     // player parameters
@@ -21,6 +22,11 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("background", "./assets/testback.png");
     this.load.image("platform", "./assets/platform.png");
     this.load.image("block", "./assets/block.png");
+
+    this.load.spritesheet("gameOver", "./assets/gameOver.png", {
+      frameWidth: 300,
+      frameHeight: 3001
+    })
 
     this.load.spritesheet("bossAttack", "./assets/bossAttack.png", {
       frameWidth: 110,
@@ -83,6 +89,10 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.existing(this.ground, true);
     this.ground.body.allowGravity = false;
     this.ground.body.immovable = true;
+    this.gameOverSprite = this.add.sprite(1150, 1250, "gameOver")
+    this.gameOverSprite.immovable = true
+    this.gameOverSprite.setScale(5)
+    this.gameOverSprite.visible = false
 
     this.anims.create({
       key: "burning",
@@ -439,10 +449,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   winGame(sourceSprite, targetSprite) {
-    var wintext = this.add
-      .text(1000, 10, "you win!")
-      .setOrigin(0.0)
-      .setScale(5);
+    this.gameOverSprite.depth = 100
+    this.gameOverSprite.visible = true
     var ui_camera = this.cameras.add().setScroll(0, 10);
   }
 }

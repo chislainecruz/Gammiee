@@ -29,10 +29,10 @@ io.on("connection", function (socket) {
   socket.on("hello", () => {
     socket.emit("currentPlayers", players);
   });
-
   //update all other players of the new player
   socket.broadcast.emit("newPlayer", players[socket.id]);
   socket.on("disconnect", function () {
+
     console.log(`user ${socket.id} disconnected`);
     // remove this player from our players object
     delete players[socket.id];
@@ -47,7 +47,8 @@ io.on("connection", function (socket) {
 
     players[socket.id].frame = data.frame;
     //emit msg to all players about the player that moved
-    socket.broadcast.emit("playerMoved", players[socket.id]);
+
+    socket.broadcast.emit('playerMoved', players[socket.id]);
   });
 });
 
