@@ -20,10 +20,12 @@ export default class WaitingRoom extends Phaser.Scene {
       margin: 1,
       spacing: 1,
     });
+    this.load.image("button", "assets/startButton.png");
   }
   create() {
     this.socket = socket;
     this.socket.emit("hello");
+
     this.anims.create({
       key: "walking",
       frames: this.anims.generateFrameNames("alien", {
@@ -45,8 +47,18 @@ export default class WaitingRoom extends Phaser.Scene {
 
     //this.physics.add.collider(this.player, this.ground);
     this.cursors = this.input.keyboard.createCursorKeys();
+
     this.text = this.add.text(1150, 1000);
     this.timedEvent = this.time.delayedCall(10000, this.onEvent, [], this);
+
+    this.startButton = this.add.sprite(800, 900, "button").setInteractive();
+    this.startButton.setScale(0.3);
+    this.startButton.on("pointerdown", () => {
+      this.startGame();
+    });
+    //create button for everyone to click
+    //on click, we should see a count down to start game
+
     events(this);
   }
 
@@ -59,5 +71,9 @@ export default class WaitingRoom extends Phaser.Scene {
   }
   onEvent() {
     this.scene.switch("gameScene");
+  }
+
+  startGame() {
+    console.log("clicked!");
   }
 }
