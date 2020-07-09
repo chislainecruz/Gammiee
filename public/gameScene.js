@@ -67,7 +67,7 @@ export default class GameScene extends Phaser.Scene {
   create() {
     this.socket = socket;
     let ourMusic = this.sound.add("music");
-
+    this.socket.emit("hello");
     let self = this;
     this.otherPlayers = this.physics.add.group();
     let bg = this.add.sprite(-600, 0, "background");
@@ -190,13 +190,13 @@ export default class GameScene extends Phaser.Scene {
         }
       });
     });
-    this.input.once(
+    this.input.on(
       "pointerdown",
       function (event) {
         // console.log("From SceneB to SceneC");
         // console.log("huh", this.scene);
 
-        this.scene.restart();
+        this.scene.switch("WaitingRoom");
       },
       this
     );
