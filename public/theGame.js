@@ -9,6 +9,7 @@ const config = {
   width: 2300,
   height: 2500,
   scene: [waitingRoom, gameScene],
+  "transparent": true,
   physics: {
     default: "arcade",
     arcade: {
@@ -21,6 +22,7 @@ const config = {
       width: 900,
       height: 1000,
     },
+
   },
 };
 

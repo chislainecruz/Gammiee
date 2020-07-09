@@ -46,14 +46,14 @@ export default class WaitingRoom extends Phaser.Scene {
     //this.physics.add.collider(this.player, this.ground);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.text = this.add.text(1150, 1000);
-    this.timedEvent = this.time.delayedCall(10000, this.onEvent, [], this);
+    this.timedEvent = this.time.delayedCall(100, this.onEvent, [], this);
     events(this);
   }
 
   update() {
     this.text.setText(
       "10 seconds till start" +
-        this.timedEvent.getProgress().toString().substr(0, 4)
+      this.timedEvent.getProgress().toString().substr(0, 4)
     );
     playerMoves(this);
   }
