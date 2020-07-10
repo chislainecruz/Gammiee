@@ -18,6 +18,7 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   playerReady() {
+    this.text.setText("Waiting for other players to hit ready...");
     this.socket.emit("playerReady");
   }
 
@@ -55,10 +56,10 @@ export default class WaitingRoom extends Phaser.Scene {
       repeat: -1,
     });
 
-    const background = this.add.sprite(0, 300, "clouds");
+    const background = this.add.sprite(-700, 800, "clouds");
     background.setOrigin(0, 0);
-    background.setScale(3);
-    this.ground = this.add.tileSprite(1150, 1250, 23 * 100, 1 * 60, "tiles");
+    background.setScale(5);
+    this.ground = this.add.tileSprite(1150, 2400, 23 * 4000, 1 * 60, "tiles");
     this.physics.add.existing(this.ground, true);
 
     this.ground.body.allowGravity = false;
@@ -66,13 +67,14 @@ export default class WaitingRoom extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     events(this);
-    this.startButton = this.add.sprite(800, 900, "button").setInteractive();
+    this.startButton = this.add.sprite(800, 2000, "button").setInteractive();
     this.startButton.setScale(0.3);
     this.startButton.on("pointerdown", () => {
       this.playerReady();
     });
 
-    this.text = this.add.text(1000, 600, "PRESS START TO BEGIN GAME");
+    this.text = this.add.text(1000, 2000, "PRESS START TO BEGIN GAME");
+    this.text.setScale(2);
     this.timedEvent;
   }
 
