@@ -16,7 +16,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.audio("music", "./assets/battleMusic.mp3");
+    // this.load.audio("music", "./assets/battleMusic.mp3");
     this.load.audio("jump", "./assets/jump-sfx.mp3");
     this.load.image("background", "./assets/testback.png");
     this.load.image("platform", "./assets/platform.png");
@@ -80,7 +80,7 @@ export default class GameScene extends Phaser.Scene {
   }
   create() {
     this.socket = socket;
-    let ourMusic = this.sound.add("music");
+    // let ourMusic = this.sound.add("music");
     this.socket.emit("hello");
     let self = this;
     this.otherPlayers = this.physics.add.group();
