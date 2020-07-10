@@ -18,7 +18,10 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   playerReady() {
-    this.text.setText("Waiting for other players to hit ready...");
+    if (this.otherPlayers) {
+      this.text.setText("Waiting for other players to hit ready...");
+    }
+
     this.socket.emit("playerReady");
   }
 
@@ -40,7 +43,7 @@ export default class WaitingRoom extends Phaser.Scene {
       margin: 1,
       spacing: 1,
     });
-    this.load.image("button", "assets/startButton.png");
+    this.load.image("button", "assets/readyButton.png");
   }
   create() {
     this.socket = socket;
