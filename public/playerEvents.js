@@ -1,7 +1,6 @@
 const events = (self) => {
   self.otherPlayers = self.physics.add.group();
   //* Player attributes
-  console.log("here");
   self.socket.on("currentPlayers", (players) => {
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
@@ -34,6 +33,18 @@ const events = (self) => {
         }
       }
     });
+  });
+
+  self.socket.on("readyCheck", (playerId) => {
+    self.otherPlayers.getChildren().forEach((otherPlayer) => {
+      if (otherPlayer.playerId === playerId) {
+        otherPlayer.ready = true;
+      }
+    });
+  });
+
+  self.socket.on("startGame", () => {
+    self.startGame();
   });
 };
 

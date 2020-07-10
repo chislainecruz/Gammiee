@@ -9,12 +9,12 @@ const config = {
   width: 2300,
   height: 2500,
   scene: [waitingRoom, gameScene],
-  "transparent": true,
+  transparent: true,
   physics: {
     default: "arcade",
     arcade: {
       gravity: { y: 1600 },
-      debug: true,
+      debug: false,
     },
     scale: {
       mode: Phaser.DOM.FIT,
@@ -22,7 +22,6 @@ const config = {
       width: 900,
       height: 1000,
     },
-
   },
 };
 

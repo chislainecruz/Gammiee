@@ -11,30 +11,27 @@ export default class WaitingRoom extends Phaser.Scene {
     this.playerSpeed = 350;
     this.jumpSpeed = -800;
     this.start = false;
-    this.ready = false;
   }
 
   onEvent() {
     this.scene.switch("gameScene");
   }
 
+  playerReady() {
+    if (this.otherPlayers) {
+      this.text.setText("Waiting for other players to hit ready...");
+    }
+
+    this.socket.emit("playerReady");
+  }
+
   startGame() {
     console.log("clicked!");
     this.timedEvent = this.time.delayedCall(10000, this.onEvent, [], this);
-    this.readyText = this.add.text(0, -20, "Ready");
-    this.readyText.font = "Arial";
-    //player name will need to be passed in
-    this.playerName = this.add.text(0, 0, "Alan");
 
-    this.container = this.add.container(
-      this.player.x - 20,
-      this.player.y - this.player.height / 2,
-      [this.playerName, this.readyText]
-    );
-    console.log(this.player.x);
+    //player name will need to be passed in
 
     this.start = true;
-    this.ready = true;
   }
 
   preload() {
@@ -46,7 +43,7 @@ export default class WaitingRoom extends Phaser.Scene {
       margin: 1,
       spacing: 1,
     });
-    this.load.image("button", "assets/startButton.png");
+    this.load.image("button", "assets/readyButton.png");
   }
   create() {
     this.socket = socket;
@@ -62,35 +59,30 @@ export default class WaitingRoom extends Phaser.Scene {
       repeat: -1,
     });
 
-    const background = this.add.sprite(0, 300, "clouds");
+    const background = this.add.sprite(-700, 800, "clouds");
     background.setOrigin(0, 0);
-    background.setScale(3);
-    this.ground = this.add.tileSprite(1150, 1250, 23 * 100, 1 * 60, "tiles");
+    background.setScale(5);
+    this.ground = this.add.tileSprite(1150, 2400, 23 * 4000, 1 * 60, "tiles");
     this.physics.add.existing(this.ground, true);
 
     this.ground.body.allowGravity = false;
     this.ground.body.immovable = true;
     this.cursors = this.input.keyboard.createCursorKeys();
 
-
-
     events(this);
-    this.startButton = this.add.sprite(800, 900, "button").setInteractive();
+    this.startButton = this.add.sprite(800, 2000, "button").setInteractive();
     this.startButton.setScale(0.3);
     this.startButton.on("pointerdown", () => {
-      this.startGame();
+      this.playerReady();
     });
 
-    this.text = this.add.text(1000, 600, "PRESS START TO BEGIN GAME");
+    this.text = this.add.text(1000, 2000, "PRESS START TO BEGIN GAME");
+    this.text.setScale(2);
     this.timedEvent;
   }
 
   update() {
-
     playerMoves(this);
-
-    if (this.ready) {
-    }
 
     if (this.start) {
       this.text.setText(
