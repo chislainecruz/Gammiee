@@ -22,6 +22,7 @@ io.on("connection", function (socket) {
     x: Math.random() * (1300 - 850) + 850,
     y: 1000,
     playerId: socket.id,
+    ready: false,
   };
 
   console.log("a user connected");
@@ -31,8 +32,24 @@ io.on("connection", function (socket) {
   });
   //update all other players of the new player
   socket.broadcast.emit("newPlayer", players[socket.id]);
-  socket.on("disconnect", function () {
 
+  socket.on("playerReady", () => {
+    players[socket.id].ready = true;
+    socket.broadcast.emit("readyCheck", socket.id);
+    let everyoneReady = true;
+    for (let player in players) {
+      if (players[player].ready === false) {
+        everyoneReady = false;
+      }
+    }
+    if (everyoneReady) {
+      console.log("eveyone is ready");
+      socket.emit("startGame");
+      socket.broadcast.emit("startGame");
+    }
+  });
+
+  socket.on("disconnect", function () {
     console.log(`user ${socket.id} disconnected`);
     // remove this player from our players object
     delete players[socket.id];
@@ -48,7 +65,7 @@ io.on("connection", function (socket) {
     players[socket.id].frame = data.frame;
     //emit msg to all players about the player that moved
 
-    socket.broadcast.emit('playerMoved', players[socket.id]);
+    socket.broadcast.emit("playerMoved", players[socket.id]);
   });
 });
 
