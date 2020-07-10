@@ -26,7 +26,6 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   startGame() {
-    console.log("clicked!");
     this.timedEvent = this.time.delayedCall(10000, this.onEvent, [], this);
 
     //player name will need to be passed in
@@ -37,6 +36,7 @@ export default class WaitingRoom extends Phaser.Scene {
   preload() {
     this.load.image("clouds", "./assets/background.png");
     this.load.image("tiles", "./assets/tiles.png");
+    this.load.audio("jump", "./assets/jump-sfx.mp3");
     this.load.spritesheet("alien", "assets/alien.png", {
       frameWidth: 90,
       frameHeight: 120,
@@ -48,7 +48,7 @@ export default class WaitingRoom extends Phaser.Scene {
   create() {
     this.socket = socket;
     this.socket.emit("hello");
-
+    this.jump = this.sound.add("jump");
     this.anims.create({
       key: "walking",
       frames: this.anims.generateFrameNames("alien", {
@@ -76,7 +76,7 @@ export default class WaitingRoom extends Phaser.Scene {
       this.playerReady();
     });
 
-    this.text = this.add.text(1000, 2000, "PRESS START TO BEGIN GAME");
+    this.text = this.add.text(1000, 2000, "PRESS I'M READY TO BEGIN GAME");
     this.text.setScale(2);
     this.timedEvent;
   }

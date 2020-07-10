@@ -5,7 +5,6 @@ const events = (self) => {
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
         addPlayer(self, players[id]);
-        // ourMusic.play()
       } else {
         addOtherPlayers(self, players[id]);
       }
@@ -100,7 +99,6 @@ export function addOtherPlayers(self, playerInfo) {
   otherPlayer.setScale(0.7);
   otherPlayer.playerId = playerInfo.playerId;
   self.otherPlayers.add(otherPlayer);
-  console.log("player added");
 }
 
 export default events;

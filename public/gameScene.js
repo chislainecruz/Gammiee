@@ -1,14 +1,13 @@
 // Linted with standardJS - https://standardjs.com/
-
+import events from "./playerEvents";
+import playerMoves from "./playerMoves";
 import socket from "./socket";
-import { addOtherPlayers, addPlayer } from "./playerEvents";
 
 let ui_camera;
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super({ key: "gameScene" });
-
   }
   init() {
     // player parameters
@@ -17,7 +16,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.audio("music", "./assets/TimeTemple.mp3");
+    this.load.audio("music", "./assets/battleMusic.mp3");
     this.load.audio("jump", "./assets/jump-sfx.mp3");
     this.load.image("background", "./assets/testback.png");
     this.load.image("platform", "./assets/platform.png");
@@ -25,8 +24,8 @@ export default class GameScene extends Phaser.Scene {
 
     this.load.spritesheet("gameOver", "./assets/gameOver.png", {
       frameWidth: 300,
-      frameHeight: 3001
-    })
+      frameHeight: 3001,
+    });
 
     this.load.spritesheet("bossAttack", "./assets/bossAttack.png", {
       frameWidth: 110,
@@ -69,7 +68,16 @@ export default class GameScene extends Phaser.Scene {
 
     this.load.json("levelData", "json/levelData.json");
   }
+  endGame() {
+    this.gameOverSprite.depth = 100;
+    this.gameOverSprite.visible = true;
+    this.cameras.add().setScroll(0, 10);
+  }
 
+  winGame(sourceSprite, targetSprite) {
+    this.socket.emit("playerWins");
+    this.endGame();
+  }
   create() {
     this.socket = socket;
     let ourMusic = this.sound.add("music");
@@ -89,10 +97,10 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.existing(this.ground, true);
     this.ground.body.allowGravity = false;
     this.ground.body.immovable = true;
-    this.gameOverSprite = this.add.sprite(1150, 1250, "gameOver")
-    this.gameOverSprite.immovable = true
-    this.gameOverSprite.setScale(5)
-    this.gameOverSprite.visible = false
+    this.gameOverSprite = this.add.sprite(1150, 1250, "gameOver");
+    this.gameOverSprite.immovable = true;
+    this.gameOverSprite.setScale(5);
+    this.gameOverSprite.visible = false;
 
     this.anims.create({
       key: "burning",
@@ -145,6 +153,11 @@ export default class GameScene extends Phaser.Scene {
     this.input.on("pointerdown", function (pointer) {
       console.log(pointer.x, pointer.y);
     });
+
+    this.socket.on("endGame", () => {
+      this.endGame();
+    });
+
     this.anims.create({
       key: "walking",
       frames: this.anims.generateFrameNames("alien", {
@@ -167,119 +180,12 @@ export default class GameScene extends Phaser.Scene {
     this.minionAttack();
 
     //* Player attributes
-    this.socket.on("currentPlayers", (players) => {
-      Object.keys(players).forEach(function (id) {
-        if (players[id].playerId === self.socket.id) {
-          addPlayer(self, players[id]);
-          // ourMusic.play()
-        } else {
-          addOtherPlayers(self, players[id]);
-        }
-      });
-    });
-
-    this.socket.on("newPlayer", (playerInfo) => {
-      addOtherPlayers(self, playerInfo);
-    });
-    this.socket.on("disconnect", (playerId) => {
-      self.otherPlayers.getChildren().forEach((otherPlayer) => {
-        if (playerId === otherPlayer.playerId) {
-          otherPlayer.destroy();
-        }
-      });
-    });
-    this.socket.on("playerMoved", (playerInfo) => {
-      self.otherPlayers.getChildren().forEach((otherPlayer) => {
-        if (playerInfo.playerId === otherPlayer.playerId) {
-          otherPlayer.setPosition(playerInfo.x, playerInfo.y);
-          otherPlayer.flipX = playerInfo.flipX;
-
-          if (playerInfo.frame) {
-            otherPlayer.setFrame(playerInfo.frame);
-          }
-        }
-      });
-    });
-    this.input.on(
-      "pointerdown",
-      function (event) {
-        //this click should be on a button once the winner banner appears. Then they can go back to WaitingRoom
-        //this.scene.switch("WaitingRoom");
-      },
-      this
-    );
+    events(this);
   }
 
   // eslint-disable-next-line complexity
   update() {
-    if (this.player && this.player.body) {
-      let x = this.player.x;
-      let y = this.player.y;
-      let flipX = this.player.flipX;
-      let frame;
-      let onGround =
-        this.player.body.blocked.down || this.player.body.touching.down;
-      //respawn when falling
-      if (this.player.body.position.y > 2400) {
-        this.player.x = 1100;
-        this.player.y = 2300;
-      }
-      if (
-        this.player.oldPosition &&
-        (x !== this.player.oldPosition.x ||
-          y !== this.player.oldPosition.y ||
-          flipX !== this.player.oldPosition.flipX ||
-          frame !== this.player.anims.currentFrame.index)
-      ) {
-        this.socket.emit("playerMovement", {
-          x: this.player.x,
-          y: this.player.y,
-          flipX: this.player.flipX,
-          frame: this.player.anims.currentFrame.index,
-        });
-      }
-
-      this.player.oldPosition = {
-        x: this.player.x,
-        y: this.player.y,
-        flipX: this.player.flipX,
-      };
-
-      if (!this.player.anims.isPlaying) {
-        this.player.anims.play("walking");
-      }
-      if (this.cursors.left.isDown) {
-        this.player.body.setVelocityX(-this.playerSpeed);
-
-        this.player.flipX = false;
-      } else if (this.cursors.right.isDown) {
-        this.player.body.setVelocityX(this.playerSpeed);
-        this.player.flipX = true;
-
-        if (!this.player.anims.isPlaying) {
-          this.player.anims.play("walking");
-        }
-      } else {
-        this.player.body.setVelocityX(0);
-        this.player.anims.stop("walking");
-        //default pose
-        this.player.setFrame(1);
-      }
-      // handle jumping
-      if (onGround && (this.cursors.space.isDown || this.cursors.up.isDown)) {
-        this.jump.play();
-        // give the player a velocity in Y
-        this.player.body.setVelocityY(this.jumpSpeed);
-
-        // // stop the walking animation
-        // if (this.player.anims.isPlaying) {
-        //   this.player.anims.play("jumping");
-        // } else this.player.anims.play("walking");
-
-        // change frame
-        this.player.setFrame(2);
-      }
-    }
+    playerMoves(this);
   }
 
   // this runs when player gets hit by object
@@ -446,11 +352,5 @@ export default class GameScene extends Phaser.Scene {
       //   // add to the group
       this.fires.add(newObj);
     }
-  }
-
-  winGame(sourceSprite, targetSprite) {
-    this.gameOverSprite.depth = 100
-    this.gameOverSprite.visible = true
-    var ui_camera = this.cameras.add().setScroll(0, 10);
   }
 }

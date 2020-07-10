@@ -19,7 +19,7 @@ io.on("connection", function (socket) {
   // create a new player and add it to our players object
 
   players[socket.id] = {
-    x: Math.random() * (1300 - 850) + 850,
+    x: Math.random() * (1400 - 830) + 830,
     y: 2300,
     playerId: socket.id,
     ready: false,
@@ -47,6 +47,10 @@ io.on("connection", function (socket) {
       socket.emit("startGame");
       socket.broadcast.emit("startGame");
     }
+  });
+
+  socket.on("playerWins", () => {
+    socket.broadcast.emit("endGame");
   });
 
   socket.on("disconnect", function () {

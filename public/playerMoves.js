@@ -1,9 +1,11 @@
 const playerMoves = (self) => {
   if (self.player && self.player.body) {
-    //self.player.setFrame(1);
-
     let onGround =
       self.player.body.blocked.down || self.player.body.touching.down;
+    if (self.player.body.position.y > 2400) {
+      self.player.x = 1100;
+      self.player.y = 2300;
+    }
     if (!self.player.anims.isPlaying) {
       self.player.anims.play("walking");
     }
@@ -27,6 +29,7 @@ const playerMoves = (self) => {
     // handle jumping
     if (onGround && (self.cursors.space.isDown || self.cursors.up.isDown)) {
       // give the player a velocity in Y
+      self.jump.play();
       self.player.body.setVelocityY(self.jumpSpeed);
 
       // change frame
