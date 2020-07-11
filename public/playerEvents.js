@@ -34,14 +34,6 @@ const events = (self) => {
     });
   });
 
-  self.socket.on("readyCheck", (playerId) => {
-    self.otherPlayers.getChildren().forEach((otherPlayer) => {
-      if (otherPlayer.playerId === playerId) {
-        otherPlayer.ready = true;
-      }
-    });
-  });
-
   self.socket.on("startGame", () => {
     self.startGame();
   });
@@ -88,7 +80,6 @@ export function addOtherPlayers(self, playerInfo) {
     1
   );
   otherPlayer.flipX = playerInfo.flipX;
-
   self.physics.add.collider(self.ground, otherPlayer);
   if (self.scene.key === "gameScene") {
     self.physics.add.collider(self.platforms, otherPlayer);

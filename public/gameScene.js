@@ -3,8 +3,6 @@ import events from "./playerEvents";
 import playerMoves from "./playerMoves";
 import socket from "./socket";
 
-let ui_camera;
-
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super({ key: "gameScene" });
@@ -82,7 +80,6 @@ export default class GameScene extends Phaser.Scene {
     this.socket = socket;
     // let ourMusic = this.sound.add("music");
     this.socket.emit("hello");
-    let self = this;
     this.otherPlayers = this.physics.add.group();
     let bg = this.add.sprite(-600, 0, "background");
     bg.setOrigin(0, 0);
@@ -190,7 +187,6 @@ export default class GameScene extends Phaser.Scene {
 
   // this runs when player gets hit by object
   restartGame(sourceSprite, targetSprite) {
-    // fade out
     this.player.x = 1100;
     this.player.y = 2300;
   }
@@ -202,17 +198,14 @@ export default class GameScene extends Phaser.Scene {
       bounceX: 1,
       collideWorldBounds: true,
     });
-    let spawnEvent = this.time.addEvent({
+    this.time.addEvent({
       delay: this.levelData.spawner.interval,
       loop: true,
       callbackScope: this,
       callback: function () {
         let flame = this.flames.create(this.goal.x, this.goal.y, "bossAttack");
-
         flame.anims.play("bossAttacking");
-
         flame.setVelocityX(-this.levelData.spawner.speed);
-
         this.time.addEvent({
           delay: this.levelData.spawner.lifespan,
           repeat: 0,
@@ -234,7 +227,7 @@ export default class GameScene extends Phaser.Scene {
         bounceX: 1,
         collideWorldBounds: true,
       });
-      let spawnEvent = this.time.addEvent({
+      this.time.addEvent({
         delay: curr.interval,
         loop: true,
         callbackScope: this,
@@ -332,24 +325,20 @@ export default class GameScene extends Phaser.Scene {
       if (curr.flipX === true) {
         newObj.flipX = true;
       }
-
       newObj.anims.play("floating");
-
       this.minions.add(newObj);
     }
-
     for (let i = 0; i < this.levelData.fires.length; i++) {
       let curr = this.levelData.fires[i];
-
       let newObj = this.fires
         .create(curr.x, curr.y, "fire")
         .setOrigin(0)
         .setSize(30, 30);
 
-      //   // play burning animation
+      // play burning animation
       newObj.anims.play("burning");
 
-      //   // add to the group
+      // add to the group
       this.fires.add(newObj);
     }
   }
