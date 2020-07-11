@@ -1,5 +1,8 @@
 const playerMoves = (self) => {
   if (self.player && self.player.body) {
+    if (!self.music.isPlaying && !self.music.isPaused){
+      self.music.play(self.soundConfig)
+    }
     let onGround =
       self.player.body.blocked.down || self.player.body.touching.down;
     if (self.player.body.position.y > 2400) {
@@ -29,7 +32,7 @@ const playerMoves = (self) => {
     // handle jumping
     if (onGround && (self.cursors.space.isDown || self.cursors.up.isDown)) {
       // give the player a velocity in Y
-      self.jump.play();
+      self.jump.play(self.soundConfig);
       self.player.body.setVelocityY(self.jumpSpeed);
 
       // change frame
@@ -45,8 +48,7 @@ const playerMoves = (self) => {
       self.player.oldPosition &&
       (x !== self.player.oldPosition.x ||
         y !== self.player.oldPosition.y ||
-        flipX !== self.player.oldPosition.flipX ||
-        frame !== self.player.anims.currentFrame.index)
+        flipX !== self.player.oldPosition.flipX)
     ) {
       self.socket.emit("playerMovement", {
         x: self.player.x,

@@ -5,6 +5,7 @@ import events from "./playerEvents";
 export default class WaitingRoom extends Phaser.Scene {
   constructor() {
     super("WaitingRoom");
+    this.onEvent = this.onEvent.bind(this)
   }
   init() {
     // player parameters
@@ -14,6 +15,7 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   onEvent() {
+    this.music.pause()
     this.scene.switch("gameScene");
   }
 
@@ -32,6 +34,7 @@ export default class WaitingRoom extends Phaser.Scene {
   preload() {
     this.load.image("clouds", "./assets/background.png");
     this.load.image("tiles", "./assets/tiles.png");
+    this.load.audio('waitingMusic', './assets/TimeTemple.mp3')
     this.load.audio("jump", "./assets/jump-sfx.mp3");
     this.load.spritesheet("alien", "assets/alien.png", {
       frameWidth: 90,
@@ -44,7 +47,11 @@ export default class WaitingRoom extends Phaser.Scene {
   create() {
     this.socket = socket;
     this.socket.emit("hello");
+    this.soundConfig = {
+      volume: 0.1
+    }
     this.jump = this.sound.add("jump");
+    this.music = this.sound.add('waitingMusic')
     this.anims.create({
       key: "walking",
       frames: this.anims.generateFrameNames("alien", {
