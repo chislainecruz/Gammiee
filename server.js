@@ -65,10 +65,8 @@ io.on("connection", function (socket) {
     players[socket.id].x = data.x;
     players[socket.id].y = data.y;
     players[socket.id].flipX = data.flipX;
-
     players[socket.id].frame = data.frame;
     //emit msg to all players about the player that moved
-
     socket.broadcast.emit("playerMoved", players[socket.id]);
   });
 });
