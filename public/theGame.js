@@ -1,17 +1,21 @@
-import GameScene from "./gameScene";
-import WaitingRoom from "./waitingRoom";
+import GameScene from './gameScene';
+import WaitingRoom from './waitingRoom';
 
 const gameScene = new GameScene();
 const waitingRoom = new WaitingRoom();
 
 const config = {
   type: Phaser.AUTO,
+  parent: 'ex',
   width: 2300,
   height: 2500,
+  dom: {
+    createContainer: true,
+  },
   scene: [waitingRoom, gameScene],
   transparent: true,
   physics: {
-    default: "arcade",
+    default: 'arcade',
     arcade: {
       gravity: { y: 1600 },
       debug: false,
@@ -30,4 +34,4 @@ let game = new Phaser.Game(config);
 //load scenes
 
 //start waiting room
-game.scene.start("WaitingRoom");
+game.scene.start('WaitingRoom');
