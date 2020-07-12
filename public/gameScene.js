@@ -14,7 +14,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    // this.load.audio("music", "./assets/battleMusic.mp3");
+    this.load.audio("battleMusic", "./assets/battleMusic.mp3");
     this.load.audio("jump", "./assets/jump-sfx.mp3");
     this.load.image("background", "./assets/testback.png");
     this.load.image("platform", "./assets/platform.png");
@@ -84,7 +84,11 @@ export default class GameScene extends Phaser.Scene {
     let bg = this.add.sprite(-600, 0, "background");
     bg.setOrigin(0, 0);
     bg.setScale(5);
+    this.soundConfig = {
+      volume: 0.1
+    }
     this.jump = this.sound.add("jump");
+    this.music = this.sound.add('battleMusic')
     //creates ground blocks
 
     //the first 2 nums are the position on the screen
