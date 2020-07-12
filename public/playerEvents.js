@@ -41,7 +41,7 @@ const events = (self) => {
 
 export function addPlayer(self, playerInfo) {
   self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
-  if (self.scene.key === "gameScene") {
+  if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy") {
     self.physics.add.collider(self.ground, [
       self.player,
       self.goal,
@@ -81,7 +81,7 @@ export function addOtherPlayers(self, playerInfo) {
   );
   otherPlayer.flipX = playerInfo.flipX;
   self.physics.add.collider(self.ground, otherPlayer);
-  if (self.scene.key === "gameScene") {
+  if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy") {
     self.physics.add.collider(self.platforms, otherPlayer);
   }
   otherPlayer.body.bounce.y = 0.2;

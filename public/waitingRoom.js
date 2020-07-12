@@ -16,7 +16,7 @@ export default class WaitingRoom extends Phaser.Scene {
 
   onEvent() {
     this.music.pause()
-    this.scene.switch("gameScene");
+    this.scene.switch("gameSceneEasy");
   }
 
   playerReady() {
@@ -90,8 +90,8 @@ export default class WaitingRoom extends Phaser.Scene {
     if (this.start) {
       this.text.setText(
         `THE GAME WILL START IN   ${
-          10 -
-          Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
+        10 -
+        Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
         }`
       );
     }

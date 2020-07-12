@@ -1,6 +1,8 @@
+import GameSceneEasy from "./gameSceneEasy";
 import GameScene from "./gameScene";
 import WaitingRoom from "./waitingRoom";
 
+const gameSceneEasy = new GameSceneEasy();
 const gameScene = new GameScene();
 const waitingRoom = new WaitingRoom();
 
@@ -8,7 +10,7 @@ const config = {
   type: Phaser.AUTO,
   width: 2300,
   height: 2500,
-  scene: [waitingRoom, gameScene],
+  scene: [waitingRoom, gameSceneEasy, gameScene],
   transparent: true,
   physics: {
     default: "arcade",

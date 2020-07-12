@@ -1,7 +1,7 @@
 var express = require("express");
 var app = express();
 var server = require("http").Server(app);
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8020;
 var io = require("socket.io").listen(server);
 
 //We will use this object to keep track of all the players that are currently in the games
