@@ -2,7 +2,7 @@ var express = require("express");
 var app = express();
 var server = require("http").Server(app);
 const PORT = process.env.PORT || 8080;
-var io = require("socket.io").listen(server);
+var io = require("socket.io").listen(server, {});
 
 //We will use this object to keep track of all the players that are currently in the games
 let players = {};
@@ -33,7 +33,6 @@ io.on("connection", function (socket) {
   socket.on("WR", () => {
     for (let player in players) {
       if (players[player].scene === "waitingRoom") {
-        console.log(players[player]);
         wRPlayers[players[player].playerId] = players[player];
       }
     }
@@ -98,10 +97,23 @@ io.on("connection", function (socket) {
     // remove this player from our players object
     delete players[socket.id];
     // emit a message to all players to remove this player
+
     io.emit("disconnect", socket.id);
   });
   //when a player moves
   socket.on("playerMovement", (data) => {
+    //listen for player's inactivity and disconnect
+    clearTimeout(socket.inactivityTimeout);
+
+    socket.inactivityTimeout = setTimeout(
+      () => {
+        socket.emit("disconnectPlayer");
+        socket.disconnect(true);
+      },
+      //if player goes a minute without moving, they will be disconnected
+      1000 * 30
+    );
+
     players[socket.id].x = data.x;
     players[socket.id].y = data.y;
     players[socket.id].flipX = data.flipX;

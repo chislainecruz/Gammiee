@@ -1,4 +1,4 @@
-import { waitingRoom, gameScene } from "./theGame";
+import game, { waitingRoom, gameScene } from "./theGame";
 
 const events = (self) => {
   self.otherPlayers = self.physics.add.group();
@@ -64,6 +64,14 @@ const events = (self) => {
     if (self.scene.key === "WaitingRoom") {
       self.startGame();
     }
+  });
+  self.socket.on("disconnectPlayer", () => {
+    console.log("stopping scene...");
+    game.destroy();
+    console.log(game);
+    alert(
+      "You have been disconnected due to inactivity. Please refresh the page"
+    );
   });
 };
 
