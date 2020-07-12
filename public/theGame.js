@@ -1,8 +1,8 @@
 import GameScene from "./gameScene";
 import WaitingRoom from "./waitingRoom";
 
-const gameScene = new GameScene();
-const waitingRoom = new WaitingRoom();
+export const gameScene = new GameScene();
+export const waitingRoom = new WaitingRoom();
 
 const config = {
   type: Phaser.AUTO,

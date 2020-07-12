@@ -23,13 +23,38 @@ io.on("connection", function (socket) {
     y: 2300,
     playerId: socket.id,
     ready: false,
+    scene: "waitingRoom",
   };
 
   console.log("a user connected");
   // send the players object to the new player
-  socket.on("hello", () => {
-    socket.emit("currentPlayers", players);
+  socket.on("WR", () => {
+    let wRPlayers = {};
+    for (let player in players) {
+      if (players[player].scene === "waitingRoom") {
+        console.log(players[player]);
+        wRPlayers[players[player].playerId] = players[player];
+      }
+    }
+    socket.emit("currentPlayersInWR", wRPlayers);
   });
+
+  socket.on("GS", () => {
+    let gSPlayers = {};
+    for (let player in players) {
+      if (players[player].scene === "gameScene") {
+        gSPlayers[players[player].playerId] = players[player];
+      }
+    }
+    socket.emit("currentPlayersInGS", gSPlayers);
+  });
+
+  socket.on("changeScenes", () => {
+    console.log("changing scenes...");
+    players[socket.id].scene = "gameScene";
+    socket.broadcast.emit("updateScene", socket.id);
+  });
+
   //update all other players of the new player
   socket.broadcast.emit("newPlayer", players[socket.id]);
 

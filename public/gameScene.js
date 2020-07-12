@@ -79,16 +79,16 @@ export default class GameScene extends Phaser.Scene {
   create() {
     this.socket = socket;
     // let ourMusic = this.sound.add("music");
-    this.socket.emit("hello");
+    this.socket.emit("GS");
     this.otherPlayers = this.physics.add.group();
     let bg = this.add.sprite(-600, 0, "background");
     bg.setOrigin(0, 0);
     bg.setScale(5);
     this.soundConfig = {
-      volume: 0.1
-    }
+      volume: 0.1,
+    };
     this.jump = this.sound.add("jump");
-    this.music = this.sound.add('battleMusic')
+    this.music = this.sound.add("battleMusic");
     //creates ground blocks
 
     //the first 2 nums are the position on the screen
