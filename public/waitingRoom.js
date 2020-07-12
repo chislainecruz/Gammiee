@@ -4,12 +4,8 @@ import events from './playerEvents';
 
 export default class WaitingRoom extends Phaser.Scene {
   constructor() {
-<<<<<<< HEAD
     super('WaitingRoom');
-=======
-    super("WaitingRoom");
-    this.onEvent = this.onEvent.bind(this)
->>>>>>> 9216e006662e216766421bc8ebcf7019e0f52f05
+    this.onEvent = this.onEvent.bind(this);
   }
   init() {
     // player parameters
@@ -19,12 +15,8 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   onEvent() {
-<<<<<<< HEAD
+    this.music.pause();
     this.scene.switch('gameScene');
-=======
-    this.music.pause()
-    this.scene.switch("gameScene");
->>>>>>> 9216e006662e216766421bc8ebcf7019e0f52f05
   }
 
   playerReady() {
@@ -40,18 +32,11 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   preload() {
-<<<<<<< HEAD
     this.load.image('clouds', './assets/background.png');
     this.load.image('tiles', './assets/tiles.png');
+    this.load.audio('waitingMusic', './assets/TimeTemple.mp3');
     this.load.audio('jump', './assets/jump-sfx.mp3');
     this.load.spritesheet('alien', 'assets/alien.png', {
-=======
-    this.load.image("clouds", "./assets/background.png");
-    this.load.image("tiles", "./assets/tiles.png");
-    this.load.audio('waitingMusic', './assets/TimeTemple.mp3')
-    this.load.audio("jump", "./assets/jump-sfx.mp3");
-    this.load.spritesheet("alien", "assets/alien.png", {
->>>>>>> 9216e006662e216766421bc8ebcf7019e0f52f05
       frameWidth: 90,
       frameHeight: 120,
       margin: 1,
@@ -62,17 +47,12 @@ export default class WaitingRoom extends Phaser.Scene {
   }
   create() {
     this.socket = socket;
-<<<<<<< HEAD
     this.socket.emit('hello');
-    this.jump = this.sound.add('jump');
-=======
-    this.socket.emit("hello");
     this.soundConfig = {
-      volume: 0.1
-    }
-    this.jump = this.sound.add("jump");
-    this.music = this.sound.add('waitingMusic')
->>>>>>> 9216e006662e216766421bc8ebcf7019e0f52f05
+      volume: 0.1,
+    };
+    this.jump = this.sound.add('jump');
+    this.music = this.sound.add('waitingMusic');
     this.anims.create({
       key: 'walking',
       frames: this.anims.generateFrameNames('alien', {
