@@ -12,25 +12,26 @@ export default class WaitingRoom extends Phaser.Scene {
     this.playerSpeed = 350;
     this.jumpSpeed = -800;
     this.start = false;
+    this.gameInSession = false;
+    this.ready = false;
   }
 
   onEvent() {
     this.music.pause();
     this.socket.emit("changeScenes");
-    //do game.scene.start??
     this.scene.switch("gameScene");
   }
 
   playerReady() {
-    if (this.otherPlayers) {
-      this.text.setText("Waiting for other players to hit ready...");
-    }
+    this.ready = true;
     this.socket.emit("playerReady");
   }
 
   startGame() {
-    this.timedEvent = this.time.delayedCall(10000, this.onEvent, [], this);
-    this.start = true;
+    if (!this.gameInSession) {
+      this.timedEvent = this.time.delayedCall(10000, this.onEvent, [], this);
+      this.start = true;
+    }
   }
 
   preload() {
@@ -74,21 +75,36 @@ export default class WaitingRoom extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     events(this);
+    this.socket.emit("checkGameStatus");
+    this.socket.on("gameInProgress", () => {
+      this.gameInSession = !this.gameInSession;
+      console.log("listened. it now is ", this.gameInSession);
+    });
+    this.text = this.add.text(1000, 2000);
+    this.text.setScale(2);
+    this.timedEvent;
 
     this.startButton = this.add.sprite(800, 2000, "button").setInteractive();
     this.startButton.setScale(0.3);
     this.startButton.on("pointerdown", () => {
-      this.playerReady();
+      if (!this.gameInSession) {
+        this.playerReady();
+      }
     });
-
-    this.text = this.add.text(1000, 2000, "PRESS I'M READY TO START GAME");
-    this.text.setScale(2);
-    this.timedEvent;
-    console.log(this.player);
   }
 
   update() {
     playerMoves(this);
+
+    if (this.gameInSession) {
+      this.text.setText("GAME IN SESSION");
+    } else {
+      this.text.setText("PRESS I'M READY TO START GAME");
+    }
+
+    if (this.ready && this.otherPlayers) {
+      this.text.setText("Waiting for other players to hit ready...");
+    }
 
     if (this.start) {
       this.text.setText(

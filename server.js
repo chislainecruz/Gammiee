@@ -6,6 +6,8 @@ var io = require("socket.io").listen(server);
 
 //We will use this object to keep track of all the players that are currently in the games
 let players = {};
+let gSPlayers = {};
+let wRPlayers = {};
 
 app.use(express.static(__dirname + "/public"));
 
@@ -29,7 +31,6 @@ io.on("connection", function (socket) {
   console.log("a user connected");
   // send the players object to the new player
   socket.on("WR", () => {
-    let wRPlayers = {};
     for (let player in players) {
       if (players[player].scene === "waitingRoom") {
         console.log(players[player]);
@@ -40,7 +41,6 @@ io.on("connection", function (socket) {
   });
 
   socket.on("GS", () => {
-    let gSPlayers = {};
     for (let player in players) {
       if (players[player].scene === "gameScene") {
         gSPlayers[players[player].playerId] = players[player];
@@ -78,8 +78,23 @@ io.on("connection", function (socket) {
     socket.broadcast.emit("endGame");
   });
 
+  socket.on("checkGameStatus", () => {
+    if (Object.keys(gSPlayers).length > 0) {
+      socket.emit("gameInProgress");
+    }
+  });
+
   socket.on("disconnect", function () {
     console.log(`user ${socket.id} disconnected`);
+
+    if (gSPlayers[socket.id]) {
+      delete gSPlayers[socket.id];
+      if (!(Object.keys(gSPlayers).length >= 1)) {
+        io.emit("gameInProgress");
+      }
+    } else if (wRPlayers[socket.id]) {
+      delete wRPlayers[socket.id];
+    }
     // remove this player from our players object
     delete players[socket.id];
     // emit a message to all players to remove this player
