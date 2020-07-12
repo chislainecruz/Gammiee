@@ -94,34 +94,36 @@ export default class WaitingRoom extends Phaser.Scene {
     const inputText = document.getElementsByName('lname');
     console.log('WaitingRoom -> create -> inputText', inputText);
 
-    element.addListener('click');
+    //* Might need to add the listeners on index.html
+    //!Right now, when we click lets play it refreshes page :/
+    // element.addListener('click');
 
-    element.on('click', function (event) {
-      if (event.target.name === 'playButton') {
-        var inputText = this.getChildByName('nameField');
+    // element.on('click', function (event) {
+    //   if (event.target.name === 'playButton') {
+    //     var inputText = this.getChildByName('nameField');
 
-        //  Have they entered anything?
-        if (inputText.value !== '') {
-          //  Turn off the click events
-          this.removeListener('click');
+    //     //  Have they entered anything?
+    //     if (inputText.value !== '') {
+    //       //  Turn off the click events
+    //       this.removeListener('click');
 
-          //  Hide the login element
-          this.setVisible(false);
+    //       //  Hide the login element
+    //       this.setVisible(false);
 
-          //  Populate the text with whatever they typed in
-          text.setText('Welcome ' + inputText.value);
-        } else {
-          //  Flash the prompt
-          this.scene.tweens.add({
-            targets: namePrompt,
-            alpha: 0.2,
-            duration: 250,
-            ease: 'Power3',
-            yoyo: true,
-          });
-        }
-      }
-    });
+    //       //  Populate the text with whatever they typed in
+    //       text.setText('Welcome ' + inputText.value);
+    //     } else {
+    //       //  Flash the prompt
+    //       this.scene.tweens.add({
+    //         targets: namePrompt,
+    //         alpha: 0.2,
+    //         duration: 250,
+    //         ease: 'Power3',
+    //         yoyo: true,
+    //       });
+    //     }
+    //   }
+    // });
 
     const input = this.tweens.add({
       targets: element,
