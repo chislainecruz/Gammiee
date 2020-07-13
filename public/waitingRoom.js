@@ -19,6 +19,7 @@ export default class WaitingRoom extends Phaser.Scene {
   onEvent() {
     this.music.pause();
     this.socket.emit("changeScenes");
+    this.socket.off();
     this.scene.switch("gameScene");
   }
 
@@ -78,7 +79,6 @@ export default class WaitingRoom extends Phaser.Scene {
     this.socket.emit("checkGameStatus");
     this.socket.on("gameInProgress", () => {
       this.gameInSession = !this.gameInSession;
-      console.log("listened. it now is ", this.gameInSession);
     });
     this.text = this.add.text(1000, 2000);
     this.text.setScale(2);

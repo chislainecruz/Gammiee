@@ -80,7 +80,6 @@ export default class GameScene extends Phaser.Scene {
     this.socket = socket;
     // let ourMusic = this.sound.add("music");
     this.socket.emit("GS");
-    this.otherPlayers = this.physics.add.group();
     let bg = this.add.sprite(-600, 0, "background");
     bg.setOrigin(0, 0);
     bg.setScale(5);

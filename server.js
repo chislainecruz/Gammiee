@@ -32,7 +32,7 @@ io.on("connection", function (socket) {
   // send the players object to the new player
   socket.on("WR", () => {
     for (let player in players) {
-      if (players[player].scene === "waitingRoom") {
+      if (players[player].scene !== "gameScene") {
         wRPlayers[players[player].playerId] = players[player];
       }
     }
@@ -85,7 +85,7 @@ io.on("connection", function (socket) {
 
   socket.on("disconnect", function () {
     console.log(`user ${socket.id} disconnected`);
-
+    io.emit("disconnect", socket.id);
     if (gSPlayers[socket.id]) {
       delete gSPlayers[socket.id];
       if (!(Object.keys(gSPlayers).length >= 1)) {
@@ -97,8 +97,6 @@ io.on("connection", function (socket) {
     // remove this player from our players object
     delete players[socket.id];
     // emit a message to all players to remove this player
-
-    io.emit("disconnect", socket.id);
   });
   //when a player moves
   socket.on("playerMovement", (data) => {
@@ -107,8 +105,8 @@ io.on("connection", function (socket) {
 
     socket.inactivityTimeout = setTimeout(
       () => {
+        //socket.emit("disconnect");
         socket.emit("disconnectPlayer");
-        socket.disconnect(true);
       },
       //if player goes a minute without moving, they will be disconnected
       1000 * 30

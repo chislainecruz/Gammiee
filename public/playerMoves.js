@@ -1,5 +1,3 @@
-import game from "./theGame";
-
 const playerMoves = (self) => {
   if (self.player && self.player.body) {
     if (!self.music.isPlaying && !self.music.isPaused) {

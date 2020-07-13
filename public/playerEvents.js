@@ -1,16 +1,18 @@
 import game, { waitingRoom, gameScene } from "./theGame";
+import socket from "./socket";
 
 const events = (self) => {
   self.otherPlayers = self.physics.add.group();
   //* Player attributes
 
   self.socket.on("currentPlayersInWR", (players) => {
-    console.log("players : ", players);
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
         addPlayer(self, players[id]);
       } else {
-        addOtherPlayers(self, players[id]);
+        if (players[id].scene === "waitingRoom") {
+          addOtherPlayers(self, players[id]);
+        }
       }
     });
   });
@@ -43,6 +45,10 @@ const events = (self) => {
   self.socket.on("disconnect", (playerId) => {
     self.otherPlayers.getChildren().forEach((otherPlayer) => {
       if (playerId === otherPlayer.playerId) {
+        if (self.scene.key === "WaitingRoom") {
+          console.log("hello");
+        }
+
         otherPlayer.destroy();
       }
     });
@@ -67,8 +73,9 @@ const events = (self) => {
   });
   self.socket.on("disconnectPlayer", () => {
     console.log("stopping scene...");
-    game.destroy();
-    console.log(game);
+    //self.socket.broadcast.emit("disconnect");
+    //game.destroy();
+
     alert(
       "You have been disconnected due to inactivity. Please refresh the page"
     );
@@ -78,7 +85,6 @@ const events = (self) => {
 export function addPlayer(self, playerInfo) {
   self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
 
-  console.log(self.player.scene === gameScene, "is it game scene?");
   if (self.scene.key === "gameScene") {
     self.physics.add.collider(self.ground, [
       self.player,
