@@ -56,7 +56,7 @@ const playerMoves = self => {
         flipX: self.player.flipX,
         frame: self.player.anims.currentFrame.index,
       });
-      self.name.x = self.player.x - 30;
+      self.name.x = self.player.x - 30 - sel;
       self.name.y = self.player.y - 50;
     }
 
