@@ -43,8 +43,8 @@ export default class GameSceneEasy extends Phaser.Scene {
     });
 
     this.load.spritesheet("goal", "./assets/Dragon.png", {
-      frameWidth: 250,
-      frameHeight: 212,
+      frameWidth: 223,
+      frameHeight: 270,
 
 
     });
@@ -136,7 +136,7 @@ export default class GameSceneEasy extends Phaser.Scene {
     this.anims.create({
       key: "boss",
       frames: this.anims.generateFrameNames("goal", {
-        frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+        frames: [0, 1, 2, 3, 4, 5],
       }),
       frameRate: 6,
       repeat: -1,
