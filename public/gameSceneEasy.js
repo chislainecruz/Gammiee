@@ -16,7 +16,7 @@ export default class GameSceneEasy extends Phaser.Scene {
   preload() {
     this.load.audio("battleMusic", "./assets/battleMusic.mp3");
     this.load.audio("jump", "./assets/jump-sfx.mp3");
-    this.load.image("background", "./assets/testback.png");
+    this.load.image("background", "./assets/easyBg.png");
     this.load.image("platform", "./assets/platform.png");
     this.load.image("block", "./assets/block.png");
 
@@ -42,9 +42,10 @@ export default class GameSceneEasy extends Phaser.Scene {
       margin: 1,
     });
 
-    this.load.spritesheet("goal", "./assets/levelBoss.png", {
-      frameWidth: 180,
-      frameHeight: 207,
+    this.load.spritesheet("goal", "./assets/Dragon.png", {
+      frameWidth: 240,
+      frameHeight: 310,
+
     });
 
     this.load.spritesheet("minion", "./assets/babyBalrog.png", {
@@ -81,9 +82,9 @@ export default class GameSceneEasy extends Phaser.Scene {
     // let ourMusic = this.sound.add("music");
     this.socket.emit("hello");
     this.otherPlayers = this.physics.add.group();
-    // let bg = this.add.sprite(-600, 0, "background");
-    // bg.setOrigin(0, 0);
-    // bg.setScale(5);
+    let bg = this.add.sprite(-600, 2000, "background");
+    bg.setOrigin(0, 0);
+    bg.setScale(1);
     this.soundConfig = {
       volume: 0.1
     }
@@ -192,7 +193,7 @@ export default class GameSceneEasy extends Phaser.Scene {
   // this runs when player gets hit by object
   restartGame(sourceSprite, targetSprite) {
     this.player.x = 1100;
-    this.player.y = 2300;
+    this.player.y = 300;
   }
 
   // boss attack
