@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html style="background-color: black;">
+  <head>
+    <meta charset="utf-8" />
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/phaser@3.23.0/dist/phaser.min.js"
+    ></script>
+    <script type="module" defer src="bundle.js"></script>
+    <style>
+      canvas {
+        display: block;
+        margin: auto;
+        height: 43%;
+        width: 53%;
+      }
+    </style>
+  </head>
 
-<head>
-  <meta charset="utf-8" />
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser@3.23.0/dist/phaser.min.js"></script>
-  <script type="module" defer src="bundle.js"></script>
-  <style>
-    canvas {
-      display: block;
-      margin: auto;
-      height: 43%;
-      width: 53%;
-    }
-  </style>
-</head>
-
-<body>
-  <script src="/socket.io/socket.io.js"></script>
-</body>
-
+  <body>
+    <form>
+      <input type="text" id="player-name" />
+      <input type="button" id="player-button" value="Lets play!" />
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+  </body>
 </html>

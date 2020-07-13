@@ -43,7 +43,6 @@ export default class WaitingRoom extends Phaser.Scene {
       spacing: 1,
     });
     this.load.image('button', 'assets/readyButton.png');
-    this.load.html('nameform', './nameform.html');
   }
   create() {
     this.socket = socket;
@@ -83,57 +82,6 @@ export default class WaitingRoom extends Phaser.Scene {
     this.text = this.add.text(1000, 2000, "PRESS I'M READY TO START GAME");
     this.text.setScale(2);
     this.timedEvent;
-
-    const namePrompt = this.add.text(1300, 1750, 'Please enter your name', {
-      color: 'white',
-      fontSize: '30px ',
-    });
-    const element = this.add.dom(namePrompt.x, 0).createFromCache('nameform');
-
-    console.log('WaitingRoom -> create -> element', element);
-    const inputText = document.getElementsByName('lname');
-    console.log('WaitingRoom -> create -> inputText', inputText);
-
-    //* Might need to add the listeners on index.html
-    //!Right now, when we click lets play it refreshes page :/
-    // element.addListener('click');
-
-    // element.on('click', function (event) {
-    //   if (event.target.name === 'playButton') {
-    //     var inputText = this.getChildByName('nameField');
-
-    //     //  Have they entered anything?
-    //     if (inputText.value !== '') {
-    //       //  Turn off the click events
-    //       this.removeListener('click');
-
-    //       //  Hide the login element
-    //       this.setVisible(false);
-
-    //       //  Populate the text with whatever they typed in
-    //       text.setText('Welcome ' + inputText.value);
-    //     } else {
-    //       //  Flash the prompt
-    //       this.scene.tweens.add({
-    //         targets: namePrompt,
-    //         alpha: 0.2,
-    //         duration: 250,
-    //         ease: 'Power3',
-    //         yoyo: true,
-    //       });
-    //     }
-    //   }
-    // });
-
-    const input = this.tweens.add({
-      targets: element,
-      y: namePrompt.y - 120,
-      x: namePrompt.x,
-      duration: 1000,
-      ease: 'Linear',
-    });
-    console.log('WaitingRoom -> create -> tween', input);
-    element.setScale(1);
   }
 
   update() {
