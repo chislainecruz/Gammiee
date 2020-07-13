@@ -1,6 +1,5 @@
-
-import game, { waitingRoom, gameScene } from './theGame';
-import socket from './socket';
+import game, { waitingRoom, gameScene, gameSceneEasy, gameSceneMedium } from "./theGame";
+import socket from "./socket";
 
 
 const events = self => {
@@ -23,7 +22,7 @@ const events = self => {
   self.socket.on('updateScene', playerId => {
     self.otherPlayers.getChildren().forEach(otherPlayer => {
       if (playerId === otherPlayer.playerId) {
-        otherPlayer.scene = 'gameScene';
+        otherPlayer.scene = "gameScene" || "gameSceneEasy" || "gameSceneMedium";
       }
     });
   });
@@ -98,9 +97,8 @@ const events = self => {
 };
 
 export function addPlayer(self, playerInfo) {
-  self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, 'alien', 1);
-
-  if (self.scene.key === 'gameScene') {
+  self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
+  if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy" || self.scene.key === "gameSceneMedium") {
     self.physics.add.collider(self.ground, [
       self.player,
       self.goal,
@@ -131,14 +129,14 @@ export function addPlayer(self, playerInfo) {
   self.cameras.main.setZoom(1.6);
 
   if (!playerInfo.name) {
-    playerInfo.name = 'ello govy';
+    playerInfo.name = 'Anonymous';
   }
   self.name = self.add.text(
     self.player.x - 50,
     self.player.y - 50,
     playerInfo.name
   );
-  if (self.player.scene === gameScene) {
+  if (self.player.scene === gameScene || self.player.scene === gameSceneEasy || self.player.scene === gameSceneMedium) {
     waitingRoom.player.destroy();
   }
 }
@@ -152,7 +150,7 @@ export function addOtherPlayers(self, playerInfo) {
   );
   otherPlayer.flipX = playerInfo.flipX;
   self.physics.add.collider(self.ground, otherPlayer);
-  if (self.scene.key === 'gameScene') {
+  if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy" || self.scene.key === "gameSceneMedium") {
     self.physics.add.collider(self.platforms, otherPlayer);
   }
   otherPlayer.body.bounce.y = 0.2;
@@ -162,7 +160,7 @@ export function addOtherPlayers(self, playerInfo) {
   otherPlayer.playerId = playerInfo.playerId;
 
   if (!playerInfo.name) {
-    playerInfo.name = 'ello govna';
+    playerInfo.name = 'Anonymous';
   }
   otherPlayer.name = self.add.text(
     otherPlayer.x - 50,

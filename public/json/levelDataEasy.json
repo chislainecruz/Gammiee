@@ -1,0 +1,169 @@
+{
+  "spawner": {
+    "interval": 8000,
+    "speed": 300,
+    "lifespan": 3000
+  },
+  "goal": {
+    "x": 1400,
+    "y": 15
+  },
+  "minions": [
+    {
+      "x": 600,
+      "y": 1860,
+      "interval": 8000,
+      "speed": 400,
+      "lifespan": 3000,
+      "flipX": true
+    },
+    {
+      "x": 1880,
+      "y": 560,
+      "interval": 8000,
+      "speed": -400,
+      "lifespan": 3000,
+      "flipX": false
+    }
+  ],
+  "platforms": [
+    {
+      "x": 1420,
+      "y": 2290,
+      "numTiles": 6,
+      "key": "block"
+    },
+    {
+      "x": 1120,
+      "y": 2180,
+      "numTiles": 5,
+      "key": "block"
+    },
+    {
+      "x": 720,
+      "y": 1995,
+      "numTiles": 3,
+      "key": "block"
+    },
+    {
+      "x": 940,
+      "y": 1875,
+      "numTiles": 3,
+      "key": "block"
+    },
+    {
+      "x": 1140,
+      "y": 1745,
+      "numTiles": 15,
+      "key": "block"
+    },
+    {
+      "x": 1705,
+      "y": 1625,
+      "numTiles": 3,
+      "key": "block"
+    },
+    {
+      "x": 1560,
+      "y": 1505,
+      "numTiles": 3,
+      "key": "block"
+    },
+    {
+      "x": 990,
+      "y": 1405,
+      "numTiles": 15,
+      "key": "block"
+    },
+    {
+      "x": 890,
+      "y": 1305,
+      "numTiles": 4,
+      "key": "block"
+    },
+    {
+      "x": 1070,
+      "y": 1189,
+      "numTiles": 4,
+      "key": "block"
+    },
+    {
+      "x": 920,
+      "y": 1065,
+      "numTiles": 4,
+      "key": "block"
+    },
+    {
+      "x": 1070,
+      "y": 950,
+      "numTiles": 20,
+      "key": "block"
+    },
+    {
+      "x": 1850,
+      "y": 850,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 1070,
+      "y": 740,
+      "numTiles": 20,
+      "key": "block"
+    },
+    {
+      "x": 960,
+      "y": 630,
+      "numTiles": 3,
+      "key": "block"
+    },
+    {
+      "x": 845,
+      "y": 530,
+      "numTiles": 3,
+      "key": "block"
+    },
+    {
+      "x": 265,
+      "y": 410,
+      "numTiles": 15,
+      "key": "block"
+    },
+    {
+      "x": 835,
+      "y": 289,
+      "numTiles": 2,
+      "key": "block"
+    },
+    {
+      "x": 920,
+      "y": 2080,
+      "numTiles": 5,
+      "key": "block"
+    },
+    {
+      "x": 950,
+      "y": 230,
+      "numTiles": 15,
+      "key": "block"
+    }
+  ],
+  "fires": [
+    {
+      "x": 1590,
+      "y": 2240
+    },
+    {
+      "x": 1400,
+      "y": 1695
+    },
+    {
+      "x": 1350,
+      "y": 1349
+    },
+    {
+      "x": 1400,
+      "y": 694
+    }
+  ]
+}

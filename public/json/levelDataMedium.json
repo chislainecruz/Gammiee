@@ -1,0 +1,237 @@
+{
+  "spawner": {
+    "interval": 6700,
+    "speed": 300,
+    "lifespan": 3000
+  },
+  "goal": {
+    "x": 1400,
+    "y": 15
+  },
+  "minions": [
+    {
+      "x": 1850,
+      "y": 1600,
+      "interval": 8000,
+      "speed": -400,
+      "lifespan": 3000,
+      "flipX": false
+    },
+    {
+      "x": 720,
+      "y": 900,
+      "interval": 7000,
+      "speed": 400,
+      "lifespan": 3000,
+      "flipX": true
+    },
+    {
+      "x": 1890,
+      "y": 690,
+      "interval": 7000,
+      "speed": -400,
+      "lifespan": 3000,
+      "flipX": false
+    }
+  ],
+  "platforms": [
+    {
+      "x": 800,
+      "y": 2300,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 1360,
+      "y": 2300,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 1490,
+      "y": 2200,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 690,
+      "y": 2200,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 870,
+      "y": 2100,
+      "numTiles": 13,
+      "key": "block"
+    },
+    {
+      "x": 1050,
+      "y": 2000,
+      "numTiles": 2,
+      "key": "block"
+    },
+    {
+      "x": 1250,
+      "y": 1890,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 1350,
+      "y": 1790,
+      "numTiles": 4,
+      "key": "block"
+    },
+    {
+      "x": 1550,
+      "y": 1690,
+      "numTiles": 10,
+      "key": "block"
+    },
+    {
+      "x": 870,
+      "y": 2100,
+      "numTiles": 13,
+      "key": "block"
+    },
+    {
+      "x": 1330,
+      "y": 1560,
+      "numTiles": 4,
+      "key": "block"
+    },
+    {
+      "x": 1200,
+      "y": 1460,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 800,
+      "y": 1360,
+      "numTiles": 8,
+      "key": "block"
+    },
+    {
+      "x": 600,
+      "y": 1260,
+      "numTiles": 3,
+      "key": "block"
+    },
+    {
+      "x": 820,
+      "y": 1160,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 900,
+      "y": 1060,
+      "numTiles": 25,
+      "key": "block"
+    },
+    {
+      "x": 1900,
+      "y": 960,
+      "numTiles": 2,
+      "key": "block"
+    },
+    {
+      "x": 1900,
+      "y": 760,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 1450,
+      "y": 840,
+      "numTiles": 10,
+      "key": "block"
+    },
+    {
+      "x": 1350,
+      "y": 740,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 950,
+      "y": 230,
+      "numTiles": 15,
+      "key": "block"
+    },
+    {
+      "x": 750,
+      "y": 980,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 1050,
+      "y": 640,
+      "numTiles": 7,
+      "key": "block"
+    },
+    {
+      "x": 950,
+      "y": 540,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 850,
+      "y": 250,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 730,
+      "y": 330,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 450,
+      "y": 440,
+      "numTiles": 10,
+      "key": "block"
+    },
+    {
+      "x": 750,
+      "y": 440,
+      "numTiles": 3,
+      "key": "block"
+    }
+  ],
+  "fires": [
+    {
+      "x": 980,
+      "y": 2050
+    },
+    {
+      "x": 1130,
+      "y": 2050
+    },
+    {
+      "x": 600,
+      "y": 1200
+    },
+    {
+      "x": 1000,
+      "y": 1000
+    },
+    {
+      "x": 1300,
+      "y": 1000
+    },
+    {
+      "x": 1600,
+      "y": 1000
+    },
+    {
+      "x": 1600,
+      "y": 790
+    }
+  ]
+}

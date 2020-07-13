@@ -20,7 +20,7 @@ export default class WaitingRoom extends Phaser.Scene {
     this.music.pause();
     this.socket.emit('changeScenes');
     this.socket.off();
-    this.scene.switch('gameScene');
+    this.scene.switch("gameScene");
   }
 
   playerReady() {
@@ -29,10 +29,8 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   startGame() {
-    if (!this.gameInSession) {
-      this.timedEvent = this.time.delayedCall(10000, this.onEvent, [], this);
-      this.start = true;
-    }
+    this.timedEvent = this.time.delayedCall(100, this.onEvent, [], this);
+    this.start = true;
   }
 
   preload() {
@@ -108,8 +106,8 @@ export default class WaitingRoom extends Phaser.Scene {
     if (this.start) {
       this.text.setText(
         `THE GAME WILL START IN   ${
-          10 -
-          Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
+        10 -
+        Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
         }`
       );
     }

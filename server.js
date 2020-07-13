@@ -46,17 +46,17 @@ io.on('connection', function (socket) {
 
   socket.on('GS', () => {
     for (let player in players) {
-      if (players[player].scene === 'gameScene') {
+      if (players[player].scene === "gameScene" || players[player].scene === "gameSceneEasy" || players[player].scene === "gameSceneMedium") {
         gSPlayers[players[player].playerId] = players[player];
       }
     }
     socket.emit("currentPlayers", gSPlayers);
   });
 
-  socket.on('changeScenes', () => {
-    console.log('changing scenes...');
-    players[socket.id].scene = 'gameScene';
-    socket.broadcast.emit('updateScene', socket.id);
+  socket.on("changeScenes", () => {
+    console.log("changing scenes...");
+    players[socket.id].scene = "gameScene" || "gameSceneEasy" || "gameSceneMedium";
+    socket.broadcast.emit("updateScene", socket.id);
   });
 
   //update all other players of the new player
