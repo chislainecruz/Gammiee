@@ -36,7 +36,7 @@ io.on("connection", function (socket) {
         wRPlayers[players[player].playerId] = players[player];
       }
     }
-    socket.emit("currentPlayersInWR", wRPlayers);
+    socket.emit("currentPlayers", wRPlayers);
   });
 
   socket.on("GS", () => {
@@ -45,7 +45,7 @@ io.on("connection", function (socket) {
         gSPlayers[players[player].playerId] = players[player];
       }
     }
-    socket.emit("currentPlayersInGS", gSPlayers);
+    socket.emit("currentPlayers", gSPlayers);
   });
 
   socket.on("changeScenes", () => {
@@ -109,7 +109,7 @@ io.on("connection", function (socket) {
         socket.emit("disconnectPlayer");
       },
       //if player goes a minute without moving, they will be disconnected
-      1000 * 20
+      1000 * 25
     );
 
     players[socket.id].x = data.x;

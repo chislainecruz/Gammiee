@@ -4,7 +4,7 @@ const events = (self) => {
   self.otherPlayers = self.physics.add.group();
   //* Player attributes
 
-  self.socket.on("currentPlayersInWR", (players) => {
+  self.socket.on("currentPlayers", (players) => {
     addPlayer(self, players[self.socket.id]);
     delete players[self.socket.id];
 
@@ -13,30 +13,12 @@ const events = (self) => {
         addOtherPlayers(self, players[id]);
       }
     });
-
-    // Object.keys(players).forEach(function (id) {
-    //   if (players[id].playerId === self.socket.id) {
-    //     addPlayer(self, players[id]);
-    //   } else if (self.scene.key === players[id].scene) {
-    //     addOtherPlayers(self, players[id]);
-    //   }
-    // });
   });
 
   self.socket.on("updateScene", (playerId) => {
     self.otherPlayers.getChildren().forEach((otherPlayer) => {
       if (playerId === otherPlayer.playerId) {
         otherPlayer.scene = "gameScene";
-      }
-    });
-  });
-
-  self.socket.on("currentPlayersInGS", (players) => {
-    Object.keys(players).forEach(function (id) {
-      if (players[id].playerId === self.socket.id) {
-        addPlayer(self, players[id]);
-      } else {
-        addOtherPlayers(self, players[id]);
       }
     });
   });
