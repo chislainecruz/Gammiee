@@ -1,11 +1,11 @@
 // Linted with standardJS - https://standardjs.com/
-import events from "./playerEvents";
-import playerMoves from "./playerMoves";
-import socket from "./socket";
+import events from './playerEvents';
+import playerMoves from './playerMoves';
+import socket from './socket';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
-    super({ key: "gameScene" });
+    super({ key: 'gameScene' });
   }
   init() {
     // player parameters
@@ -14,50 +14,50 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.audio("battleMusic", "./assets/battleMusic.mp3");
-    this.load.audio("jump", "./assets/jump-sfx.mp3");
-    this.load.image("background", "./assets/testback.png");
-    this.load.image("platform", "./assets/platform.png");
-    this.load.image("block", "./assets/block.png");
+    this.load.audio('battleMusic', './assets/battleMusic.mp3');
+    this.load.audio('jump', './assets/jump-sfx.mp3');
+    this.load.image('background', './assets/testback.png');
+    this.load.image('platform', './assets/platform.png');
+    this.load.image('block', './assets/block.png');
 
-    this.load.spritesheet("gameOver", "./assets/gameOver.png", {
+    this.load.spritesheet('gameOver', './assets/gameOver.png', {
       frameWidth: 300,
       frameHeight: 3001,
     });
 
-    this.load.spritesheet("bossAttack", "./assets/bossAttack.png", {
+    this.load.spritesheet('bossAttack', './assets/bossAttack.png', {
       frameWidth: 110,
       frameHeight: 130,
     });
 
-    this.load.spritesheet("flame", "./assets/flame.png", {
+    this.load.spritesheet('flame', './assets/flame.png', {
       frameWidth: 75,
       frameHeight: 50,
       margin: 1,
     });
 
-    this.load.spritesheet("fire", "./assets/fire.png", {
+    this.load.spritesheet('fire', './assets/fire.png', {
       frameWidth: 64,
       frameHeight: 64,
       margin: 1,
     });
 
-    this.load.spritesheet("goal", "./assets/levelBoss.png", {
+    this.load.spritesheet('goal', './assets/levelBoss.png', {
       frameWidth: 180,
       frameHeight: 207,
     });
 
-    this.load.spritesheet("minion", "./assets/babyBalrog.png", {
+    this.load.spritesheet('minion', './assets/babyBalrog.png', {
       frameWidth: 94.1,
       frameHeight: 95.1,
     });
 
-    this.load.spritesheet("tiles", "./assets/tiles.png", {
+    this.load.spritesheet('tiles', './assets/tiles.png', {
       frameWidth: 100,
       frameHeight: 60,
     });
 
-    this.load.spritesheet("alien", "assets/alien.png", {
+    this.load.spritesheet('alien', 'assets/alien.png', {
       frameWidth: 90,
       frameHeight: 120,
       margin: 1,
@@ -73,38 +73,38 @@ export default class GameScene extends Phaser.Scene {
   }
 
   winGame(sourceSprite, targetSprite) {
-    this.socket.emit("playerWins");
+    this.socket.emit('playerWins');
     this.endGame();
   }
   create() {
     this.socket = socket;
     // let ourMusic = this.sound.add("music");
-    this.socket.emit("GS");
-    let bg = this.add.sprite(-600, 0, "background");
+    this.socket.emit('GS');
+    let bg = this.add.sprite(-600, 0, 'background');
     bg.setOrigin(0, 0);
     bg.setScale(5);
     this.soundConfig = {
       volume: 0.1,
     };
-    this.jump = this.sound.add("jump");
-    this.music = this.sound.add("battleMusic");
+    this.jump = this.sound.add('jump');
+    this.music = this.sound.add('battleMusic');
     //creates ground blocks
 
     //the first 2 nums are the position on the screen
 
-    this.ground = this.add.tileSprite(1100, 2400, 400, 30, "tiles");
+    this.ground = this.add.tileSprite(1100, 2400, 400, 30, 'tiles');
     // the true parameter makes the ground static
     this.physics.add.existing(this.ground, true);
     this.ground.body.allowGravity = false;
     this.ground.body.immovable = true;
-    this.gameOverSprite = this.add.sprite(1150, 1250, "gameOver");
+    this.gameOverSprite = this.add.sprite(1150, 1250, 'gameOver');
     this.gameOverSprite.immovable = true;
     this.gameOverSprite.setScale(5);
     this.gameOverSprite.visible = false;
 
     this.anims.create({
-      key: "burning",
-      frames: this.anims.generateFrameNames("fire", {
+      key: 'burning',
+      frames: this.anims.generateFrameNames('fire', {
         start: 0,
         end: 60,
       }),
@@ -113,8 +113,8 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.anims.create({
-      key: "floating",
-      frames: this.anims.generateFrameNames("minion", {
+      key: 'floating',
+      frames: this.anims.generateFrameNames('minion', {
         frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
       }),
       frameRate: 10,
@@ -122,8 +122,8 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.anims.create({
-      key: "flaming",
-      frames: this.anims.generateFrameNames("flame", {
+      key: 'flaming',
+      frames: this.anims.generateFrameNames('flame', {
         frames: [0, 1, 2],
       }),
       frameRate: 30,
@@ -131,8 +131,8 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.anims.create({
-      key: "boss",
-      frames: this.anims.generateFrameNames("goal", {
+      key: 'boss',
+      frames: this.anims.generateFrameNames('goal', {
         frames: [0, 1, 2, 2, 3, 3],
       }),
       frameRate: 6,
@@ -140,27 +140,27 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.anims.create({
-      key: "bossAttacking",
-      frames: this.anims.generateFrameNames("bossAttack", {
+      key: 'bossAttacking',
+      frames: this.anims.generateFrameNames('bossAttack', {
         frames: [0, 1, 2, 3, 4],
       }),
       frameRate: 10,
       repeat: -1,
     });
 
-    this.cursors = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard.addKeys('up, down, left, right')
 
-    this.input.on("pointerdown", function (pointer) {
+    this.input.on('pointerdown', function (pointer) {
       console.log(pointer.x, pointer.y);
     });
 
-    this.socket.on("endGame", () => {
+    this.socket.on('endGame', () => {
       this.endGame();
     });
 
     this.anims.create({
-      key: "walking",
-      frames: this.anims.generateFrameNames("alien", {
+      key: 'walking',
+      frames: this.anims.generateFrameNames('alien', {
         //frames that are moving
         frames: [0, 1, 2, 3],
       }),
@@ -169,8 +169,8 @@ export default class GameScene extends Phaser.Scene {
     });
 
     this.anims.create({
-      key: "burning",
-      frames: this.anims.generateFrameNames("fire", { start: 0, end: 59 }),
+      key: 'burning',
+      frames: this.anims.generateFrameNames('fire', { start: 0, end: 59 }),
       frameRate: 120,
       repeat: -1,
     });
@@ -179,7 +179,6 @@ export default class GameScene extends Phaser.Scene {
     this.bossAttack();
     this.minionAttack();
 
-    //* Player attributes
     events(this);
   }
 
@@ -236,10 +235,10 @@ export default class GameScene extends Phaser.Scene {
         callbackScope: this,
         callback: function () {
           let flame = this.flames
-            .create(curr.x, curr.y, "flame")
+            .create(curr.x, curr.y, 'flame')
             .setSize(35, 35);
 
-          flame.anims.play("flaming");
+          flame.anims.play('flaming');
 
           if (curr.flipX === true) {
             flame.flipX = true;
@@ -317,7 +316,7 @@ export default class GameScene extends Phaser.Scene {
       this.levelDataHard.goal.y,
       "goal"
     );
-    this.goal.anims.play("boss");
+    this.goal.anims.play('boss');
 
     this.physics.add.existing(this.goal);
 
@@ -328,18 +327,18 @@ export default class GameScene extends Phaser.Scene {
       if (curr.flipX === true) {
         newObj.flipX = true;
       }
-      newObj.anims.play("floating");
+      newObj.anims.play('floating');
       this.minions.add(newObj);
     }
     for (let i = 0; i < this.levelDataHard.fires.length; i++) {
       let curr = this.levelDataHard.fires[i];
       let newObj = this.fires
-        .create(curr.x, curr.y, "fire")
+        .create(curr.x, curr.y, 'fire')
         .setOrigin(0)
         .setSize(30, 30);
 
       // play burning animation
-      newObj.anims.play("burning");
+      newObj.anims.play('burning');
 
       // add to the group
       this.fires.add(newObj);

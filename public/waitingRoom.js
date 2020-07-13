@@ -1,10 +1,10 @@
-import socket from "./socket";
-import playerMoves from "./playerMoves";
-import events from "./playerEvents";
+import socket from './socket';
+import playerMoves from './playerMoves';
+import events from './playerEvents';
 
 export default class WaitingRoom extends Phaser.Scene {
   constructor() {
-    super("WaitingRoom");
+    super('WaitingRoom');
     this.onEvent = this.onEvent.bind(this);
   }
   init() {
@@ -18,14 +18,14 @@ export default class WaitingRoom extends Phaser.Scene {
 
   onEvent() {
     this.music.pause();
-    this.socket.emit("changeScenes");
+    this.socket.emit('changeScenes');
     this.socket.off();
-    this.scene.switch("gameSceneEasy");
+    this.scene.switch("gameScene");
   }
 
   playerReady() {
     this.ready = true;
-    this.socket.emit("playerReady");
+    this.socket.emit('playerReady');
   }
 
   startGame() {
@@ -34,29 +34,29 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("clouds", "./assets/background.png");
-    this.load.image("tiles", "./assets/tiles.png");
-    this.load.audio("waitingMusic", "./assets/TimeTemple.mp3");
-    this.load.audio("jump", "./assets/jump-sfx.mp3");
-    this.load.spritesheet("alien", "assets/alien.png", {
+    this.load.image('clouds', './assets/background.png');
+    this.load.image('tiles', './assets/tiles.png');
+    this.load.audio('waitingMusic', './assets/TimeTemple.mp3');
+    this.load.audio('jump', './assets/jump-sfx.mp3');
+    this.load.spritesheet('alien', 'assets/alien.png', {
       frameWidth: 90,
       frameHeight: 120,
       margin: 1,
       spacing: 1,
     });
-    this.load.image("button", "assets/readyButton.png");
+    this.load.image('button', 'assets/readyButton.png');
   }
   create() {
     this.socket = socket;
-    this.socket.emit("WR");
+    this.socket.emit('WR');
     this.soundConfig = {
       volume: 0.1,
     };
-    this.jump = this.sound.add("jump");
-    this.music = this.sound.add("waitingMusic");
+    this.jump = this.sound.add('jump');
+    this.music = this.sound.add('waitingMusic');
     this.anims.create({
-      key: "walking",
-      frames: this.anims.generateFrameNames("alien", {
+      key: 'walking',
+      frames: this.anims.generateFrameNames('alien', {
         //frames that are moving
         frames: [0, 1, 2, 3],
       }),
@@ -64,27 +64,26 @@ export default class WaitingRoom extends Phaser.Scene {
       repeat: -1,
     });
 
-    const background = this.add.sprite(-700, 800, "clouds");
+    const background = this.add.sprite(-700, 800, 'clouds');
     background.setOrigin(0, 0);
     background.setScale(5);
-    this.ground = this.add.tileSprite(1150, 2400, 23 * 4000, 1 * 60, "tiles");
+    this.ground = this.add.tileSprite(1150, 2400, 23 * 4000, 1 * 60, 'tiles');
     this.physics.add.existing(this.ground, true);
     this.ground.body.allowGravity = false;
     this.ground.body.immovable = true;
-    this.cursors = this.input.keyboard.createCursorKeys();
-
+    this.cursors = this.input.keyboard.addKeys('up, down, left, right')
     events(this);
-    this.socket.emit("checkGameStatus");
-    this.socket.on("gameInProgress", () => {
+    this.socket.emit('checkGameStatus');
+    this.socket.on('gameInProgress', () => {
       this.gameInSession = !this.gameInSession;
     });
     this.text = this.add.text(1000, 2000);
     this.text.setScale(2);
     this.timedEvent;
 
-    this.startButton = this.add.sprite(800, 2000, "button").setInteractive();
+    this.startButton = this.add.sprite(800, 2000, 'button').setInteractive();
     this.startButton.setScale(0.3);
-    this.startButton.on("pointerdown", () => {
+    this.startButton.on('pointerdown', () => {
       if (!this.gameInSession) {
         this.playerReady();
       }
@@ -95,13 +94,13 @@ export default class WaitingRoom extends Phaser.Scene {
     playerMoves(this);
 
     if (this.gameInSession) {
-      this.text.setText("GAME IN SESSION");
+      this.text.setText('GAME IN SESSION');
     } else {
       this.text.setText("PRESS I'M READY TO START GAME");
     }
 
     if (this.ready && this.otherPlayers) {
-      this.text.setText("Waiting for other players to hit ready...");
+      this.text.setText('Waiting for other players to hit ready...');
     }
 
     if (this.start) {
