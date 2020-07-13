@@ -48,7 +48,7 @@ const events = self => {
         if (self.scene.key === 'WaitingRoom') {
           console.log('hello');
         }
-
+        otherPlayer.name.destroy()
         otherPlayer.destroy();
       }
     });
@@ -58,7 +58,7 @@ const events = self => {
       if (playerInfo.playerId === otherPlayer.playerId) {
         otherPlayer.setPosition(playerInfo.x, playerInfo.y);
         otherPlayer.flipX = playerInfo.flipX;
-        otherPlayer.name.x = otherPlayer.x - 50;
+        otherPlayer.name.x = otherPlayer.x - 25 - (otherPlayer.name.text.length * 2);
         otherPlayer.name.y = otherPlayer.y - 50;
 
         if (playerInfo.frame) {

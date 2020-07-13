@@ -148,7 +148,7 @@ export default class GameScene extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.cursors = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard.addKeys('up, down, left, right')
 
     this.input.on('pointerdown', function (pointer) {
       console.log(pointer.x, pointer.y);

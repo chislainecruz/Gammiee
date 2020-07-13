@@ -73,8 +73,7 @@ export default class WaitingRoom extends Phaser.Scene {
     this.physics.add.existing(this.ground, true);
     this.ground.body.allowGravity = false;
     this.ground.body.immovable = true;
-    this.cursors = this.input.keyboard.createCursorKeys();
-
+    this.cursors = this.input.keyboard.addKeys('up, down, left, right')
     events(this);
     this.socket.emit('checkGameStatus');
     this.socket.on('gameInProgress', () => {

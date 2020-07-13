@@ -30,7 +30,7 @@ const playerMoves = self => {
       self.player.setFrame(1);
     }
     // handle jumping
-    if (onGround && (self.cursors.space.isDown || self.cursors.up.isDown)) {
+    if (onGround && (self.cursors.up.isDown)) {
       // give the player a velocity in Y
       self.jump.play(self.soundConfig);
       self.player.body.setVelocityY(self.jumpSpeed);
@@ -56,7 +56,8 @@ const playerMoves = self => {
         flipX: self.player.flipX,
         frame: self.player.anims.currentFrame.index,
       });
-      self.name.x = self.player.x - 30 - sel;
+
+      self.name.x = self.player.x - 25 - (self.name.text.length * 2);
       self.name.y = self.player.y - 50;
     }
 
