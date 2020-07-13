@@ -32,8 +32,26 @@
       "key": "block"
     },
     {
-      "x": 820,
-      "y": 2070,
+      "x": 720,
+      "y": 1995,
+      "numTiles": 3,
+      "key": "block"
+    },
+    {
+      "x": 940,
+      "y": 1875,
+      "numTiles": 3,
+      "key": "block"
+    },
+    {
+      "x": 1140,
+      "y": 1745,
+      "numTiles": 15,
+      "key": "block"
+    },
+    {
+      "x": 1240,
+      "y": 1645,
       "numTiles": 3,
       "key": "block"
     },

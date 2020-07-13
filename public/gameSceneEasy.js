@@ -43,7 +43,7 @@ export default class GameSceneEasy extends Phaser.Scene {
     });
 
     this.load.spritesheet("goal", "./assets/Dragon.png", {
-      frameWidth: 245,
+      frameWidth: 250,
       frameHeight: 212,
 
 
@@ -81,7 +81,7 @@ export default class GameSceneEasy extends Phaser.Scene {
   create() {
     this.socket = socket;
     // let ourMusic = this.sound.add("music");
-    this.socket.emit("hello");
+    this.socket.emit("GS");
     this.otherPlayers = this.physics.add.group();
     let bg = this.add.sprite(-600, -600, "easybackground");
     bg.setOrigin(0, 0);
