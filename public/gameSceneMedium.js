@@ -16,7 +16,7 @@ export default class GameSceneMedium extends Phaser.Scene {
   preload() {
     this.load.audio("battleMusic", "./assets/battleMusic.mp3");
     this.load.audio("jump", "./assets/jump-sfx.mp3");
-    this.load.image("background", "./assets/testback.png");
+    this.load.image("mediumbackground", "./assets/mediumBackground.png");
     this.load.image("platform", "./assets/platform.png");
     this.load.image("block", "./assets/block.png");
 
@@ -42,14 +42,15 @@ export default class GameSceneMedium extends Phaser.Scene {
       margin: 1,
     });
 
-    this.load.spritesheet("goal", "./assets/Dragon.png", {
-      frameWidth: 250,
-      frameHeight: 300,
+    this.load.spritesheet("goal", "./assets/Dog.png", {
+      frameWidth: 172.5,
+      frameHeight: 137,
+      margin: 1
     });
 
-    this.load.spritesheet("minion", "./assets/babyBalrog.png", {
-      frameWidth: 94.1,
-      frameHeight: 95.1,
+    this.load.spritesheet("minion", "./assets/puppy.png", {
+      frameWidth: 81,
+      frameHeight: 80,
     });
 
     this.load.spritesheet("tiles", "./assets/tiles.png", {
@@ -64,7 +65,7 @@ export default class GameSceneMedium extends Phaser.Scene {
       spacing: 1,
     });
 
-    this.load.json("levelDataEasy", "./json/levelDataEasy.json");
+    this.load.json("levelDataMedium", "./json/levelDataMedium.json");
   }
   endGame() {
     this.gameOverSprite.depth = 100;
@@ -79,11 +80,11 @@ export default class GameSceneMedium extends Phaser.Scene {
   create() {
     this.socket = socket;
     // let ourMusic = this.sound.add("music");
-    this.socket.emit("hello");
+    this.socket.emit("GS");
     this.otherPlayers = this.physics.add.group();
-    // let bg = this.add.sprite(-600, 0, "background");
-    // bg.setOrigin(0, 0);
-    // bg.setScale(5);
+    let bg = this.add.sprite(-600, -500, "mediumbackground");
+    bg.setOrigin(0, 0);
+    bg.setScale(6);
     this.soundConfig = {
       volume: 0.1
     }
@@ -116,9 +117,9 @@ export default class GameSceneMedium extends Phaser.Scene {
     this.anims.create({
       key: "floating",
       frames: this.anims.generateFrameNames("minion", {
-        frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        frames: [0, 1, 2, 3],
       }),
-      frameRate: 10,
+      frameRate: 4,
       repeat: -1,
     });
 
@@ -134,7 +135,7 @@ export default class GameSceneMedium extends Phaser.Scene {
     this.anims.create({
       key: "boss",
       frames: this.anims.generateFrameNames("goal", {
-        frames: [0, 1, 2, 2, 3, 3],
+        frames: [0, 1, 2, 3, 4, 5],
       }),
       frameRate: 6,
       repeat: -1,
@@ -192,7 +193,7 @@ export default class GameSceneMedium extends Phaser.Scene {
   // this runs when player gets hit by object
   restartGame(sourceSprite, targetSprite) {
     this.player.x = 1100;
-    this.player.y = 2300;
+    this.player.y = 300;
   }
 
   // boss attack
@@ -203,15 +204,15 @@ export default class GameSceneMedium extends Phaser.Scene {
       collideWorldBounds: true,
     });
     this.time.addEvent({
-      delay: this.levelDataEasy.spawner.interval,
+      delay: this.levelDataMedium.spawner.interval,
       loop: true,
       callbackScope: this,
       callback: function () {
         let flame = this.flames.create(this.goal.x, this.goal.y, "bossAttack");
         flame.anims.play("bossAttacking");
-        flame.setVelocityX(-this.levelDataEasy.spawner.speed);
+        flame.setVelocityX(-this.levelDataMedium.spawner.speed);
         this.time.addEvent({
-          delay: this.levelDataEasy.spawner.lifespan,
+          delay: this.levelDataMedium.spawner.lifespan,
           repeat: 0,
           callbackScope: this,
           callback: function () {
@@ -224,8 +225,8 @@ export default class GameSceneMedium extends Phaser.Scene {
 
   //minion attack
   minionAttack() {
-    for (let i = 0; i < this.levelDataEasy.minions.length; i++) {
-      let curr = this.levelDataEasy.minions[i];
+    for (let i = 0; i < this.levelDataMedium.minions.length; i++) {
+      let curr = this.levelDataMedium.minions[i];
       this.flames = this.physics.add.group({
         bounceY: 0.1,
         bounceX: 1,
@@ -265,11 +266,11 @@ export default class GameSceneMedium extends Phaser.Scene {
     this.platforms = this.add.group();
 
     // parse json data
-    this.levelDataEasy = this.cache.json.get("levelDataEasy");
+    this.levelDataMedium = this.cache.json.get("levelDataMedium");
 
     // create all the platforms
-    for (let i = 0; i < this.levelDataEasy.platforms.length; i++) {
-      let platform = this.levelDataEasy.platforms[i];
+    for (let i = 0; i < this.levelDataMedium.platforms.length; i++) {
+      let platform = this.levelDataMedium.platforms[i];
 
       let newObj;
 
@@ -314,8 +315,8 @@ export default class GameSceneMedium extends Phaser.Scene {
 
     // create goal/boss
     this.goal = this.add.sprite(
-      this.levelDataEasy.goal.x,
-      this.levelDataEasy.goal.y,
+      this.levelDataMedium.goal.x,
+      this.levelDataMedium.goal.y,
       "goal"
     );
     this.goal.anims.play("boss");
@@ -323,8 +324,8 @@ export default class GameSceneMedium extends Phaser.Scene {
     this.physics.add.existing(this.goal);
 
     // create minions
-    for (let i = 0; i < this.levelDataEasy.minions.length; i++) {
-      let curr = this.levelDataEasy.minions[i];
+    for (let i = 0; i < this.levelDataMedium.minions.length; i++) {
+      let curr = this.levelDataMedium.minions[i];
       let newObj = this.minions.create(curr.x, curr.y, "minion").setOrigin(0);
       if (curr.flipX === true) {
         newObj.flipX = true;
@@ -332,8 +333,8 @@ export default class GameSceneMedium extends Phaser.Scene {
       newObj.anims.play("floating");
       this.minions.add(newObj);
     }
-    for (let i = 0; i < this.levelDataEasy.fires.length; i++) {
-      let curr = this.levelDataEasy.fires[i];
+    for (let i = 0; i < this.levelDataMedium.fires.length; i++) {
+      let curr = this.levelDataMedium.fires[i];
       let newObj = this.fires
         .create(curr.x, curr.y, "fire")
         .setOrigin(0)

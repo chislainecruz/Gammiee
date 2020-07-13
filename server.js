@@ -32,7 +32,7 @@ io.on("connection", function (socket) {
   // send the players object to the new player
   socket.on("WR", () => {
     for (let player in players) {
-      if (players[player].scene !== "gameScene" || players[player].scene !== "gameSceneEasy") {
+      if (players[player].scene !== "gameScene" || players[player].scene !== "gameSceneEasy" || players[player].scene !== "gameSceneMedium") {
         wRPlayers[players[player].playerId] = players[player];
       }
     }
@@ -41,7 +41,7 @@ io.on("connection", function (socket) {
 
   socket.on("GS", () => {
     for (let player in players) {
-      if (players[player].scene === "gameScene" || players[player].scene === "gameSceneEasy") {
+      if (players[player].scene === "gameScene" || players[player].scene === "gameSceneEasy" || players[player].scene === "gameSceneMedium") {
         gSPlayers[players[player].playerId] = players[player];
       }
     }
@@ -50,7 +50,7 @@ io.on("connection", function (socket) {
 
   socket.on("changeScenes", () => {
     console.log("changing scenes...");
-    players[socket.id].scene = "gameScene" || "gameSceneEasy";
+    players[socket.id].scene = "gameScene" || "gameSceneEasy" || "gameSceneMedium";
     socket.broadcast.emit("updateScene", socket.id);
   });
 

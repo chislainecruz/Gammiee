@@ -1,4 +1,4 @@
-import game, { waitingRoom, gameScene, gameSceneEasy } from "./theGame";
+import game, { waitingRoom, gameScene, gameSceneEasy, gameSceneMedium } from "./theGame";
 import socket from "./socket";
 
 const events = (self) => {
@@ -20,7 +20,7 @@ const events = (self) => {
   self.socket.on("updateScene", (playerId) => {
     self.otherPlayers.getChildren().forEach((otherPlayer) => {
       if (playerId === otherPlayer.playerId) {
-        otherPlayer.scene = "gameScene" || "gameSceneEasy";
+        otherPlayer.scene = "gameScene" || "gameSceneEasy" || "gameSceneMedium";
       }
     });
   });
@@ -84,7 +84,7 @@ const events = (self) => {
 
 export function addPlayer(self, playerInfo) {
   self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
-  if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy") {
+  if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy" || self.scene.key === "gameSceneMedium") {
     self.physics.add.collider(self.ground, [
       self.player,
       self.goal,
@@ -128,7 +128,7 @@ export function addOtherPlayers(self, playerInfo) {
   );
   otherPlayer.flipX = playerInfo.flipX;
   self.physics.add.collider(self.ground, otherPlayer);
-  if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy") {
+  if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy" || self.scene.key === "gameSceneMedium") {
     self.physics.add.collider(self.platforms, otherPlayer);
   }
   otherPlayer.body.bounce.y = 0.2;

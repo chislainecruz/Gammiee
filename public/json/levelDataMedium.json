@@ -1,6 +1,6 @@
 {
   "spawner": {
-    "interval": 8000,
+    "interval": 6700,
     "speed": 300,
     "lifespan": 3000
   },
@@ -10,239 +10,149 @@
   },
   "minions": [
     {
-      "x": 800,
-      "y": 1460,
+      "x": 1850,
+      "y": 1600,
       "interval": 8000,
+      "speed": -400,
+      "lifespan": 3000,
+      "flipX": false
+    },
+    {
+      "x": 720,
+      "y": 900,
+      "interval": 7000,
       "speed": 400,
       "lifespan": 3000,
       "flipX": true
     },
     {
-      "x": 1800,
-      "y": 900,
-      "interval": 8000,
-      "speed": -500,
+      "x": 1890,
+      "y": 690,
+      "interval": 7000,
+      "speed": -400,
       "lifespan": 3000,
       "flipX": false
-    },
-    {
-      "x": 460,
-      "y": 660,
-      "interval": 8000,
-      "speed": 300,
-      "lifespan": 3000,
-      "flipX": true
-    },
-    {
-      "x": 460,
-      "y": 660,
-      "interval": 8000,
-      "speed": 300,
-      "lifespan": 3000,
-      "flipX": true
-    },
-    {
-      "x": 1360,
-      "y": 530,
-      "interval": 8000,
-      "speed": -300,
-      "lifespan": 3000,
-      "flipX": false
-    },
-    {
-      "x": 960,
-      "y": 330,
-      "interval": 8000,
-      "speed": 300,
-      "lifespan": 3000,
-      "flipX": true
     }
   ],
   "platforms": [
     {
-      "x": 1800,
-      "y": 1000,
-      "numTiles": 6,
+      "x": 800,
+      "y": 2300,
+      "numTiles": 1,
       "key": "block"
     },
     {
-      "x": 460,
-      "y": 750,
-      "numTiles": 3,
+      "x": 1360,
+      "y": 2300,
+      "numTiles": 1,
       "key": "block"
     },
     {
-      "x": 620,
-      "y": 2280,
-      "numTiles": 6,
+      "x": 1490,
+      "y": 2200,
+      "numTiles": 1,
       "key": "block"
     },
     {
-      "x": 500,
-      "y": 2030,
-      "numTiles": 6,
+      "x": 690,
+      "y": 2200,
+      "numTiles": 1,
       "key": "block"
     },
     {
-      "x": 572,
-      "y": 1910,
-      "numTiles": 8,
+      "x": 870,
+      "y": 2100,
+      "numTiles": 13,
       "key": "block"
     },
     {
-      "x": 1000,
+      "x": 1050,
       "y": 2000,
       "numTiles": 2,
       "key": "block"
     },
     {
-      "x": 1490,
-      "y": 1850,
+      "x": 1250,
+      "y": 1890,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 1350,
+      "y": 1790,
       "numTiles": 4,
       "key": "block"
     },
     {
-      "x": 700,
-      "y": 2150,
-      "numTiles": 8,
+      "x": 1550,
+      "y": 1690,
+      "numTiles": 10,
       "key": "block"
     },
     {
-      "x": 1290,
-      "y": 2190,
-      "numTiles": 4,
+      "x": 870,
+      "y": 2100,
+      "numTiles": 13,
       "key": "block"
     },
     {
-      "x": 1520,
-      "y": 2110,
-      "numTiles": 4,
-      "key": "block"
-    },
-    {
-      "x": 1400,
-      "y": 1980,
-      "numTiles": 4,
-      "key": "block"
-    },
-    {
-      "x": 1300,
-      "y": 1730,
+      "x": 1330,
+      "y": 1560,
       "numTiles": 4,
       "key": "block"
     },
     {
       "x": 1200,
-      "y": 1630,
+      "y": 1460,
       "numTiles": 1,
       "key": "block"
     },
     {
-      "x": 830,
-      "y": 1550,
-      "numTiles": 7,
+      "x": 800,
+      "y": 1360,
+      "numTiles": 8,
       "key": "block"
     },
     {
-      "x": 650,
-      "y": 1450,
-      "numTiles": 4,
-      "key": "block"
-    },
-    {
-      "x": 860,
-      "y": 1350,
-      "numTiles": 11,
-      "key": "block"
-    },
-    {
-      "x": 740,
-      "y": 1230,
+      "x": 600,
+      "y": 1260,
       "numTiles": 3,
       "key": "block"
     },
     {
-      "x": 1290,
-      "y": 1230,
-      "numTiles": 4,
-      "key": "block"
-    },
-    {
-      "x": 1500,
-      "y": 1130,
-      "numTiles": 1,
-      "key": "block"
-    },
-    {
-      "x": 1600,
-      "y": 1030,
-      "numTiles": 1,
-      "key": "block"
-    },
-    {
-      "x": 1290,
-      "y": 930,
-      "numTiles": 5,
-      "key": "block"
-    },
-    {
-      "x": 860,
-      "y": 1050,
-      "numTiles": 11,
-      "key": "block"
-    },
-    {
-      "x": 640,
-      "y": 1130,
-      "numTiles": 2,
-      "key": "block"
-    },
-    {
-      "x": 760,
-      "y": 900,
-      "numTiles": 4,
-      "key": "block"
-    },
-    {
-      "x": 1060,
-      "y": 850,
-      "numTiles": 2,
-      "key": "block"
-    },
-    {
-      "x": 660,
-      "y": 800,
-      "numTiles": 2,
-      "key": "block"
-    },
-    {
       "x": 820,
-      "y": 700,
+      "y": 1160,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 900,
+      "y": 1060,
+      "numTiles": 25,
+      "key": "block"
+    },
+    {
+      "x": 1900,
+      "y": 960,
       "numTiles": 2,
       "key": "block"
     },
     {
-      "x": 950,
-      "y": 630,
-      "numTiles": 15,
+      "x": 1900,
+      "y": 760,
+      "numTiles": 1,
       "key": "block"
     },
     {
-      "x": 1600,
-      "y": 530,
-      "numTiles": 4,
+      "x": 1450,
+      "y": 840,
+      "numTiles": 10,
       "key": "block"
     },
     {
-      "x": 950,
-      "y": 430,
-      "numTiles": 15,
-      "key": "block"
-    },
-    {
-      "x": 680,
-      "y": 330,
-      "numTiles": 4,
+      "x": 1350,
+      "y": 740,
+      "numTiles": 1,
       "key": "block"
     },
     {
@@ -250,40 +160,78 @@
       "y": 230,
       "numTiles": 15,
       "key": "block"
+    },
+    {
+      "x": 750,
+      "y": 980,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 1050,
+      "y": 640,
+      "numTiles": 7,
+      "key": "block"
+    },
+    {
+      "x": 950,
+      "y": 540,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 850,
+      "y": 250,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 730,
+      "y": 330,
+      "numTiles": 1,
+      "key": "block"
+    },
+    {
+      "x": 450,
+      "y": 440,
+      "numTiles": 10,
+      "key": "block"
+    },
+    {
+      "x": 750,
+      "y": 440,
+      "numTiles": 3,
+      "key": "block"
     }
   ],
   "fires": [
     {
-      "x": 900,
-      "y": 2096
+      "x": 980,
+      "y": 2050
     },
     {
-      "x": 800,
-      "y": 1860
+      "x": 1130,
+      "y": 2050
     },
     {
-      "x": 1580,
-      "y": 1800
+      "x": 600,
+      "y": 1200
     },
     {
-      "x": 640,
-      "y": 1393
+      "x": 1000,
+      "y": 1000
     },
     {
-      "x": 1190,
-      "y": 1293
+      "x": 1300,
+      "y": 1000
     },
     {
-      "x": 850,
-      "y": 993
+      "x": 1600,
+      "y": 1000
     },
     {
-      "x": 1700,
-      "y": 473
-    },
-    {
-      "x": 667,
-      "y": 273
+      "x": 1600,
+      "y": 790
     }
   ]
 }
