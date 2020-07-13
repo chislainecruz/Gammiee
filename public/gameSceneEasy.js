@@ -43,8 +43,8 @@ export default class GameSceneEasy extends Phaser.Scene {
     });
 
     this.load.spritesheet("goal", "./assets/Dragon.png", {
-      frameWidth: 244.41,
-      frameHeight: 249,
+      frameWidth: 245,
+      frameHeight: 212,
 
 
     });

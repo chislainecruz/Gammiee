@@ -1,7 +1,31 @@
+import game, { waitingRoom, gameScene, gameSceneEasy } from "./theGame";
+import socket from "./socket";
+
 const events = (self) => {
   self.otherPlayers = self.physics.add.group();
   //* Player attributes
-  self.socket.on("currentPlayers", (players) => {
+
+  self.socket.on("currentPlayersInWR", (players) => {
+    Object.keys(players).forEach(function (id) {
+      if (players[id].playerId === self.socket.id) {
+        addPlayer(self, players[id]);
+      } else {
+        if (players[id].scene === "waitingRoom") {
+          addOtherPlayers(self, players[id]);
+        }
+      }
+    });
+  });
+
+  self.socket.on("updateScene", (playerId) => {
+    self.otherPlayers.getChildren().forEach((otherPlayer) => {
+      if (playerId === otherPlayer.playerId) {
+        otherPlayer.scene = "gameScene" || "gameSceneEasy";
+      }
+    });
+  });
+
+  self.socket.on("currentPlayersInGS", (players) => {
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
         addPlayer(self, players[id]);
@@ -12,11 +36,19 @@ const events = (self) => {
   });
 
   self.socket.on("newPlayer", (playerInfo) => {
-    addOtherPlayers(self, playerInfo);
+    if (self.scene.key === "WaitingRoom") {
+      console.log("creating new player...");
+      addOtherPlayers(self, playerInfo);
+    }
   });
+
   self.socket.on("disconnect", (playerId) => {
     self.otherPlayers.getChildren().forEach((otherPlayer) => {
       if (playerId === otherPlayer.playerId) {
+        if (self.scene.key === "WaitingRoom") {
+          console.log("hello");
+        }
+
         otherPlayer.destroy();
       }
     });
@@ -35,7 +67,18 @@ const events = (self) => {
   });
 
   self.socket.on("startGame", () => {
-    self.startGame();
+    if (self.scene.key === "WaitingRoom") {
+      self.startGame();
+    }
+  });
+  self.socket.on("disconnectPlayer", () => {
+    console.log("stopping scene...");
+    //self.socket.broadcast.emit("disconnect");
+    //game.destroy();
+
+    alert(
+      "You have been disconnected due to inactivity. Please refresh the page"
+    );
   });
 };
 
@@ -70,6 +113,10 @@ export function addPlayer(self, playerInfo) {
   self.physics.add.overlap(self.player, [self.goal], self.winGame, null, self);
   self.cameras.main.startFollow(self.player);
   self.cameras.main.setZoom(1.6);
+
+  if (self.player.scene === gameScene || self.player.scene === gameSceneEasy) {
+    waitingRoom.player.destroy();
+  }
 }
 
 export function addOtherPlayers(self, playerInfo) {

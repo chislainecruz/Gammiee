@@ -33,3 +33,4 @@ let game = new Phaser.Game(config);
 
 //start waiting room
 game.scene.start("WaitingRoom");
+export default game;
