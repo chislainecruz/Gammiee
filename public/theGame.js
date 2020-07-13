@@ -1,8 +1,8 @@
 import GameScene from "./gameScene";
 import WaitingRoom from "./waitingRoom";
 
-const gameScene = new GameScene();
-const waitingRoom = new WaitingRoom();
+export const gameScene = new GameScene();
+export const waitingRoom = new WaitingRoom();
 
 const config = {
   type: Phaser.AUTO,
@@ -31,3 +31,4 @@ let game = new Phaser.Game(config);
 
 //start waiting room
 game.scene.start("WaitingRoom");
+export default game;

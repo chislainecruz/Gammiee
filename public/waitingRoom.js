@@ -5,36 +5,40 @@ import events from "./playerEvents";
 export default class WaitingRoom extends Phaser.Scene {
   constructor() {
     super("WaitingRoom");
-    this.onEvent = this.onEvent.bind(this)
+    this.onEvent = this.onEvent.bind(this);
   }
   init() {
     // player parameters
     this.playerSpeed = 350;
     this.jumpSpeed = -800;
     this.start = false;
+    this.gameInSession = false;
+    this.ready = false;
   }
 
   onEvent() {
-    this.music.pause()
+    this.music.pause();
+    this.socket.emit("changeScenes");
+    this.socket.off();
     this.scene.switch("gameScene");
   }
 
   playerReady() {
-    if (this.otherPlayers) {
-      this.text.setText("Waiting for other players to hit ready...");
-    }
+    this.ready = true;
     this.socket.emit("playerReady");
   }
 
   startGame() {
-    this.timedEvent = this.time.delayedCall(10000, this.onEvent, [], this);
-    this.start = true;
+    if (!this.gameInSession) {
+      this.timedEvent = this.time.delayedCall(10000, this.onEvent, [], this);
+      this.start = true;
+    }
   }
 
   preload() {
     this.load.image("clouds", "./assets/background.png");
     this.load.image("tiles", "./assets/tiles.png");
-    this.load.audio('waitingMusic', './assets/TimeTemple.mp3')
+    this.load.audio("waitingMusic", "./assets/TimeTemple.mp3");
     this.load.audio("jump", "./assets/jump-sfx.mp3");
     this.load.spritesheet("alien", "assets/alien.png", {
       frameWidth: 90,
@@ -46,12 +50,12 @@ export default class WaitingRoom extends Phaser.Scene {
   }
   create() {
     this.socket = socket;
-    this.socket.emit("hello");
+    this.socket.emit("WR");
     this.soundConfig = {
-      volume: 0.1
-    }
+      volume: 0.1,
+    };
     this.jump = this.sound.add("jump");
-    this.music = this.sound.add('waitingMusic')
+    this.music = this.sound.add("waitingMusic");
     this.anims.create({
       key: "walking",
       frames: this.anims.generateFrameNames("alien", {
@@ -72,20 +76,35 @@ export default class WaitingRoom extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
 
     events(this);
+    this.socket.emit("checkGameStatus");
+    this.socket.on("gameInProgress", () => {
+      this.gameInSession = !this.gameInSession;
+    });
+    this.text = this.add.text(1000, 2000);
+    this.text.setScale(2);
+    this.timedEvent;
 
     this.startButton = this.add.sprite(800, 2000, "button").setInteractive();
     this.startButton.setScale(0.3);
     this.startButton.on("pointerdown", () => {
-      this.playerReady();
+      if (!this.gameInSession) {
+        this.playerReady();
+      }
     });
-
-    this.text = this.add.text(1000, 2000, "PRESS I'M READY TO START GAME");
-    this.text.setScale(2);
-    this.timedEvent;
   }
 
   update() {
     playerMoves(this);
+
+    if (this.gameInSession) {
+      this.text.setText("GAME IN SESSION");
+    } else {
+      this.text.setText("PRESS I'M READY TO START GAME");
+    }
+
+    if (this.ready && this.otherPlayers) {
+      this.text.setText("Waiting for other players to hit ready...");
+    }
 
     if (this.start) {
       this.text.setText(

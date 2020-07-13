@@ -1,7 +1,7 @@
 const playerMoves = (self) => {
   if (self.player && self.player.body) {
-    if (!self.music.isPlaying && !self.music.isPaused){
-      self.music.play(self.soundConfig)
+    if (!self.music.isPlaying && !self.music.isPaused) {
+      self.music.play(self.soundConfig);
     }
     let onGround =
       self.player.body.blocked.down || self.player.body.touching.down;
