@@ -1,18 +1,21 @@
+
 import game, { waitingRoom, gameScene } from './theGame';
 import socket from './socket';
+
 
 const events = self => {
   self.otherPlayers = self.physics.add.group();
   //* Player attributes
 
-  self.socket.on('currentPlayersInWR', players => {
+
+  self.socket.on("currentPlayers", (players) => {
+    addPlayer(self, players[self.socket.id]);
+    delete players[self.socket.id];
+
     Object.keys(players).forEach(function (id) {
-      if (players[id].playerId === self.socket.id) {
-        addPlayer(self, players[id]);
-      } else {
-        if (players[id].scene === 'waitingRoom') {
-          addOtherPlayers(self, players[id]);
-        }
+      if (self.scene.key === players[id].scene) {
+        addOtherPlayers(self, players[id]);
+
       }
     });
   });
@@ -25,30 +28,22 @@ const events = self => {
     });
   });
 
-  self.socket.on('currentPlayersInGS', players => {
-    Object.keys(players).forEach(function (id) {
-      if (players[id].playerId === self.socket.id) {
-        addPlayer(self, players[id]);
-      } else {
-        addOtherPlayers(self, players[id]);
-      }
-    });
-  });
 
-  self.socket.on('newPlayer', playerInfo => {
-    if (self.scene.key === 'WaitingRoom') {
-      console.log('creating new player...');
+  self.socket.on("newPlayer", (playerInfo) => {
+    if (self.scene.key === "WaitingRoom") {
+      console.log("creating new player...");
+
       addOtherPlayers(self, playerInfo);
     }
   });
 
-  self.socket.on('disconnect', playerId => {
-    self.otherPlayers.getChildren().forEach(otherPlayer => {
-      if (playerId === otherPlayer.playerId) {
-        if (self.scene.key === 'WaitingRoom') {
-          console.log('hello');
-        }
-        otherPlayer.name.destroy()
+
+  self.socket.on("disconnect", (playerId) => {
+    self.otherPlayers.getChildren().forEach((otherPlayer) => {
+      if (
+        playerId === otherPlayer.playerId &&
+        self.scene.key === otherPlayer.scene.scene.key
+      ) {
         otherPlayer.destroy();
       }
     });
@@ -73,10 +68,11 @@ const events = self => {
       self.startGame();
     }
   });
-  self.socket.on('disconnectPlayer', () => {
-    console.log('stopping scene...');
-    //self.socket.broadcast.emit("disconnect");
-    //game.destroy();
+
+  self.socket.on("disconnectPlayer", () => {
+    console.log("stopping scene...");
+    //destroys the game instance so other players can join
+    self.sys.game.destroy();
 
     alert(
       'You have been disconnected due to inactivity. Please refresh the page'
