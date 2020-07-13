@@ -192,7 +192,7 @@ export default class GameScene extends Phaser.Scene {
   // this runs when player gets hit by object
   restartGame(sourceSprite, targetSprite) {
     this.player.x = 1100;
-    this.player.y = 300;
+    this.player.y = 2300;
   }
 
   // boss attack

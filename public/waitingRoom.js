@@ -27,7 +27,7 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   startGame() {
-    this.timedEvent = this.time.delayedCall(10000, this.onEvent, [], this);
+    this.timedEvent = this.time.delayedCall(100, this.onEvent, [], this);
     this.start = true;
   }
 

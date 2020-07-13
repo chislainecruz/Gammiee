@@ -16,7 +16,7 @@ export default class GameSceneEasy extends Phaser.Scene {
   preload() {
     this.load.audio("battleMusic", "./assets/battleMusic.mp3");
     this.load.audio("jump", "./assets/jump-sfx.mp3");
-    this.load.image("background", "./assets/easyBg.png");
+    this.load.image("easybackground", "./assets/easyBackground.png");
     this.load.image("platform", "./assets/platform.png");
     this.load.image("block", "./assets/block.png");
 
@@ -43,14 +43,15 @@ export default class GameSceneEasy extends Phaser.Scene {
     });
 
     this.load.spritesheet("goal", "./assets/Dragon.png", {
-      frameWidth: 240,
-      frameHeight: 310,
+      frameWidth: 244.41,
+      frameHeight: 249,
+
 
     });
 
-    this.load.spritesheet("minion", "./assets/babyBalrog.png", {
-      frameWidth: 94.1,
-      frameHeight: 95.1,
+    this.load.spritesheet("minion", "./assets/babyDragon.png", {
+      frameWidth: 74.1,
+      frameHeight: 75,
     });
 
     this.load.spritesheet("tiles", "./assets/tiles.png", {
@@ -82,9 +83,9 @@ export default class GameSceneEasy extends Phaser.Scene {
     // let ourMusic = this.sound.add("music");
     this.socket.emit("hello");
     this.otherPlayers = this.physics.add.group();
-    let bg = this.add.sprite(-600, 2000, "background");
+    let bg = this.add.sprite(-600, -600, "easybackground");
     bg.setOrigin(0, 0);
-    bg.setScale(1);
+    bg.setScale(6);
     this.soundConfig = {
       volume: 0.1
     }
@@ -117,7 +118,7 @@ export default class GameSceneEasy extends Phaser.Scene {
     this.anims.create({
       key: "floating",
       frames: this.anims.generateFrameNames("minion", {
-        frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        frames: [0, 1, 2, 3, 4],
       }),
       frameRate: 10,
       repeat: -1,
@@ -135,7 +136,7 @@ export default class GameSceneEasy extends Phaser.Scene {
     this.anims.create({
       key: "boss",
       frames: this.anims.generateFrameNames("goal", {
-        frames: [0, 1, 2, 2, 3, 3],
+        frames: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
       }),
       frameRate: 6,
       repeat: -1,
