@@ -1,5 +1,4 @@
 import game, { waitingRoom, gameScene } from "./theGame";
-import socket from "./socket";
 
 const events = (self) => {
   self.otherPlayers = self.physics.add.group();
@@ -9,10 +8,8 @@ const events = (self) => {
     Object.keys(players).forEach(function (id) {
       if (players[id].playerId === self.socket.id) {
         addPlayer(self, players[id]);
-      } else {
-        if (players[id].scene === "waitingRoom") {
-          addOtherPlayers(self, players[id]);
-        }
+      } else if (self.scene.key === players[id].scene) {
+        addOtherPlayers(self, players[id]);
       }
     });
   });
@@ -44,11 +41,10 @@ const events = (self) => {
 
   self.socket.on("disconnect", (playerId) => {
     self.otherPlayers.getChildren().forEach((otherPlayer) => {
-      if (playerId === otherPlayer.playerId) {
-        if (self.scene.key === "WaitingRoom") {
-          console.log("hello");
-        }
-
+      if (
+        playerId === otherPlayer.playerId &&
+        self.scene.key === otherPlayer.scene.scene.key
+      ) {
         otherPlayer.destroy();
       }
     });
@@ -73,8 +69,8 @@ const events = (self) => {
   });
   self.socket.on("disconnectPlayer", () => {
     console.log("stopping scene...");
-    //self.socket.broadcast.emit("disconnect");
-    //game.destroy();
+    //destroys the game instance so other players can join
+    self.sys.game.destroy();
 
     alert(
       "You have been disconnected due to inactivity. Please refresh the page"
