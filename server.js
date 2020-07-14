@@ -46,16 +46,16 @@ io.on('connection', function (socket) {
 
   socket.on('GS', () => {
     for (let player in players) {
-      if (players[player].scene === "gameScene" || players[player].scene === "gameSceneEasy" || players[player].scene === "gameSceneMedium") {
+      if (players[player].scene === "Hard" || players[player].scene === "Easy" || players[player].scene === "Medium") {
         gSPlayers[players[player].playerId] = players[player];
       }
     }
     socket.emit("currentPlayers", gSPlayers);
   });
 
-  socket.on("changeScenes", () => {
+  socket.on("changeScenes", (ourScene) => {
     console.log("changing scenes...");
-    players[socket.id].scene = "gameScene" || "gameSceneEasy" || "gameSceneMedium";
+    players[socket.id].scene = ourScene;
     socket.broadcast.emit("updateScene", socket.id);
   });
 
@@ -78,9 +78,14 @@ io.on('connection', function (socket) {
     }
   });
 
+
   socket.on('playerWins', () => {
     socket.broadcast.emit('endGame');
   });
+
+  socket.on("selecting", (ourScene) => {
+    socket.broadcast.emit("selectingLevel", ourScene)
+  })
 
   socket.on('checkGameStatus', () => {
     if (Object.keys(gSPlayers).length > 0) {

@@ -6,7 +6,6 @@ export default class WaitingRoom extends Phaser.Scene {
   constructor() {
     super('WaitingRoom');
     this.onEvent = this.onEvent.bind(this);
-    this.sceneChangeValue = "Easy"
   }
   init() {
     // player parameters
@@ -15,15 +14,18 @@ export default class WaitingRoom extends Phaser.Scene {
     this.start = false;
     this.gameInSession = false;
     this.ready = false;
+    this.sceneSelect = "Easy"
+  }
+  selectingLevel(val) {
+    this.sceneSelect = val
   }
 
   onEvent() {
     this.music.pause();
-    this.socket.emit('changeScenes');
     this.socket.off();
-    this.scene.switch(this.sceneChangeValue);
+    this.socket.emit("changeScenes", this.sceneSelect)
+    this.scene.switch(this.sceneSelect);
   }
-
   playerReady() {
     this.ready = true;
     this.socket.emit('playerReady');
@@ -56,6 +58,10 @@ export default class WaitingRoom extends Phaser.Scene {
     this.soundConfig = {
       volume: 0.1,
     };
+
+    this.socket.on("selectingLevel", (val) => {
+      this.selectingLevel(val)
+    })
     this.jump = this.sound.add('jump');
     this.music = this.sound.add('waitingMusic');
     this.anims.create({
@@ -98,20 +104,26 @@ export default class WaitingRoom extends Phaser.Scene {
     this.easyButton = this.add.sprite(500, 1800, 'easybutton').setInteractive();
     this.easyButton.setScale(0.2);
     this.easyButton.on('pointerdown', () => {
-      this.sceneChangeValue = "Easy"
+      // this.sceneChangeValue = "Easy"
+      this.sceneSelect = "Easy"
+      socket.emit("selecting", this.sceneSelect)
     });
 
 
     this.mediumButton = this.add.sprite(800, 1800, 'mediumbutton').setInteractive();
     this.mediumButton.setScale(0.2);
     this.mediumButton.on('pointerdown', () => {
-      this.sceneChangeValue = "Medium"
+      // this.sceneChangeValue = "Medium"
+      this.sceneSelect = "Medium"
+      socket.emit("selecting", this.sceneSelect)
     });
 
     this.hardButton = this.add.sprite(1100, 1800, 'hardbutton').setInteractive();
     this.hardButton.setScale(0.2);
     this.hardButton.on('pointerdown', () => {
-      this.sceneChangeValue = "Hard"
+      // this.sceneChangeValue = "Hard"
+      this.sceneSelect = "Hard"
+      socket.emit("selecting", this.sceneSelect)
     });
   }
 
@@ -136,6 +148,7 @@ export default class WaitingRoom extends Phaser.Scene {
         }`
       );
     }
-    this.levelText.setText(`LEVEL SELECTED : ${this.sceneChangeValue}`)
+    this.levelText.setText(`LEVEL SELECTED : ${this.sceneSelect}`)
+
   }
 }

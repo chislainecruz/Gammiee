@@ -28,10 +28,10 @@ const events = self => {
   });
 
 
+
   self.socket.on("newPlayer", (playerInfo) => {
     if (self.scene.key === "WaitingRoom") {
       console.log("creating new player...");
-
       addOtherPlayers(self, playerInfo);
     }
   });
@@ -62,6 +62,8 @@ const events = self => {
     });
   });
 
+
+
   self.socket.on('startGame', () => {
     if (self.scene.key === 'WaitingRoom') {
       self.startGame();
@@ -87,6 +89,7 @@ const events = self => {
     self.socket.emit('usernameAdded', self.name.text);
   });
 
+
   self.socket.on('displayUsername', (username, socketId) => {
     self.otherPlayers.getChildren().forEach(otherPlayer => {
       if (socketId === otherPlayer.playerId) {
@@ -95,6 +98,9 @@ const events = self => {
     });
   });
 };
+
+
+
 
 export function addPlayer(self, playerInfo) {
   self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
