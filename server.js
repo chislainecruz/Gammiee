@@ -24,7 +24,7 @@ io.on('connection', function (socket) {
   let index = Math.floor(Math.random() * spritesArray.length)
   //we remove that sprite so there a no duplicate sprites in the game
   //splice returns an array so we access it with index [0]
-  let sprite = spritesArray.splice(index, 1)[0]
+  let sprite = spritesArray[index]
 
   players[socket.id] = {
     x: Math.random() * (1400 - 830) + 830,
@@ -102,8 +102,6 @@ io.on('connection', function (socket) {
 
   socket.on('disconnect', function () {
     console.log(`user ${socket.id} disconnected`);
-    //places the disconnected players sprite back into the array
-    spritesArray.push(players[socket.id].sprite)
     if (gSPlayers[socket.id]) {
       delete gSPlayers[socket.id];
       if (!(Object.keys(gSPlayers).length >= 1)) {
@@ -129,7 +127,7 @@ io.on('connection', function (socket) {
 
       },
       //if player goes a minute without moving, they will be disconnected
-      1000 * 25
+      1000 * 120
     );
 
     players[socket.id].x = data.x;

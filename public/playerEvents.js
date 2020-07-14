@@ -105,13 +105,8 @@ const events = self => {
 
 
 export function addPlayer(self, playerInfo) {
-<<<<<<< HEAD
-  self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
+  self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, playerInfo.sprite.key, 1);
   if (self.scene.key === "Hard" || self.scene.key === "Easy" || self.scene.key === "Medium") {
-=======
-  self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, playerInfo.sprite.key, 0);
-  if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy" || self.scene.key === "gameSceneMedium") {
->>>>>>> 5f205b662e4659f6912256f98aa7b3441ed6ee4d
     self.physics.add.collider(self.ground, [
       self.player,
       self.goal,
