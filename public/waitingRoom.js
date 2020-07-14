@@ -1,10 +1,10 @@
-import socket from './socket';
-import playerMoves from './playerMoves';
-import events from './playerEvents';
+import socket from "./socket";
+import playerMoves from "./playerMoves";
+import events from "./playerEvents";
 
 export default class WaitingRoom extends Phaser.Scene {
   constructor() {
-    super('WaitingRoom');
+    super("WaitingRoom");
     this.onEvent = this.onEvent.bind(this);
   }
   init() {
@@ -14,21 +14,21 @@ export default class WaitingRoom extends Phaser.Scene {
     this.start = false;
     this.gameInSession = false;
     this.ready = false;
-    this.sceneSelect = "Easy"
+    this.sceneSelect = "Easy";
   }
   selectingLevel(val) {
-    this.sceneSelect = val
+    this.sceneSelect = val;
   }
 
   onEvent() {
     this.music.pause();
     this.socket.off();
-    this.socket.emit("changeScenes", this.sceneSelect)
+    this.socket.emit("changeScenes", this.sceneSelect);
     this.scene.switch(this.sceneSelect);
   }
   playerReady() {
     this.ready = true;
-    this.socket.emit('playerReady');
+    this.socket.emit("playerReady");
   }
 
   startGame() {
@@ -37,17 +37,17 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('clouds', './assets/background.png');
-    this.load.image('tiles', './assets/tiles.png');
-    this.load.audio('waitingMusic', './assets/TimeTemple.mp3');
-    this.load.audio('jump', './assets/jump-sfx.mp3');
-    this.load.spritesheet('alien', 'assets/alien.png', {
+    this.load.image("clouds", "./assets/background.png");
+    this.load.image("tiles", "./assets/tiles.png");
+    this.load.audio("waitingMusic", "./assets/TimeTemple.mp3");
+    this.load.audio("jump", "./assets/jump-sfx.mp3");
+    this.load.spritesheet("alien", "assets/alien.png", {
       frameWidth: 90,
       frameHeight: 120,
       margin: 1,
       spacing: 1,
     });
-    this.load.spritesheet('werewolf', 'assets/werewolf.png', {
+    this.load.spritesheet("werewolf", "assets/werewolf.png", {
       frameWidth: 162,
       frameHeight: 163,
       spacing: 1,
@@ -61,26 +61,26 @@ export default class WaitingRoom extends Phaser.Scene {
       frameHeight: 125,
       spacing: 1,
     });
-    this.load.image('button', 'assets/readyButton.png');
-    this.load.image('easybutton', 'assets/easy.png');
-    this.load.image('mediumbutton', 'assets/medium.png');
-    this.load.image('hardbutton', 'assets/hard.png');
+    this.load.image("button", "assets/readyButton.png");
+    this.load.image("easybutton", "assets/easy.png");
+    this.load.image("mediumbutton", "assets/medium.png");
+    this.load.image("hardbutton", "assets/hard.png");
   }
   create() {
     this.socket = socket;
-    this.socket.emit('WR');
+    this.socket.emit("WR");
     this.soundConfig = {
       volume: 0.1,
     };
 
     this.socket.on("selectingLevel", (val) => {
-      this.selectingLevel(val)
-    })
-    this.jump = this.sound.add('jump');
-    this.music = this.sound.add('waitingMusic');
+      this.selectingLevel(val);
+    });
+    this.jump = this.sound.add("jump");
+    this.music = this.sound.add("waitingMusic");
     this.anims.create({
-      key: 'alienWalking',
-      frames: this.anims.generateFrameNames('alien', {
+      key: "alienWalking",
+      frames: this.anims.generateFrameNames("alien", {
         //frames that are moving
         frames: [0, 1, 2, 3],
       }),
@@ -88,8 +88,8 @@ export default class WaitingRoom extends Phaser.Scene {
       repeat: -1,
     });
     this.anims.create({
-      key: 'werewolfWalking',
-      frames: this.anims.generateFrameNames('werewolf', {
+      key: "werewolfWalking",
+      frames: this.anims.generateFrameNames("werewolf", {
         //frames that are moving
         frames: [0, 1, 2, 3],
       }),
@@ -114,20 +114,20 @@ export default class WaitingRoom extends Phaser.Scene {
       }),
       frameRate: 6,
       yoyo: true,
-      repeat: -1
+      repeat: -1,
     });
 
-    const background = this.add.sprite(-700, 800, 'clouds');
+    const background = this.add.sprite(-700, 800, "clouds");
     background.setOrigin(0, 0);
     background.setScale(5);
-    this.ground = this.add.tileSprite(1150, 2400, 23 * 4000, 1 * 60, 'tiles');
+    this.ground = this.add.tileSprite(1150, 2400, 23 * 4000, 1 * 60, "tiles");
     this.physics.add.existing(this.ground, true);
     this.ground.body.allowGravity = false;
     this.ground.body.immovable = true;
-    this.cursors = this.input.keyboard.addKeys('up, down, left, right')
+    this.cursors = this.input.keyboard.addKeys("up, down, left, right");
     events(this);
-    this.socket.emit('checkGameStatus');
-    this.socket.on('gameInProgress', () => {
+    this.socket.emit("checkGameStatus");
+    this.socket.on("gameInProgress", () => {
       this.gameInSession = !this.gameInSession;
     });
     this.text = this.add.text(540, 2080);
@@ -137,36 +137,39 @@ export default class WaitingRoom extends Phaser.Scene {
     this.levelText = this.add.text(600, 1850);
     this.levelText.setScale(2);
 
-    this.startButton = this.add.sprite(800, 2000, 'button').setInteractive();
+    this.startButton = this.add.sprite(800, 2000, "button").setInteractive();
     this.startButton.setScale(0.2);
-    this.startButton.on('pointerdown', () => {
+    this.startButton.on("pointerdown", () => {
       if (!this.gameInSession) {
         this.playerReady();
       }
     });
-    this.easyButton = this.add.sprite(500, 1800, 'easybutton').setInteractive();
+    this.easyButton = this.add.sprite(500, 1800, "easybutton").setInteractive();
     this.easyButton.setScale(0.2);
-    this.easyButton.on('pointerdown', () => {
+    this.easyButton.on("pointerdown", () => {
       // this.sceneChangeValue = "Easy"
-      this.sceneSelect = "Easy"
-      socket.emit("selecting", this.sceneSelect)
+      this.sceneSelect = "Easy";
+      socket.emit("selecting", this.sceneSelect);
     });
 
-
-    this.mediumButton = this.add.sprite(800, 1800, 'mediumbutton').setInteractive();
+    this.mediumButton = this.add
+      .sprite(800, 1800, "mediumbutton")
+      .setInteractive();
     this.mediumButton.setScale(0.2);
-    this.mediumButton.on('pointerdown', () => {
+    this.mediumButton.on("pointerdown", () => {
       // this.sceneChangeValue = "Medium"
-      this.sceneSelect = "Medium"
-      socket.emit("selecting", this.sceneSelect)
+      this.sceneSelect = "Medium";
+      socket.emit("selecting", this.sceneSelect);
     });
 
-    this.hardButton = this.add.sprite(1100, 1800, 'hardbutton').setInteractive();
+    this.hardButton = this.add
+      .sprite(1100, 1800, "hardbutton")
+      .setInteractive();
     this.hardButton.setScale(0.2);
-    this.hardButton.on('pointerdown', () => {
+    this.hardButton.on("pointerdown", () => {
       // this.sceneChangeValue = "Hard"
-      this.sceneSelect = "Hard"
-      socket.emit("selecting", this.sceneSelect)
+      this.sceneSelect = "Hard";
+      socket.emit("selecting", this.sceneSelect);
     });
   }
 
@@ -174,24 +177,23 @@ export default class WaitingRoom extends Phaser.Scene {
     playerMoves(this);
 
     if (this.gameInSession) {
-      this.text.setText('GAME IN SESSION');
+      this.text.setText("GAME IN SESSION");
     } else {
       this.text.setText("PRESS I'M READY TO START GAME");
     }
 
     if (this.ready && this.otherPlayers) {
-      this.text.setText('Waiting for other players to hit ready...');
+      this.text.setText("Waiting for other players to hit ready...");
     }
 
     if (this.start) {
       this.text.setText(
         `THE GAME WILL START IN   ${
-        10 -
-        Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
+          10 -
+          Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
         }`
       );
     }
-    this.levelText.setText(`LEVEL SELECTED : ${this.sceneSelect}`)
-
+    this.levelText.setText(`LEVEL SELECTED : ${this.sceneSelect}`);
   }
 }
