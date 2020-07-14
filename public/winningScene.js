@@ -20,13 +20,9 @@ export default class WinningScene extends Phaser.Scene {
       this.lobbyButton.setScale(0.3);
       this.lobbyButton.on("pointerdown", () => {
         console.log(this);
-        this.sys.game.destroy(true);
-        document.addEventListener("mousedown", function newGame() {
-          //restart or create new game
-          // const game = createNewGame();
+        location.reload(); //force refresh
 
-          document.removeEventListener("mousedown", newGame);
-        });
+        this.scene.switch("WaitingRoom");
       });
     });
   }
