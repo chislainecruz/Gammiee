@@ -20,7 +20,7 @@ export const config = {
     default: "arcade",
     arcade: {
       gravity: { y: 1600 },
-      debug: false,
+      debug: true,
     },
     scale: {
       mode: Phaser.DOM.FIT,

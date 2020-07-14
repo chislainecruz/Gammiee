@@ -9,8 +9,8 @@ const playerMoves = (self) => {
       self.player.x = 1100;
       self.player.y = 2300;
     }
-    if (!self.player.anims.isPlaying) {
-      self.player.anims.play("walking");
+    if (!self.player.anims.isPlaying && onGround) {
+      self.player.anims.play(self.player.texture.key + "Walking");
     }
     if (self.cursors.left.isDown) {
       self.player.body.setVelocityX(-self.playerSpeed);
@@ -20,23 +20,23 @@ const playerMoves = (self) => {
       self.player.body.setVelocityX(self.playerSpeed);
       self.player.flipX = true;
 
-      if (!self.player.anims.isPlaying) {
-        self.player.anims.play("walking");
+      if (!self.player.anims.isPlaying && onGround) {
+        self.player.anims.play(self.player.texture.key + "Walking");
       }
     } else {
       self.player.body.setVelocityX(0);
-      self.player.anims.stop("walking");
-      //default pose
-      self.player.setFrame(1);
+      self.player.anims.stop(self.player.texture.key + "Walking");
+      // default pose
+      self.player.setFrame(0);
     }
     // handle jumping
     if (onGround && self.cursors.up.isDown) {
       // give the player a velocity in Y
       self.jump.play(self.soundConfig);
       self.player.body.setVelocityY(self.jumpSpeed);
-
+      self.player.anims.stop(self.player.texture.key + "Walking");
       // change frame
-      self.player.setFrame(2);
+      self.player.setFrame(3);
     }
 
     let x = self.player.x;
@@ -54,7 +54,7 @@ const playerMoves = (self) => {
         x: self.player.x,
         y: self.player.y,
         flipX: self.player.flipX,
-        frame: self.player.anims.currentFrame.index,
+        frame: self.player.frame.name,
       });
 
       self.player.name.x =

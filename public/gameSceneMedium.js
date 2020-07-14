@@ -5,7 +5,7 @@ import socket from "./socket";
 
 export default class GameSceneMedium extends Phaser.Scene {
   constructor() {
-    super({ key: "gameSceneMedium" });
+    super({ key: "Medium" });
   }
   init() {
     // player parameters
