@@ -1,0 +1,8 @@
+{
+    "sprites": [
+        {"key" : "alien", "scaleX": 0.7, "scaleY" : 0.7},
+        {"key" : "werewolf", "scaleX": 0.4, "scaleY" : 0.5},
+        {"key" : "lizard", "scaleX": 0.375, "scaleY" : 0.55},
+        {"key" : "mushroom", "scaleX": 0.5, "scaleY" : 0.65}
+    ]
+}
