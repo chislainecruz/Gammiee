@@ -10,7 +10,7 @@ export const gameScene = new GameScene();
 export const waitingRoom = new WaitingRoom();
 export const winningScene = new WinningScene();
 
-const config = {
+export const config = {
   type: Phaser.AUTO,
   width: 2300,
   height: 2500,
@@ -31,10 +31,18 @@ const config = {
   },
 };
 
-let game = new Phaser.Game(config);
+export const createNewGame = () => {
+  let game = new Phaser.Game(config);
+
+  game.scene.add(waitingRoom);
+  return game;
+};
+
+let game = createNewGame();
 
 //load scenes
 
 //start waiting room
 game.scene.start("WaitingRoom");
+
 export default game;

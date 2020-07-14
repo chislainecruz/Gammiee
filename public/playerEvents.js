@@ -72,6 +72,7 @@ const events = (self) => {
     console.log("stopping scene...");
     //destroys the game instance so other players can join
     self.sys.game.destroy();
+    self.scene.pause();
 
     alert(
       "You have been disconnected due to inactivity. Please refresh the page"
