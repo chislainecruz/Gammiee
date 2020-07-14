@@ -13,6 +13,7 @@ const events = self => {
 
     Object.keys(players).forEach(function (id) {
       if (self.scene.key === players[id].scene) {
+        console.log('test')
         addOtherPlayers(self, players[id]);
 
       }
@@ -43,6 +44,7 @@ const events = self => {
         playerId === otherPlayer.playerId &&
         self.scene.key === otherPlayer.scene.scene.key
       ) {
+        otherPlayer.name.destroy()
         otherPlayer.destroy();
       }
     });
@@ -97,7 +99,7 @@ const events = self => {
 };
 
 export function addPlayer(self, playerInfo) {
-  self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "werewolf", 0);
+  self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, playerInfo.sprite.key, 0);
   if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy" || self.scene.key === "gameSceneMedium") {
     self.physics.add.collider(self.ground, [
       self.player,
@@ -115,7 +117,11 @@ export function addPlayer(self, playerInfo) {
   self.player.body.bounce.y = 0.1;
   self.player.body.gravity.y = 800;
   self.player.body.collideWorldBounds = true;
-  self.player.setScale(0.7);
+  //were wolf scale y 0.5, scalex 0.4
+  //lizzy scaley 0.55 scalex 0.375
+  //mushroom scaley 0.65 scalex 0.5
+  self.player.scaleX = playerInfo.sprite.scaleX
+  self.player.scaleY = playerInfo.sprite.scaleY
   //overlaps
   self.physics.add.overlap(
     self.player,
@@ -145,7 +151,7 @@ export function addOtherPlayers(self, playerInfo) {
   const otherPlayer = self.physics.add.sprite(
     playerInfo.x,
     playerInfo.y,
-    'alien',
+    playerInfo.sprite.key,
     1
   );
   otherPlayer.flipX = playerInfo.flipX;
@@ -156,7 +162,8 @@ export function addOtherPlayers(self, playerInfo) {
   otherPlayer.body.bounce.y = 0.2;
   otherPlayer.body.gravity.y = 800;
   otherPlayer.body.collideWorldBounds = true;
-  otherPlayer.setScale(0.7);
+  otherPlayer.scaleX = playerInfo.sprite.scaleX
+  otherPlayer.scaleY = playerInfo.sprite.scaleY
   otherPlayer.playerId = playerInfo.playerId;
 
   if (!playerInfo.name) {

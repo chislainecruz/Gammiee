@@ -20,7 +20,7 @@ export default class WaitingRoom extends Phaser.Scene {
     this.music.pause();
     this.socket.emit('changeScenes');
     this.socket.off();
-    this.scene.switch("gameSceneMedium");
+    this.scene.switch("gameScene");
   }
 
   playerReady() {
@@ -48,7 +48,15 @@ export default class WaitingRoom extends Phaser.Scene {
       frameWidth: 162,
       frameHeight: 163,
       spacing: 1,
-  
+    });
+    this.load.spritesheet("lizard", "assets/lizzyMcguire.png", {
+      frameWidth: 167.5,
+      frameHeight: 146,
+    });
+    this.load.spritesheet("mushroom", "assets/mushroom.png", {
+      frameWidth: 119,
+      frameHeight: 125,
+      spacing: 1,
     });
     this.load.image('button', 'assets/readyButton.png');
   }
@@ -61,7 +69,7 @@ export default class WaitingRoom extends Phaser.Scene {
     this.jump = this.sound.add('jump');
     this.music = this.sound.add('waitingMusic');
     this.anims.create({
-      key: 'walking',
+      key: 'alienWalking',
       frames: this.anims.generateFrameNames('alien', {
         //frames that are moving
         frames: [0, 1, 2, 3],
@@ -75,8 +83,28 @@ export default class WaitingRoom extends Phaser.Scene {
         //frames that are moving
         frames: [0, 1, 2, 3],
       }),
-      frameRate: 4,
+      frameRate: 5,
       repeat: -1,
+    });
+    this.anims.create({
+      key: "lizardWalking",
+      frames: this.anims.generateFrameNames("lizard", {
+        //frames that are moving
+        frames: [0, 1, 2, 3],
+      }),
+      frameRate: 8,
+      yoyo: true,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "mushroomWalking",
+      frames: this.anims.generateFrameNames("mushroom", {
+        //frames that are moving
+        frames: [0, 1, 2],
+      }),
+      frameRate: 6,
+      yoyo: true,
+      repeat: -1
     });
 
     const background = this.add.sprite(-700, 800, 'clouds');

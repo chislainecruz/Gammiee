@@ -3,6 +3,7 @@ var app = express();
 var server = require('http').Server(app);
 const PORT = process.env.PORT || 8080;
 var io = require('socket.io').listen(server, {});
+let spritesArray = require('./public/json/spriteData.json').sprites
 
 //We will use this object to keep track of all the players that are currently in the games
 let players = {};
@@ -19,6 +20,11 @@ app.get('/', function (req, res) {
 
 io.on('connection', function (socket) {
   // create a new player and add it to our players object
+  // chooses a random index from our sprites array
+  let index = Math.floor(Math.random() * spritesArray.length)
+  //we remove that sprite so there a no duplicate sprites in the game
+  //splice returns an array so we access it with index [0]
+  let sprite = spritesArray.splice(index, 1)[0]
 
   players[socket.id] = {
     x: Math.random() * (1400 - 830) + 830,
@@ -26,6 +32,7 @@ io.on('connection', function (socket) {
     playerId: socket.id,
     ready: false,
     scene: "WaitingRoom",
+    sprite: sprite
   };
 
   socket.on('usernameAdded', username => {
@@ -90,7 +97,8 @@ io.on('connection', function (socket) {
 
   socket.on('disconnect', function () {
     console.log(`user ${socket.id} disconnected`);
-
+    //places the disconnected players sprite back into the array
+    spritesArray.push(players[socket.id].sprite)
     if (gSPlayers[socket.id]) {
       delete gSPlayers[socket.id];
       if (!(Object.keys(gSPlayers).length >= 1)) {
