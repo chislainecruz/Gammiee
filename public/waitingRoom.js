@@ -85,31 +85,31 @@ export default class WaitingRoom extends Phaser.Scene {
     this.text.setScale(2);
     this.timedEvent;
 
-    this.levelText = this.add.text(600, 1900);
+    this.levelText = this.add.text(600, 1850);
     this.levelText.setScale(2);
 
     this.startButton = this.add.sprite(800, 2000, 'button').setInteractive();
-    this.startButton.setScale(0.3);
+    this.startButton.setScale(0.2);
     this.startButton.on('pointerdown', () => {
       if (!this.gameInSession) {
         this.playerReady();
       }
     });
     this.easyButton = this.add.sprite(500, 1800, 'easybutton').setInteractive();
-    this.easyButton.setScale(0.3);
+    this.easyButton.setScale(0.2);
     this.easyButton.on('pointerdown', () => {
       this.sceneChangeValue = "Easy"
     });
 
 
     this.mediumButton = this.add.sprite(800, 1800, 'mediumbutton').setInteractive();
-    this.mediumButton.setScale(0.3);
+    this.mediumButton.setScale(0.2);
     this.mediumButton.on('pointerdown', () => {
       this.sceneChangeValue = "Medium"
     });
 
     this.hardButton = this.add.sprite(1100, 1800, 'hardbutton').setInteractive();
-    this.hardButton.setScale(0.3);
+    this.hardButton.setScale(0.2);
     this.hardButton.on('pointerdown', () => {
       this.sceneChangeValue = "Hard"
     });
