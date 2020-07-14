@@ -14,15 +14,18 @@ export default class WaitingRoom extends Phaser.Scene {
     this.start = false;
     this.gameInSession = false;
     this.ready = false;
+    this.sceneSelect = "Easy"
+  }
+  selectingLevel(val) {
+    this.sceneSelect = val
   }
 
   onEvent() {
     this.music.pause();
-    this.socket.emit('changeScenes');
     this.socket.off();
-    this.scene.switch("gameScene");
+    this.socket.emit("changeScenes", this.sceneSelect)
+    this.scene.switch(this.sceneSelect);
   }
-
   playerReady() {
     this.ready = true;
     this.socket.emit('playerReady');
@@ -44,7 +47,24 @@ export default class WaitingRoom extends Phaser.Scene {
       margin: 1,
       spacing: 1,
     });
+    this.load.spritesheet('werewolf', 'assets/werewolf.png', {
+      frameWidth: 162,
+      frameHeight: 163,
+      spacing: 1,
+    });
+    this.load.spritesheet("lizard", "assets/lizzyMcguire.png", {
+      frameWidth: 167.5,
+      frameHeight: 146,
+    });
+    this.load.spritesheet("mushroom", "assets/mushroom.png", {
+      frameWidth: 119,
+      frameHeight: 125,
+      spacing: 1,
+    });
     this.load.image('button', 'assets/readyButton.png');
+    this.load.image('easybutton', 'assets/easy.png');
+    this.load.image('mediumbutton', 'assets/medium.png');
+    this.load.image('hardbutton', 'assets/hard.png');
   }
   create() {
     this.socket = socket;
@@ -52,16 +72,49 @@ export default class WaitingRoom extends Phaser.Scene {
     this.soundConfig = {
       volume: 0.1,
     };
+
+    this.socket.on("selectingLevel", (val) => {
+      this.selectingLevel(val)
+    })
     this.jump = this.sound.add('jump');
     this.music = this.sound.add('waitingMusic');
     this.anims.create({
-      key: 'walking',
+      key: 'alienWalking',
       frames: this.anims.generateFrameNames('alien', {
         //frames that are moving
         frames: [0, 1, 2, 3],
       }),
       frameRate: 8,
       repeat: -1,
+    });
+    this.anims.create({
+      key: 'werewolfWalking',
+      frames: this.anims.generateFrameNames('werewolf', {
+        //frames that are moving
+        frames: [0, 1, 2, 3],
+      }),
+      frameRate: 5,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "lizardWalking",
+      frames: this.anims.generateFrameNames("lizard", {
+        //frames that are moving
+        frames: [0, 1, 2, 3],
+      }),
+      frameRate: 8,
+      yoyo: true,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: "mushroomWalking",
+      frames: this.anims.generateFrameNames("mushroom", {
+        //frames that are moving
+        frames: [0, 1, 2],
+      }),
+      frameRate: 6,
+      yoyo: true,
+      repeat: -1
     });
 
     const background = this.add.sprite(-700, 800, 'clouds');
@@ -77,16 +130,43 @@ export default class WaitingRoom extends Phaser.Scene {
     this.socket.on('gameInProgress', () => {
       this.gameInSession = !this.gameInSession;
     });
-    this.text = this.add.text(1000, 2000);
+    this.text = this.add.text(540, 2080);
     this.text.setScale(2);
     this.timedEvent;
 
+    this.levelText = this.add.text(600, 1850);
+    this.levelText.setScale(2);
+
     this.startButton = this.add.sprite(800, 2000, 'button').setInteractive();
-    this.startButton.setScale(0.3);
+    this.startButton.setScale(0.2);
     this.startButton.on('pointerdown', () => {
       if (!this.gameInSession) {
         this.playerReady();
       }
+    });
+    this.easyButton = this.add.sprite(500, 1800, 'easybutton').setInteractive();
+    this.easyButton.setScale(0.2);
+    this.easyButton.on('pointerdown', () => {
+      // this.sceneChangeValue = "Easy"
+      this.sceneSelect = "Easy"
+      socket.emit("selecting", this.sceneSelect)
+    });
+
+
+    this.mediumButton = this.add.sprite(800, 1800, 'mediumbutton').setInteractive();
+    this.mediumButton.setScale(0.2);
+    this.mediumButton.on('pointerdown', () => {
+      // this.sceneChangeValue = "Medium"
+      this.sceneSelect = "Medium"
+      socket.emit("selecting", this.sceneSelect)
+    });
+
+    this.hardButton = this.add.sprite(1100, 1800, 'hardbutton').setInteractive();
+    this.hardButton.setScale(0.2);
+    this.hardButton.on('pointerdown', () => {
+      // this.sceneChangeValue = "Hard"
+      this.sceneSelect = "Hard"
+      socket.emit("selecting", this.sceneSelect)
     });
   }
 
@@ -111,5 +191,7 @@ export default class WaitingRoom extends Phaser.Scene {
         }`
       );
     }
+    this.levelText.setText(`LEVEL SELECTED : ${this.sceneSelect}`)
+
   }
 }
