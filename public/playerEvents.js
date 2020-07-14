@@ -82,9 +82,9 @@ const events = (self) => {
   const button = document.getElementById("player-button");
 
   button.addEventListener("click", function () {
-    self.name.text = username.value;
+    self.player.name.text = username.value;
 
-    self.socket.emit("usernameAdded", self.name.text);
+    self.socket.emit("usernameAdded", self.player.name.text);
   });
 
   self.socket.on("displayUsername", (username, socketId) => {
@@ -131,7 +131,7 @@ export function addPlayer(self, playerInfo) {
   if (!playerInfo.name) {
     playerInfo.name = "";
   }
-  self.name = self.add.text(
+  self.player.name = self.add.text(
     self.player.x - 50,
     self.player.y - 50,
     playerInfo.name

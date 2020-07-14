@@ -71,10 +71,13 @@ export default class GameSceneEasy extends Phaser.Scene {
     this.gameOverSprite.visible = true;
     this.cameras.add().setScroll(0, 10);
     //set timer for 3 seconds, switch to winning scene
+    this.scene.switch("WinningScene");
   }
 
   winGame(sourceSprite, targetSprite) {
-    this.socket.emit("playerWins");
+    console.log("this ", this.player.name);
+    this.socket.emit("playerWins", this.player.name.text);
+
     this.endGame();
   }
   create() {
@@ -193,7 +196,7 @@ export default class GameSceneEasy extends Phaser.Scene {
   // this runs when player gets hit by object
   restartGame(sourceSprite, targetSprite) {
     this.player.x = 1100;
-    this.player.y = 2300;
+    this.player.y = 100;
   }
 
   // boss attack

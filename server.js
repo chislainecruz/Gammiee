@@ -8,6 +8,7 @@ var io = require("socket.io").listen(server, {});
 let players = {};
 let gSPlayers = {};
 let wRPlayers = {};
+let winner = "";
 
 app.use(express.static(__dirname + "/public"));
 
@@ -83,8 +84,14 @@ io.on("connection", function (socket) {
     }
   });
 
-  socket.on("playerWins", () => {
+  socket.on("playerWins", (playerName) => {
     socket.broadcast.emit("endGame");
+    winner = playerName;
+    console.log("setting winner to ", winner);
+  });
+  socket.on("getWinner", () => {
+    console.log("sending winners name...");
+    socket.emit("winner", winner);
   });
 
   socket.on("checkGameStatus", () => {
