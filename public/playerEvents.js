@@ -1,11 +1,13 @@
-import game, { waitingRoom, gameScene, gameSceneEasy, gameSceneMedium } from "./theGame";
-import socket from "./socket";
+import {
+  waitingRoom,
+  gameScene,
+  gameSceneEasy,
+  gameSceneMedium,
+} from "./theGame";
 
-
-const events = self => {
+const events = (self) => {
   self.otherPlayers = self.physics.add.group();
   //* Player attributes
-
 
   self.socket.on("currentPlayers", (players) => {
     addPlayer(self, players[self.socket.id]);
@@ -14,19 +16,17 @@ const events = self => {
     Object.keys(players).forEach(function (id) {
       if (self.scene.key === players[id].scene) {
         addOtherPlayers(self, players[id]);
-
       }
     });
   });
 
-  self.socket.on('updateScene', playerId => {
-    self.otherPlayers.getChildren().forEach(otherPlayer => {
+  self.socket.on("updateScene", (playerId) => {
+    self.otherPlayers.getChildren().forEach((otherPlayer) => {
       if (playerId === otherPlayer.playerId) {
         otherPlayer.scene = "gameScene" || "gameSceneEasy" || "gameSceneMedium";
       }
     });
   });
-
 
   self.socket.on("newPlayer", (playerInfo) => {
     if (self.scene.key === "WaitingRoom") {
@@ -35,7 +35,6 @@ const events = self => {
       addOtherPlayers(self, playerInfo);
     }
   });
-
 
   self.socket.on("disconnect", (playerId) => {
     self.otherPlayers.getChildren().forEach((otherPlayer) => {
@@ -47,12 +46,13 @@ const events = self => {
       }
     });
   });
-  self.socket.on('playerMoved', playerInfo => {
-    self.otherPlayers.getChildren().forEach(otherPlayer => {
+  self.socket.on("playerMoved", (playerInfo) => {
+    self.otherPlayers.getChildren().forEach((otherPlayer) => {
       if (playerInfo.playerId === otherPlayer.playerId) {
         otherPlayer.setPosition(playerInfo.x, playerInfo.y);
         otherPlayer.flipX = playerInfo.flipX;
-        otherPlayer.name.x = otherPlayer.x - 25 - (otherPlayer.name.text.length * 2);
+        otherPlayer.name.x =
+          otherPlayer.x - 25 - otherPlayer.name.text.length * 2;
         otherPlayer.name.y = otherPlayer.y - 50;
 
         if (playerInfo.frame) {
@@ -62,8 +62,8 @@ const events = self => {
     });
   });
 
-  self.socket.on('startGame', () => {
-    if (self.scene.key === 'WaitingRoom') {
+  self.socket.on("startGame", () => {
+    if (self.scene.key === "WaitingRoom") {
       self.startGame();
     }
   });
@@ -74,21 +74,21 @@ const events = self => {
     self.sys.game.destroy();
 
     alert(
-      'You have been disconnected due to inactivity. Please refresh the page'
+      "You have been disconnected due to inactivity. Please refresh the page"
     );
   });
 
-  const username = document.getElementById('player-name');
-  const button = document.getElementById('player-button');
+  const username = document.getElementById("player-name");
+  const button = document.getElementById("player-button");
 
-  button.addEventListener('click', function () {
+  button.addEventListener("click", function () {
     self.name.text = username.value;
 
-    self.socket.emit('usernameAdded', self.name.text);
+    self.socket.emit("usernameAdded", self.name.text);
   });
 
-  self.socket.on('displayUsername', (username, socketId) => {
-    self.otherPlayers.getChildren().forEach(otherPlayer => {
+  self.socket.on("displayUsername", (username, socketId) => {
+    self.otherPlayers.getChildren().forEach((otherPlayer) => {
       if (socketId === otherPlayer.playerId) {
         otherPlayer.name.text = username;
       }
@@ -98,7 +98,11 @@ const events = self => {
 
 export function addPlayer(self, playerInfo) {
   self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
-  if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy" || self.scene.key === "gameSceneMedium") {
+  if (
+    self.scene.key === "gameScene" ||
+    self.scene.key === "gameSceneEasy" ||
+    self.scene.key === "gameSceneMedium"
+  ) {
     self.physics.add.collider(self.ground, [
       self.player,
       self.goal,
@@ -129,14 +133,18 @@ export function addPlayer(self, playerInfo) {
   self.cameras.main.setZoom(1.6);
 
   if (!playerInfo.name) {
-    playerInfo.name = 'Anonymous';
+    playerInfo.name = "";
   }
   self.name = self.add.text(
     self.player.x - 50,
     self.player.y - 50,
     playerInfo.name
   );
-  if (self.player.scene === gameScene || self.player.scene === gameSceneEasy || self.player.scene === gameSceneMedium) {
+  if (
+    self.player.scene === gameScene ||
+    self.player.scene === gameSceneEasy ||
+    self.player.scene === gameSceneMedium
+  ) {
     waitingRoom.player.destroy();
   }
 }
@@ -145,12 +153,16 @@ export function addOtherPlayers(self, playerInfo) {
   const otherPlayer = self.physics.add.sprite(
     playerInfo.x,
     playerInfo.y,
-    'alien',
+    "alien",
     1
   );
   otherPlayer.flipX = playerInfo.flipX;
   self.physics.add.collider(self.ground, otherPlayer);
-  if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy" || self.scene.key === "gameSceneMedium") {
+  if (
+    self.scene.key === "gameScene" ||
+    self.scene.key === "gameSceneEasy" ||
+    self.scene.key === "gameSceneMedium"
+  ) {
     self.physics.add.collider(self.platforms, otherPlayer);
   }
   otherPlayer.body.bounce.y = 0.2;
@@ -160,7 +172,7 @@ export function addOtherPlayers(self, playerInfo) {
   otherPlayer.playerId = playerInfo.playerId;
 
   if (!playerInfo.name) {
-    playerInfo.name = 'Anonymous';
+    playerInfo.name = "";
   }
   otherPlayer.name = self.add.text(
     otherPlayer.x - 50,
