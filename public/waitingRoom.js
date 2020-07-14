@@ -20,7 +20,7 @@ export default class WaitingRoom extends Phaser.Scene {
     this.music.pause();
     this.socket.emit('changeScenes');
     this.socket.off();
-    this.scene.switch("gameScene");
+    this.scene.switch("gameSceneMedium");
   }
 
   playerReady() {
@@ -44,6 +44,12 @@ export default class WaitingRoom extends Phaser.Scene {
       margin: 1,
       spacing: 1,
     });
+    this.load.spritesheet('werewolf', 'assets/werewolf.png', {
+      frameWidth: 162,
+      frameHeight: 163,
+      spacing: 1,
+  
+    });
     this.load.image('button', 'assets/readyButton.png');
   }
   create() {
@@ -61,6 +67,15 @@ export default class WaitingRoom extends Phaser.Scene {
         frames: [0, 1, 2, 3],
       }),
       frameRate: 8,
+      repeat: -1,
+    });
+    this.anims.create({
+      key: 'werewolfWalking',
+      frames: this.anims.generateFrameNames('werewolf', {
+        //frames that are moving
+        frames: [0, 1, 2, 3],
+      }),
+      frameRate: 4,
       repeat: -1,
     });
 
