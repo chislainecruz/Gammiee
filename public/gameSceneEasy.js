@@ -45,8 +45,6 @@ export default class GameSceneEasy extends Phaser.Scene {
     this.load.spritesheet("goal", "./assets/Dragon.png", {
       frameWidth: 223,
       frameHeight: 270,
-
-
     });
 
     this.load.spritesheet("minion", "./assets/babyDragon.png", {
@@ -72,6 +70,7 @@ export default class GameSceneEasy extends Phaser.Scene {
     this.gameOverSprite.depth = 100;
     this.gameOverSprite.visible = true;
     this.cameras.add().setScroll(0, 10);
+    //set timer for 3 seconds, switch to winning scene
   }
 
   winGame(sourceSprite, targetSprite) {
@@ -87,10 +86,10 @@ export default class GameSceneEasy extends Phaser.Scene {
     bg.setOrigin(0, 0);
     bg.setScale(6);
     this.soundConfig = {
-      volume: 0.1
-    }
+      volume: 0.1,
+    };
     this.jump = this.sound.add("jump");
-    this.music = this.sound.add('battleMusic')
+    this.music = this.sound.add("battleMusic");
     //creates ground blocks
 
     //the first 2 nums are the position on the screen
