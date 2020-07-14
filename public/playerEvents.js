@@ -22,7 +22,7 @@ const events = self => {
   self.socket.on('updateScene', playerId => {
     self.otherPlayers.getChildren().forEach(otherPlayer => {
       if (playerId === otherPlayer.playerId) {
-        otherPlayer.scene = "gameScene" || "gameSceneEasy" || "gameSceneMedium";
+        otherPlayer.scene = "Hard" || "Easy" || "Medium";
       }
     });
   });
@@ -98,7 +98,7 @@ const events = self => {
 
 export function addPlayer(self, playerInfo) {
   self.player = self.physics.add.sprite(playerInfo.x, playerInfo.y, "alien", 1);
-  if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy" || self.scene.key === "gameSceneMedium") {
+  if (self.scene.key === "Hard" || self.scene.key === "Easy" || self.scene.key === "Medium") {
     self.physics.add.collider(self.ground, [
       self.player,
       self.goal,
@@ -150,7 +150,7 @@ export function addOtherPlayers(self, playerInfo) {
   );
   otherPlayer.flipX = playerInfo.flipX;
   self.physics.add.collider(self.ground, otherPlayer);
-  if (self.scene.key === "gameScene" || self.scene.key === "gameSceneEasy" || self.scene.key === "gameSceneMedium") {
+  if (self.scene.key === "Hard" || self.scene.key === "Easy" || self.scene.key === "Medium") {
     self.physics.add.collider(self.platforms, otherPlayer);
   }
   otherPlayer.body.bounce.y = 0.2;

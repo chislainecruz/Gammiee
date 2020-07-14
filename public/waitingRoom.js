@@ -6,7 +6,7 @@ export default class WaitingRoom extends Phaser.Scene {
   constructor() {
     super('WaitingRoom');
     this.onEvent = this.onEvent.bind(this);
-    this.sceneChangeValue = "gameSceneEasy"
+    this.sceneChangeValue = "Easy"
   }
   init() {
     // player parameters
@@ -81,9 +81,12 @@ export default class WaitingRoom extends Phaser.Scene {
     this.socket.on('gameInProgress', () => {
       this.gameInSession = !this.gameInSession;
     });
-    this.text = this.add.text(1000, 2000);
+    this.text = this.add.text(540, 2080);
     this.text.setScale(2);
     this.timedEvent;
+
+    this.levelText = this.add.text(600, 1900);
+    this.levelText.setScale(2);
 
     this.startButton = this.add.sprite(800, 2000, 'button').setInteractive();
     this.startButton.setScale(0.3);
@@ -95,20 +98,20 @@ export default class WaitingRoom extends Phaser.Scene {
     this.easyButton = this.add.sprite(500, 1800, 'easybutton').setInteractive();
     this.easyButton.setScale(0.3);
     this.easyButton.on('pointerdown', () => {
-      this.sceneChangeValue = "gameSceneEasy"
+      this.sceneChangeValue = "Easy"
     });
 
 
     this.mediumButton = this.add.sprite(800, 1800, 'mediumbutton').setInteractive();
     this.mediumButton.setScale(0.3);
     this.mediumButton.on('pointerdown', () => {
-      this.sceneChangeValue = "gameSceneMedium"
+      this.sceneChangeValue = "Medium"
     });
 
     this.hardButton = this.add.sprite(1100, 1800, 'hardbutton').setInteractive();
     this.hardButton.setScale(0.3);
     this.hardButton.on('pointerdown', () => {
-      this.sceneChangeValue = "gameScene"
+      this.sceneChangeValue = "Hard"
     });
   }
 
@@ -133,5 +136,6 @@ export default class WaitingRoom extends Phaser.Scene {
         }`
       );
     }
+    this.levelText.setText(`LEVEL SELECTED : ${this.sceneChangeValue}`)
   }
 }
