@@ -203,14 +203,25 @@ export default class GameSceneEasy extends Phaser.Scene {
     // this.speedPower.body.allowGravity = true;
     // this.physics.add.collider(this.speedPower, this.ground)
     // this.physics.add.collider(this.speedPower, this.platforms)
+    this.powerUps = ['immune', 'speed']
 
-    this.speedPower = spawnPowerUps(
-      'speed',
-      this
-    );
-
-    this.potion = spawnPowerUps("immune", this)
-
+    this.time.addEvent({
+      delay: 10000,
+      loop: true,
+      callbackScope: this,
+      callback: function (){
+        this.powerUps.forEach(powerUp => {
+          let power = spawnPowerUps(powerUp, this)
+          let test = this.physics.add.overlap(
+            this.player,
+            power,
+            power.func,
+            null,
+            this
+          )
+        })
+      }
+    })
     //* Player attributes
     events(this);
   }
@@ -307,7 +318,7 @@ export default class GameSceneEasy extends Phaser.Scene {
   // sets up all the elements in the level
   level() {
     this.platforms = this.add.group();
-    this.powerUps = this.add.group();
+    
 
     // parse json data
     this.levelDataEasy = this.cache.json.get('levelDataEasy');

@@ -225,6 +225,12 @@ export function spawnPowerUps(powerUp, self) {
     powerUp
   );
   powerUpSpawn.body.allowGravity = false;
+  if (powerUp === 'speed'){
+    console.log('sped')
+    powerUpSpawn.func = speedBoost
+  } else {
+    powerUpSpawn.func = invincible
+  }
 
   return powerUpSpawn;
   // self.physics.add.collider(powerUpSpawn, self.ground);
