@@ -14,7 +14,7 @@ export default class WaitingRoom extends Phaser.Scene {
     this.start = false;
     this.gameInSession = false;
     this.ready = false;
-    this.sceneSelect = "Easy";
+    this.sceneSelect = "";
   }
   selectingLevel(val) {
     this.sceneSelect = val;
@@ -32,7 +32,7 @@ export default class WaitingRoom extends Phaser.Scene {
   }
   playerNotReady() {
     this.ready = false;
-    this.socket.emit("playerNotReady")
+    this.socket.emit("playerNotReady");
   }
 
   startGame() {
@@ -126,12 +126,16 @@ export default class WaitingRoom extends Phaser.Scene {
     background.setOrigin(0, 0);
     background.setScale(3.7);
     this.ground = this.add.tileSprite(1150, 2400, 23 * 4000, 1 * 60, "tiles");
-    this.ground.visible = false
+    this.ground.visible = false;
     this.physics.add.existing(this.ground, true);
     this.ground.body.allowGravity = false;
     this.ground.body.immovable = true;
     this.cursors = this.input.keyboard.addKeys("up, down, left, right");
     events(this);
+    this.socket.emit("getScene");
+    this.socket.on("currentScene", (scene) => {
+      this.sceneSelect = scene;
+    });
     this.socket.emit("checkGameStatus");
     this.socket.on("gameInProgress", () => {
       this.gameInSession = !this.gameInSession;
@@ -143,19 +147,22 @@ export default class WaitingRoom extends Phaser.Scene {
     this.levelText = this.add.text(600, 1850);
     this.levelText.setScale(2);
 
-    this.readyButton = this.add.sprite(800, 2000, "readyButton").setInteractive();
+    this.readyButton = this.add
+      .sprite(800, 2000, "readyButton")
+      .setInteractive();
     this.readyButton.setScale(0.2);
-    this.readyButton.visible = false
+    this.readyButton.visible = false;
 
-
-    this.notReadyButton = this.add.sprite(800, 2000, "notReadyButton").setInteractive();
+    this.notReadyButton = this.add
+      .sprite(800, 2000, "notReadyButton")
+      .setInteractive();
     this.notReadyButton.setScale(0.2);
 
     // im ready
     this.notReadyButton.on("pointerdown", () => {
       if (!this.gameInSession) {
-        this.notReadyButton.visible = false
-        this.readyButton.visible = true
+        this.notReadyButton.visible = false;
+        this.readyButton.visible = true;
         this.playerReady();
       }
       //im not ready
@@ -163,11 +170,9 @@ export default class WaitingRoom extends Phaser.Scene {
         if (!this.gameInSession) {
           this.readyButton.visible = false;
           this.notReadyButton.visible = true;
-          this.playerNotReady()
+          this.playerNotReady();
         }
-      })
-
-
+      });
     });
     this.easyButton = this.add.sprite(500, 1800, "easybutton").setInteractive();
     this.easyButton.setScale(0.2);
@@ -214,8 +219,8 @@ export default class WaitingRoom extends Phaser.Scene {
     if (this.start) {
       this.text.setText(
         `THE GAME WILL START IN   ${
-        10 -
-        Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
+          10 -
+          Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
         }`
       );
     }

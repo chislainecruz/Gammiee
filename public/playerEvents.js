@@ -1,9 +1,4 @@
-import {
-  waitingRoom,
-  gameScene,
-  gameSceneEasy,
-  gameSceneMedium,
-} from "./theGame";
+import { waitingRoom } from "./theGame";
 
 const events = (self) => {
   self.otherPlayers = self.physics.add.group();
@@ -73,10 +68,9 @@ const events = (self) => {
     console.log("stopping scene...");
     //destroys the game instance so other players can join
     self.sys.game.destroy();
-    self.scene.pause();
 
     alert(
-      "You have been disconnected due to inactivity. Please refresh the page"
+      "You have been disconnected due to inactivity. Press OK to re-connect"
     );
   });
 
@@ -105,11 +99,7 @@ export function addPlayer(self, playerInfo) {
     playerInfo.sprite.key,
     1
   );
-  if (
-    self.scene.key === "Hard" ||
-    self.scene.key === "Easy" ||
-    self.scene.key === "Medium"
-  ) {
+  if (self.scene.key !== "WaitingRoom") {
     self.physics.add.collider(self.ground, [
       self.player,
       self.goal,
@@ -165,11 +155,7 @@ export function addOtherPlayers(self, playerInfo) {
   );
   otherPlayer.flipX = playerInfo.flipX;
   self.physics.add.collider(self.ground, otherPlayer);
-  if (
-    self.scene.key === "Hard" ||
-    self.scene.key === "Easy" ||
-    self.scene.key === "Medium"
-  ) {
+  if (self.scene.key !== "WaitingRoom") {
     self.physics.add.collider(self.platforms, otherPlayer);
   }
   otherPlayer.body.bounce.y = 0.2;
