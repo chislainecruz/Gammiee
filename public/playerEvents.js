@@ -131,7 +131,7 @@ export function addPlayer(self, playerInfo) {
   //mushroom scaley 0.65 scalex 0.5
   self.player.scaleX = playerInfo.sprite.scaleX;
   self.player.scaleY = playerInfo.sprite.scaleY;
-  //overlaps
+  //player damage overlaps
   self.physics.add.overlap(
     self.player,
     [self.fires, self.flames],
@@ -139,6 +139,17 @@ export function addPlayer(self, playerInfo) {
     null,
     self
   );
+
+  self.physics.add.overlap(
+    self.player,
+    self.speedPower,
+    self.speedBoost,
+    null,
+    self
+  );
+
+
+  //player wins overlap
   self.physics.add.overlap(self.player, [self.goal], self.winGame, null, self);
   self.cameras.main.startFollow(self.player);
   self.cameras.main.setZoom(1.6);

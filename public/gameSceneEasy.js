@@ -194,11 +194,10 @@ export default class GameSceneEasy extends Phaser.Scene {
     this.minionAttack();
 
     //POWER UPS
-    this.speedPower = this.add.sprite(1000, 2300, "speed")
-    this.physics.add.existing(this.speedPower, true);
-    console.log('ELLO')
-    this.physics.add.collider(this.speedPower, [this.ground, this.platforms])
-
+    this.speedPower = this.physics.add.sprite(900, 2200, "speed")
+    this.speedPower.body.allowGravity = true;
+    this.physics.add.collider(this.speedPower, this.ground)
+    this.physics.add.collider(this.speedPower, this.platforms)
     //* Player attributes
     events(this);
   }
@@ -212,6 +211,16 @@ export default class GameSceneEasy extends Phaser.Scene {
   restartGame(sourceSprite, targetSprite) {
     this.player.x = 1100;
     this.player.y = 2300;
+  }
+  speedNormal() {
+    this.playerSpeed = 350
+    this.jumpSpeed = -800
+  }
+  speedBoost(sourceSprite, targetSprite) {
+    this.playerSpeed = 700
+    this.jumpSpeed = -1000
+
+
   }
 
   // boss attack
