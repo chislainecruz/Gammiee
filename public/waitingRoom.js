@@ -37,7 +37,7 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("clouds", "./assets/background.png");
+    this.load.image("waitingBg", "./assets/waitingBG.png");
     this.load.image("tiles", "./assets/tiles.png");
     this.load.audio("waitingMusic", "./assets/TimeTemple.mp3");
     this.load.audio("jump", "./assets/jump-sfx.mp3");
@@ -117,10 +117,11 @@ export default class WaitingRoom extends Phaser.Scene {
       repeat: -1,
     });
 
-    const background = this.add.sprite(-700, 800, "clouds");
+    const background = this.add.sprite(-800, 280, "waitingBg");
     background.setOrigin(0, 0);
-    background.setScale(5);
+    background.setScale(3.7);
     this.ground = this.add.tileSprite(1150, 2400, 23 * 4000, 1 * 60, "tiles");
+    this.ground.visible = false
     this.physics.add.existing(this.ground, true);
     this.ground.body.allowGravity = false;
     this.ground.body.immovable = true;
@@ -189,8 +190,8 @@ export default class WaitingRoom extends Phaser.Scene {
     if (this.start) {
       this.text.setText(
         `THE GAME WILL START IN   ${
-          10 -
-          Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
+        10 -
+        Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
         }`
       );
     }

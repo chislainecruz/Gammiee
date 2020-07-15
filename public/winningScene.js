@@ -6,18 +6,23 @@ export default class WinningScene extends Phaser.Scene {
     super({ key: "WinningScene" });
   }
   preload() {
+    this.load.image("winningbg", "./assets/winScreen.jpg");
     //re-using button but will need to be changed to "Go to Lobby"
-    this.load.image("button", "assets/readyButton.png");
+    this.load.image("newbutton", "assets/newGameButton.png");
   }
   create() {
+    const background = this.add.sprite(-200, 0, "winningbg");
+    background.setOrigin(0, 0);
+    background.setScale(2);
     this.socket = socket;
     this.socket.emit("getWinner");
     this.socket.on("winner", (playerName) => {
-      this.text = this.add.text(1000, 2000, `${playerName} wins!`);
-      this.text.setScale(2);
+      this.text = this.add.text(550, 500, `${playerName} wins!`);
+      this.text.setScale(8);
 
-      this.lobbyButton = this.add.sprite(800, 2000, "button").setInteractive();
-      this.lobbyButton.setScale(0.3);
+
+      this.lobbyButton = this.add.sprite(950, 1000, "newbutton").setInteractive();
+      this.lobbyButton.setScale(1);
       this.lobbyButton.on("pointerdown", () => {
         console.log(this);
         location.reload(); //force refresh
@@ -26,5 +31,5 @@ export default class WinningScene extends Phaser.Scene {
       });
     });
   }
-  update() {}
+  update() { }
 }
