@@ -68,12 +68,13 @@ const events = (self) => {
     console.log("stopping scene...");
     //destroys the game instance so other players can join
     self.music.pause();
-    self.sys.game.destroy();
+    //self.sys.game.destroy();
 
     alert(
       "You have been disconnected due to inactivity. Press OK to re-connect"
     );
-    self.scene.pause();
+    self.scene.stop();
+    //self.scene.pause();
   });
 
   const username = document.getElementById("player-name");

@@ -42,7 +42,6 @@ const playerMoves = (self) => {
     let x = self.player.x;
     let y = self.player.y;
     let flipX = self.player.flipX;
-    let frame;
 
     if (
       self.player.oldPosition &&
