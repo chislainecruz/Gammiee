@@ -132,7 +132,9 @@ export function addPlayer(self, playerInfo) {
   self.player.scaleX = playerInfo.sprite.scaleX;
   self.player.scaleY = playerInfo.sprite.scaleY;
   //player damage overlaps
-  self.physics.add.overlap(
+
+
+  self.playerDamage = self.physics.add.overlap(
     self.player,
     [self.fires, self.flames],
     self.restartGame,
@@ -140,6 +142,13 @@ export function addPlayer(self, playerInfo) {
     self
   );
 
+  self.physics.add.overlap(
+    self.player,
+    self.potion,
+    invincible,
+    null,
+    self
+  );
   self.physics.add.overlap(
     self.player,
     self.speedPower,
@@ -227,6 +236,15 @@ function speedBoost(sourceSprite, targetSprite) {
   this.jumpSpeed = -1000;
   this.time.delayedCall(8000, speedNormal, [], this);
   targetSprite.destroy();
+}
+function notInvincible() {
+  this.playerDamage.active = true
+
+}
+function invincible(sourceSprite, targetSprite) {
+  this.playerDamage.active = false
+  this.time.delayedCall(8000, notInvincible, [], this)
+  targetSprite.destroy()
 }
 
 export default events;

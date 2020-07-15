@@ -210,6 +210,8 @@ export default class GameSceneEasy extends Phaser.Scene {
       this
     );
 
+    this.potion = spawnPowerUps("immune", this.platforms.getChildren()[7], this)
+
     //* Player attributes
     events(this);
   }
