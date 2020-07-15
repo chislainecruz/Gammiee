@@ -140,7 +140,7 @@ io.on("connection", function (socket) {
         socket.emit("disconnectPlayer");
       },
       //if player goes a minute without moving, they will be disconnected
-      1000 * 25
+      1000 * 30
     );
 
     players[socket.id].x = data.x;
