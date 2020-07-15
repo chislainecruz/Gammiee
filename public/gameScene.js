@@ -1,5 +1,5 @@
 // Linted with standardJS - https://standardjs.com/
-import events from "./playerEvents";
+import events, { spawnPowerUps } from "./playerEvents";
 import playerMoves from "./playerMoves";
 import socket from "./socket";
 
@@ -19,7 +19,14 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("background", "./assets/testback.png");
     this.load.image("platform", "./assets/platform.png");
     this.load.image("block", "./assets/block.png");
-
+    this.load.spritesheet('speed', './assets/speed.png', {
+      frameWidth: 50,
+      frameHeight: 50,
+    });
+    this.load.spritesheet('immune', './assets/immune.png', {
+      frameWidth: 50,
+      frameHeight: 50,
+    });
     this.load.spritesheet("gameOver", "./assets/gameOver.png", {
       frameWidth: 300,
       frameHeight: 3001,
