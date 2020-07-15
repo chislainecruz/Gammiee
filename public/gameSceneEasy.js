@@ -20,6 +20,11 @@ export default class GameSceneEasy extends Phaser.Scene {
     this.load.image("platform", "./assets/platform.png");
     this.load.image("block", "./assets/block.png");
 
+    this.load.spritesheet("speed", "./assets/speed.png", {
+      frameWidth: 50,
+      frameHeight: 50
+    })
+
     this.load.spritesheet("gameOver", "./assets/gameOver.png", {
       frameWidth: 300,
       frameHeight: 3001,
@@ -71,6 +76,7 @@ export default class GameSceneEasy extends Phaser.Scene {
     this.gameOverSprite.visible = true;
     this.cameras.add().setScroll(0, 10);
     this.scene.pause();
+    this.music.pause();
     this.scene.switch("WinningScene");
   }
 
@@ -93,6 +99,9 @@ export default class GameSceneEasy extends Phaser.Scene {
     };
     this.jump = this.sound.add("jump");
     this.music = this.sound.add("battleMusic");
+
+
+
     //creates ground blocks
 
     //the first 2 nums are the position on the screen
@@ -183,6 +192,12 @@ export default class GameSceneEasy extends Phaser.Scene {
     this.level();
     this.bossAttack();
     this.minionAttack();
+
+    //POWER UPS
+    this.speedPower = this.add.sprite(1000, 2300, "speed")
+    this.physics.add.existing(this.speedPower, true);
+    console.log('ELLO')
+    this.physics.add.collider(this.speedPower, [this.ground, this.platforms])
 
     //* Player attributes
     events(this);
