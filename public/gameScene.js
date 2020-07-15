@@ -181,7 +181,25 @@ export default class GameScene extends Phaser.Scene {
     this.level();
     this.bossAttack();
     this.minionAttack();
+    this.powerUps = ['immune', 'speed']
 
+    this.time.addEvent({
+      delay: 10000,
+      loop: true,
+      callbackScope: this,
+      callback: function (){
+        this.powerUps.forEach(powerUp => {
+          let power = spawnPowerUps(powerUp, this)
+          let test = this.physics.add.overlap(
+            this.player,
+            power,
+            power.func,
+            null,
+            this
+          )
+        })
+      }
+    })
     events(this);
   }
 
