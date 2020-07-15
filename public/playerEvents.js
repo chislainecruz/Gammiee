@@ -208,8 +208,13 @@ export function addOtherPlayers(self, playerInfo) {
   );
   self.otherPlayers.add(otherPlayer);
 }
+function randomPlatform(self) {
+  const maxPlat = self.platforms.getChildren()
+  return maxPlat[Math.floor(Math.random() * maxPlat.length)]
+}
 
-export function spawnPowerUps(powerUp, platform, self) {
+export function spawnPowerUps(powerUp, self) {
+  let platform = randomPlatform(self)
   let minX = platform.getTopLeft().x;
   let maxX = platform.getTopRight().x;
   let y = platform.y - 20;

@@ -206,11 +206,10 @@ export default class GameSceneEasy extends Phaser.Scene {
 
     this.speedPower = spawnPowerUps(
       'speed',
-      this.platforms.getChildren()[5],
       this
     );
 
-    this.potion = spawnPowerUps("immune", this.platforms.getChildren()[7], this)
+    this.potion = spawnPowerUps("immune", this)
 
     //* Player attributes
     events(this);
@@ -219,6 +218,7 @@ export default class GameSceneEasy extends Phaser.Scene {
   // eslint-disable-next-line complexity
   update() {
     playerMoves(this);
+
   }
 
   // this runs when player gets hit by object
