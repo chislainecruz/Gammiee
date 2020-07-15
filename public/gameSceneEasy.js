@@ -212,15 +212,17 @@ export default class GameSceneEasy extends Phaser.Scene {
     this.player.x = 1100;
     this.player.y = 2300;
   }
+
   speedNormal() {
     this.playerSpeed = 350
     this.jumpSpeed = -800
   }
+
   speedBoost(sourceSprite, targetSprite) {
     this.playerSpeed = 700
     this.jumpSpeed = -1000
-
-
+    this.time.delayedCall(8000, this.speedNormal, [], this)
+    targetSprite.destroy()
   }
 
   // boss attack
