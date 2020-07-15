@@ -1,20 +1,26 @@
+import GameSceneEasy from "./gameSceneEasy";
+import GameSceneMedium from "./gameSceneMedium";
 import GameScene from "./gameScene";
 import WaitingRoom from "./waitingRoom";
+import WinningScene from "./winningScene";
 
-const gameScene = new GameScene();
-const waitingRoom = new WaitingRoom();
+export const gameSceneEasy = new GameSceneEasy();
+export const gameSceneMedium = new GameSceneMedium();
+export const gameScene = new GameScene();
+export const waitingRoom = new WaitingRoom();
+export const winningScene = new WinningScene();
 
-const config = {
+export const config = {
   type: Phaser.AUTO,
   width: 2300,
   height: 2500,
-  scene: [waitingRoom, gameScene],
+  scene: [waitingRoom, gameSceneEasy, gameSceneMedium, gameScene, winningScene],
   transparent: true,
   physics: {
     default: "arcade",
     arcade: {
       gravity: { y: 1600 },
-      debug: false,
+      // debug: true,
     },
     scale: {
       mode: Phaser.DOM.FIT,
@@ -25,9 +31,18 @@ const config = {
   },
 };
 
-let game = new Phaser.Game(config);
+export const createNewGame = () => {
+  let game = new Phaser.Game(config);
+
+  game.scene.add(waitingRoom);
+  return game;
+};
+
+let game = createNewGame();
 
 //load scenes
 
 //start waiting room
 game.scene.start("WaitingRoom");
+
+export default game;
