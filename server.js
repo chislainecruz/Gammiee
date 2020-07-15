@@ -42,7 +42,7 @@ io.on("connection", function (socket) {
   });
 
   console.log("a user connected");
-  // send the players object to the new player
+  // send the players object to the new player 
   socket.on("WR", () => {
     for (let player in players) {
       if (players[player].scene === "WaitingRoom") {
