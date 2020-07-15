@@ -3,41 +3,41 @@ import {
   gameScene,
   gameSceneEasy,
   gameSceneMedium,
-} from "./theGame";
+} from './theGame';
 
-const events = (self) => {
+const events = self => {
   self.otherPlayers = self.physics.add.group();
   //* Player attributes
 
-  self.socket.on("currentPlayers", (players) => {
+  self.socket.on('currentPlayers', players => {
     addPlayer(self, players[self.socket.id]);
     delete players[self.socket.id];
 
     Object.keys(players).forEach(function (id) {
       if (self.scene.key === players[id].scene) {
-        console.log("test");
+        console.log('test');
         addOtherPlayers(self, players[id]);
       }
     });
   });
 
-  self.socket.on("updateScene", (playerId) => {
-    self.otherPlayers.getChildren().forEach((otherPlayer) => {
+  self.socket.on('updateScene', playerId => {
+    self.otherPlayers.getChildren().forEach(otherPlayer => {
       if (playerId === otherPlayer.playerId) {
-        otherPlayer.scene = "Hard" || "Easy" || "Medium";
+        otherPlayer.scene = 'Hard' || 'Easy' || 'Medium';
       }
     });
   });
 
-  self.socket.on("newPlayer", (playerInfo) => {
-    if (self.scene.key === "WaitingRoom") {
-      console.log("creating new player...");
+  self.socket.on('newPlayer', playerInfo => {
+    if (self.scene.key === 'WaitingRoom') {
+      console.log('creating new player...');
       addOtherPlayers(self, playerInfo);
     }
   });
 
-  self.socket.on("disconnect", (playerId) => {
-    self.otherPlayers.getChildren().forEach((otherPlayer) => {
+  self.socket.on('disconnect', playerId => {
+    self.otherPlayers.getChildren().forEach(otherPlayer => {
       if (
         playerId === otherPlayer.playerId &&
         self.scene.key === otherPlayer.scene.scene.key
@@ -47,8 +47,8 @@ const events = (self) => {
       }
     });
   });
-  self.socket.on("playerMoved", (playerInfo) => {
-    self.otherPlayers.getChildren().forEach((otherPlayer) => {
+  self.socket.on('playerMoved', playerInfo => {
+    self.otherPlayers.getChildren().forEach(otherPlayer => {
       if (playerInfo.playerId === otherPlayer.playerId) {
         otherPlayer.setPosition(playerInfo.x, playerInfo.y);
         otherPlayer.flipX = playerInfo.flipX;
@@ -63,34 +63,34 @@ const events = (self) => {
     });
   });
 
-  self.socket.on("startGame", () => {
-    if (self.scene.key === "WaitingRoom") {
+  self.socket.on('startGame', () => {
+    if (self.scene.key === 'WaitingRoom') {
       self.startGame();
     }
   });
 
-  self.socket.on("disconnectPlayer", () => {
-    console.log("stopping scene...");
+  self.socket.on('disconnectPlayer', () => {
+    console.log('stopping scene...');
     //destroys the game instance so other players can join
     self.sys.game.destroy();
     self.scene.pause();
 
     alert(
-      "You have been disconnected due to inactivity. Please refresh the page"
+      'You have been disconnected due to inactivity. Please refresh the page'
     );
   });
 
-  const username = document.getElementById("player-name");
-  const button = document.getElementById("player-button");
+  const username = document.getElementById('player-name');
+  const button = document.getElementById('player-button');
 
-  button.addEventListener("click", function () {
+  button.addEventListener('click', function () {
     self.player.name.text = username.value;
 
-    self.socket.emit("usernameAdded", self.player.name.text);
+    self.socket.emit('usernameAdded', self.player.name.text);
   });
 
-  self.socket.on("displayUsername", (username, socketId) => {
-    self.otherPlayers.getChildren().forEach((otherPlayer) => {
+  self.socket.on('displayUsername', (username, socketId) => {
+    self.otherPlayers.getChildren().forEach(otherPlayer => {
       if (socketId === otherPlayer.playerId) {
         otherPlayer.name.text = username;
       }
@@ -106,9 +106,9 @@ export function addPlayer(self, playerInfo) {
     1
   );
   if (
-    self.scene.key === "Hard" ||
-    self.scene.key === "Easy" ||
-    self.scene.key === "Medium"
+    self.scene.key === 'Hard' ||
+    self.scene.key === 'Easy' ||
+    self.scene.key === 'Medium'
   ) {
     self.physics.add.collider(self.ground, [
       self.player,
@@ -143,11 +143,10 @@ export function addPlayer(self, playerInfo) {
   self.physics.add.overlap(
     self.player,
     self.speedPower,
-    self.speedBoost,
+    speedBoost,
     null,
     self
   );
-
 
   //player wins overlap
   self.physics.add.overlap(self.player, [self.goal], self.winGame, null, self);
@@ -155,7 +154,7 @@ export function addPlayer(self, playerInfo) {
   self.cameras.main.setZoom(1.6);
 
   if (!playerInfo.name) {
-    playerInfo.name = "";
+    playerInfo.name = '';
   }
   self.player.name = self.add.text(
     self.player.x - 50,
@@ -177,9 +176,9 @@ export function addOtherPlayers(self, playerInfo) {
   otherPlayer.flipX = playerInfo.flipX;
   self.physics.add.collider(self.ground, otherPlayer);
   if (
-    self.scene.key === "Hard" ||
-    self.scene.key === "Easy" ||
-    self.scene.key === "Medium"
+    self.scene.key === 'Hard' ||
+    self.scene.key === 'Easy' ||
+    self.scene.key === 'Medium'
   ) {
     self.physics.add.collider(self.platforms, otherPlayer);
   }
@@ -191,7 +190,7 @@ export function addOtherPlayers(self, playerInfo) {
   otherPlayer.playerId = playerInfo.playerId;
 
   if (!playerInfo.name) {
-    playerInfo.name = "";
+    playerInfo.name = '';
   }
   otherPlayer.name = self.add.text(
     otherPlayer.x - 50,
@@ -199,6 +198,35 @@ export function addOtherPlayers(self, playerInfo) {
     playerInfo.name
   );
   self.otherPlayers.add(otherPlayer);
+}
+
+export function spawnPowerUps(powerUp, platform, self) {
+  let minX = platform.getTopLeft().x;
+  let maxX = platform.getTopRight().x;
+  let y = platform.y - 20;
+
+  let powerUpSpawn = self.physics.add.sprite(
+    Math.random() * (maxX - minX) + minX,
+    y,
+    powerUp
+  );
+  powerUpSpawn.body.allowGravity = false;
+
+  return powerUpSpawn;
+  // self.physics.add.collider(powerUpSpawn, self.ground);
+  // self.physics.add.collider(powerUpSpawn, self.platforms);
+}
+
+function speedNormal() {
+  this.playerSpeed = 350;
+  this.jumpSpeed = -800;
+}
+
+function speedBoost(sourceSprite, targetSprite) {
+  this.playerSpeed = 700;
+  this.jumpSpeed = -1000;
+  this.time.delayedCall(8000, speedNormal, [], this);
+  targetSprite.destroy();
 }
 
 export default events;
