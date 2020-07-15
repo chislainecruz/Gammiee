@@ -136,10 +136,11 @@ io.on("connection", function (socket) {
 
     socket.inactivityTimeout = setTimeout(
       () => {
+        socket.emit("disconnect");
         socket.emit("disconnectPlayer");
       },
       //if player goes a minute without moving, they will be disconnected
-      1000 * 15
+      1000 * 25
     );
 
     players[socket.id].x = data.x;
