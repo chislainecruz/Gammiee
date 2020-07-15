@@ -71,6 +71,8 @@ export default class GameSceneMedium extends Phaser.Scene {
     this.gameOverSprite.depth = 100;
     this.gameOverSprite.visible = true;
     this.cameras.add().setScroll(0, 10);
+    this.scene.pause();
+    this.scene.switch("WinningScene");
   }
 
   winGame(sourceSprite, targetSprite) {

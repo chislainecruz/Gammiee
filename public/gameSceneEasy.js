@@ -70,7 +70,7 @@ export default class GameSceneEasy extends Phaser.Scene {
     this.gameOverSprite.depth = 100;
     this.gameOverSprite.visible = true;
     this.cameras.add().setScroll(0, 10);
-    //set timer for 3 seconds, switch to winning scene
+    this.scene.pause();
     this.scene.switch("WinningScene");
   }
 
