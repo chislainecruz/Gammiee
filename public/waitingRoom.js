@@ -30,6 +30,10 @@ export default class WaitingRoom extends Phaser.Scene {
     this.ready = true;
     this.socket.emit("playerReady");
   }
+  playerNotReady() {
+    this.ready = false;
+    this.socket.emit("playerNotReady")
+  }
 
   startGame() {
     this.timedEvent = this.time.delayedCall(100, this.onEvent, [], this);
@@ -61,7 +65,8 @@ export default class WaitingRoom extends Phaser.Scene {
       frameHeight: 125,
       spacing: 1,
     });
-    this.load.image("button", "assets/readyButton.png");
+    this.load.image("notReadyButton", "assets/notReadyButton.png");
+    this.load.image("readyButton", "assets/readyButton.png");
     this.load.image("easybutton", "assets/easy.png");
     this.load.image("mediumbutton", "assets/medium.png");
     this.load.image("hardbutton", "assets/hard.png");
@@ -138,12 +143,31 @@ export default class WaitingRoom extends Phaser.Scene {
     this.levelText = this.add.text(600, 1850);
     this.levelText.setScale(2);
 
-    this.startButton = this.add.sprite(800, 2000, "button").setInteractive();
-    this.startButton.setScale(0.2);
-    this.startButton.on("pointerdown", () => {
+    this.readyButton = this.add.sprite(800, 2000, "readyButton").setInteractive();
+    this.readyButton.setScale(0.2);
+    this.readyButton.visible = false
+
+
+    this.notReadyButton = this.add.sprite(800, 2000, "notReadyButton").setInteractive();
+    this.notReadyButton.setScale(0.2);
+
+    // im ready
+    this.notReadyButton.on("pointerdown", () => {
       if (!this.gameInSession) {
+        this.notReadyButton.visible = false
+        this.readyButton.visible = true
         this.playerReady();
       }
+      //im not ready
+      this.readyButton.on("pointerdown", () => {
+        if (!this.gameInSession) {
+          this.readyButton.visible = false;
+          this.notReadyButton.visible = true;
+          this.playerNotReady()
+        }
+      })
+
+
     });
     this.easyButton = this.add.sprite(500, 1800, "easybutton").setInteractive();
     this.easyButton.setScale(0.2);
@@ -180,7 +204,7 @@ export default class WaitingRoom extends Phaser.Scene {
     if (this.gameInSession) {
       this.text.setText("GAME IN SESSION");
     } else {
-      this.text.setText("PRESS I'M READY TO START GAME");
+      this.text.setText("PRESS READY BUTTON TO START GAME");
     }
 
     if (this.ready && this.otherPlayers) {

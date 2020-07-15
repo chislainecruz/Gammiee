@@ -74,6 +74,11 @@ io.on("connection", function (socket) {
   //update all other players of the new player
   socket.broadcast.emit("newPlayer", players[socket.id]);
 
+
+  socket.on("playerNotReady", () => {
+    players[socket.id].ready = false;
+  })
+
   socket.on("playerReady", () => {
     players[socket.id].ready = true;
     // socket.broadcast.emit('readyCheck', socket.id);
