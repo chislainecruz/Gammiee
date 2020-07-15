@@ -1,5 +1,5 @@
 // Linted with standardJS - https://standardjs.com/
-import events from "./playerEvents";
+import events, { spawnPowerUps } from "./playerEvents";
 import playerMoves from "./playerMoves";
 import socket from "./socket";
 
@@ -19,7 +19,14 @@ export default class GameSceneMedium extends Phaser.Scene {
     this.load.image("mediumbackground", "./assets/mediumBackground.png");
     this.load.image("platform", "./assets/platform.png");
     this.load.image("block", "./assets/block.png");
-
+    this.load.spritesheet('speed', './assets/speed.png', {
+      frameWidth: 50,
+      frameHeight: 50,
+    });
+    this.load.spritesheet('immune', './assets/immune.png', {
+      frameWidth: 50,
+      frameHeight: 50,
+    });
     this.load.spritesheet("gameOver", "./assets/gameOver.png", {
       frameWidth: 300,
       frameHeight: 3001,
@@ -182,7 +189,25 @@ export default class GameSceneMedium extends Phaser.Scene {
     this.level();
     this.bossAttack();
     this.minionAttack();
+    this.powerUps = ['immune', 'speed']
 
+    this.time.addEvent({
+      delay: 10000,
+      loop: true,
+      callbackScope: this,
+      callback: function (){
+        this.powerUps.forEach(powerUp => {
+          let power = spawnPowerUps(powerUp, this)
+          let test = this.physics.add.overlap(
+            this.player,
+            power,
+            power.func,
+            null,
+            this
+          )
+        })
+      }
+    })
     //* Player attributes
     events(this);
   }

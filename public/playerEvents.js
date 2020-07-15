@@ -124,14 +124,26 @@ export function addPlayer(self, playerInfo) {
   //mushroom scaley 0.65 scalex 0.5
   self.player.scaleX = playerInfo.sprite.scaleX;
   self.player.scaleY = playerInfo.sprite.scaleY;
-  //overlaps
-  self.physics.add.overlap(
+  //player damage overlaps
+
+  self.playerDamage = self.physics.add.overlap(
     self.player,
     [self.fires, self.flames],
     self.restartGame,
     null,
     self
   );
+
+  self.physics.add.overlap(self.player, self.potion, invincible, null, self);
+  self.physics.add.overlap(
+    self.player,
+    self.speedPower,
+    speedBoost,
+    null,
+    self
+  );
+
+  //player wins overlap
   self.physics.add.overlap(self.player, [self.goal], self.winGame, null, self);
   self.cameras.main.startFollow(self.player);
   self.cameras.main.setZoom(1.6);
@@ -177,6 +189,54 @@ export function addOtherPlayers(self, playerInfo) {
     playerInfo.name
   );
   self.otherPlayers.add(otherPlayer);
+}
+function randomPlatform(self) {
+  const maxPlat = self.platforms.getChildren();
+  return maxPlat[Math.floor(Math.random() * maxPlat.length)];
+}
+
+export function spawnPowerUps(powerUp, self) {
+  let platform = randomPlatform(self);
+  let minX = platform.getTopLeft().x;
+  let maxX = platform.getTopRight().x;
+  let y = platform.y - 20;
+
+  let powerUpSpawn = self.physics.add.sprite(
+    Math.random() * (maxX - minX) + minX,
+    y,
+    powerUp
+  );
+  powerUpSpawn.body.allowGravity = false;
+  if (powerUp === "speed") {
+    console.log("sped");
+    powerUpSpawn.func = speedBoost;
+  } else {
+    powerUpSpawn.func = invincible;
+  }
+
+  return powerUpSpawn;
+  // self.physics.add.collider(powerUpSpawn, self.ground);
+  // self.physics.add.collider(powerUpSpawn, self.platforms);
+}
+
+function speedNormal() {
+  this.playerSpeed = 350;
+  this.jumpSpeed = -800;
+}
+
+function speedBoost(sourceSprite, targetSprite) {
+  this.playerSpeed = 700;
+  this.jumpSpeed = -1000;
+  this.time.delayedCall(8000, speedNormal, [], this);
+  targetSprite.destroy();
+}
+function notInvincible() {
+  this.playerDamage.active = true;
+}
+function invincible(sourceSprite, targetSprite) {
+  this.playerDamage.active = false;
+  this.time.delayedCall(8000, notInvincible, [], this);
+  targetSprite.destroy();
 }
 
 export default events;
