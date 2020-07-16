@@ -83,7 +83,7 @@ export default class GameSceneMedium extends Phaser.Scene {
   }
 
   winGame(sourceSprite, targetSprite) {
-    this.socket.emit("playerWins");
+    this.socket.emit("playerWins", this.player.name.text);
     this.endGame();
   }
   create() {

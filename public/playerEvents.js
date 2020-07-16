@@ -110,10 +110,10 @@ const events = (self) => {
 
   if (self.scene.key !== "WaitingRoom") {
     self.socket.on("minionAttack", () => {
-      minionAttack.call(self);
+      minionAttack(self);
     });
     self.socket.on("bossAttack", () => {
-      bossAttack.call(self);
+      bossAttack(self);
     });
   }
 };
@@ -246,17 +246,17 @@ function createPowerups(self, powerUp, x, y) {
 }
 
 //minion attack
-function minionAttack() {
-  this.fireballs = this.physics.add.group({
+function minionAttack(self) {
+  self.flames = self.physics.add.group({
     bounceY: 0.1,
     bounceX: 1,
     collideWorldBounds: true,
   });
 
-  for (let i = 0; i < this.levelData.minions.length; i++) {
-    let curr = this.levelData.minions[i];
+  for (let i = 0; i < self.levelData.minions.length; i++) {
+    let curr = self.levelData.minions[i];
 
-    let flame = this.fireballs.create(curr.x, curr.y, "flame").setSize(35, 35);
+    let flame = self.flames.create(curr.x, curr.y, "flame").setSize(35, 35);
 
     flame.anims.play("flaming");
 
@@ -265,38 +265,41 @@ function minionAttack() {
     }
     flame.setVelocityX(curr.speed);
 
-    this.time.addEvent({
+    self.time.addEvent({
       delay: curr.lifespan,
       repeat: 0,
-      callbackScope: this,
+      callbackScope: self,
       callback: function () {
         flame.destroy();
       },
     });
   }
-  this.physics.add.collider(this.platforms, this.fireballs);
+  self.physics.add.collider(self.platforms, self.flames);
+  self.physics.add.overlap(self.player, self.flames, self.restartGame, null, self)
+
 }
 
-function bossAttack() {
-  this.bossAttack = this.physics.add.group({
+function bossAttack(self) {
+  self.bossAttack = self.physics.add.group({
     bounceY: 0.1,
     bounceX: 1,
     collideWorldBounds: true,
   });
 
-  let flame = this.bossAttack.create(this.goal.x, this.goal.y, "bossAttack");
+  let flame = self.bossAttack.create(self.goal.x, self.goal.y, "bossAttack");
   flame.anims.play("bossAttacking");
-  flame.setVelocityX(-this.levelData.spawner.speed);
-  this.time.addEvent({
-    delay: this.levelData.spawner.lifespan,
+  flame.setVelocityX(-self.levelData.spawner.speed);
+  self.time.addEvent({
+    delay: self.levelData.spawner.lifespan,
     repeat: 0,
-    callbackScope: this,
+    callbackScope: self,
     callback: function () {
       flame.destroy();
     },
   });
 
-  this.physics.add.collider(this.platforms, this.bossAttack);
+  self.physics.add.collider(self.platforms, self.bossAttack);
+  self.physics.add.overlap(self.player, self.bossAttack, self.restartGame, null, self)
 }
 
 export default events;

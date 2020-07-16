@@ -65,8 +65,8 @@ export default class WaitingRoom extends Phaser.Scene {
       frameHeight: 125,
       spacing: 1,
     });
-    this.load.image("notReadyButton", "assets/notReadyButton.png");
-    this.load.image("readyButton", "assets/readyButton.png");
+    this.load.image("notReadyButton", "assets/readyButton.png");
+    this.load.image("readyButton", "assets/notReadyButton.png");
     this.load.image("easybutton", "assets/easy.png");
     this.load.image("mediumbutton", "assets/medium.png");
     this.load.image("hardbutton", "assets/hard.png");
@@ -219,8 +219,8 @@ export default class WaitingRoom extends Phaser.Scene {
     if (this.start) {
       this.text.setText(
         `THE GAME WILL START IN   ${
-          10 -
-          Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
+        10 -
+        Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
         }`
       );
     }
