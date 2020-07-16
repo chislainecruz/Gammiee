@@ -73,7 +73,20 @@ io.on("connection", function (socket) {
     console.log("changing scenes...");
     players[socket.id].scene = ourScene;
     socket.broadcast.emit("updateScene", socket.id);
+    switch (ourScene) {
+      case "Easy":
+        platforms = easyPlatforms;
+        break;
+      case "Medium":
+        platforms = mediumPlatforms;
+        break;
 
+      case "Hard":
+        platforms = hardPlatforms;
+        break;
+      default:
+        break;
+    }
     if (!createdPowerup) {
 
       setInterval(() => {
@@ -85,20 +98,7 @@ io.on("connection", function (socket) {
         socket.emit('bossAttack')
         socket.broadcast.emit('bossAttack')
       }, 6700)
-      switch (ourScene) {
-        case "Easy":
-          platforms = easyPlatforms;
-          break;
-        case "Medium":
-          platforms = mediumPlatforms;
-          break;
 
-        case "Hard":
-          platforms = hardPlatforms;
-          break;
-        default:
-          break;
-      }
 
       setInterval(() => {
         const platform =

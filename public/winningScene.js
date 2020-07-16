@@ -6,7 +6,7 @@ export default class WinningScene extends Phaser.Scene {
     super({ key: "WinningScene" });
   }
   preload() {
-    this.load.image("winningbg", "./assets/winScreen.jpg");
+    this.load.image("winningbg", "./assets/WinScreen.jpg");
 
     this.load.image("newbutton", "assets/newGameButton.png");
   }
@@ -31,5 +31,5 @@ export default class WinningScene extends Phaser.Scene {
       });
     });
   }
-  update() {}
+  update() { }
 }
