@@ -10,6 +10,7 @@ let players = {};
 let gSPlayers = {};
 let wRPlayers = {};
 let winner = "";
+let selectedScene = "Easy";
 
 app.use(express.static(__dirname + "/public"));
 
@@ -54,11 +55,7 @@ io.on("connection", function (socket) {
 
   socket.on("GS", () => {
     for (let player in players) {
-      if (
-        players[player].scene === "Hard" ||
-        players[player].scene === "Easy" ||
-        players[player].scene === "Medium"
-      ) {
+      if (players[player].scene !== "WaitingScene") {
         gSPlayers[players[player].playerId] = players[player];
       }
     }
@@ -74,10 +71,9 @@ io.on("connection", function (socket) {
   //update all other players of the new player
   socket.broadcast.emit("newPlayer", players[socket.id]);
 
-
   socket.on("playerNotReady", () => {
     players[socket.id].ready = false;
-  })
+  });
 
   socket.on("playerReady", () => {
     players[socket.id].ready = true;
@@ -104,7 +100,12 @@ io.on("connection", function (socket) {
   });
 
   socket.on("selecting", (ourScene) => {
+    selectedScene = ourScene;
     socket.broadcast.emit("selectingLevel", ourScene);
+  });
+
+  socket.on("getScene", () => {
+    socket.emit("currentScene", selectedScene);
   });
 
   socket.on("checkGameStatus", () => {
@@ -135,10 +136,11 @@ io.on("connection", function (socket) {
 
     socket.inactivityTimeout = setTimeout(
       () => {
+        socket.emit("disconnect");
         socket.emit("disconnectPlayer");
       },
       //if player goes a minute without moving, they will be disconnected
-      1000 * 120
+      1000 * 30
     );
 
     players[socket.id].x = data.x;
