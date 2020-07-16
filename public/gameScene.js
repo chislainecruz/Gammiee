@@ -19,11 +19,11 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("background", "./assets/testback.png");
     this.load.image("platform", "./assets/platform.png");
     this.load.image("block", "./assets/block.png");
-    this.load.spritesheet('speed', './assets/speed.png', {
+    this.load.spritesheet("speed", "./assets/speed.png", {
       frameWidth: 50,
       frameHeight: 50,
     });
-    this.load.spritesheet('immune', './assets/immune.png', {
+    this.load.spritesheet("immune", "./assets/immune.png", {
       frameWidth: 50,
       frameHeight: 50,
     });
@@ -71,13 +71,13 @@ export default class GameScene extends Phaser.Scene {
       spacing: 1,
     });
 
-    this.load.json("levelDataHard", "json/levelDataHard.json");
+    this.load.json("levelData", "json/levelDataHard.json");
   }
   endGame() {
     this.gameOverSprite.depth = 100;
     this.gameOverSprite.visible = true;
     this.cameras.add().setScroll(0, 10);
-    this.music.pause()
+    this.music.pause();
     this.scene.pause();
     this.scene.switch("WinningScene");
   }
@@ -186,27 +186,7 @@ export default class GameScene extends Phaser.Scene {
     });
     //* Level Setup
     this.level();
-    this.bossAttack();
-    this.minionAttack();
-    this.powerUps = ['immune', 'speed']
 
-    this.time.addEvent({
-      delay: 10000,
-      loop: true,
-      callbackScope: this,
-      callback: function (){
-        this.powerUps.forEach(powerUp => {
-          let power = spawnPowerUps(powerUp, this)
-          let test = this.physics.add.overlap(
-            this.player,
-            power,
-            power.func,
-            null,
-            this
-          )
-        })
-      }
-    })
     events(this);
   }
 
@@ -222,80 +202,19 @@ export default class GameScene extends Phaser.Scene {
   }
 
   // boss attack
-  bossAttack() {
-    this.flames = this.physics.add.group({
-      bounceY: 0.1,
-      bounceX: 1,
-      collideWorldBounds: true,
-    });
-    this.time.addEvent({
-      delay: this.levelDataHard.spawner.interval,
-      loop: true,
-      callbackScope: this,
-      callback: function () {
-        let flame = this.flames.create(this.goal.x, this.goal.y, "bossAttack");
-        flame.anims.play("bossAttacking");
-        flame.setVelocityX(-this.levelDataHard.spawner.speed);
-        this.time.addEvent({
-          delay: this.levelDataHard.spawner.lifespan,
-          repeat: 0,
-          callbackScope: this,
-          callback: function () {
-            flame.destroy();
-          },
-        });
-      },
-    });
-  }
+  
 
-  //minion attack
-  minionAttack() {
-    for (let i = 0; i < this.levelDataHard.minions.length; i++) {
-      let curr = this.levelDataHard.minions[i];
-      this.flames = this.physics.add.group({
-        bounceY: 0.1,
-        bounceX: 1,
-        collideWorldBounds: true,
-      });
-      this.time.addEvent({
-        delay: curr.interval,
-        loop: true,
-        callbackScope: this,
-        callback: function () {
-          let flame = this.flames
-            .create(curr.x, curr.y, "flame")
-            .setSize(35, 35);
-
-          flame.anims.play("flaming");
-
-          if (curr.flipX === true) {
-            flame.flipX = true;
-          }
-          flame.setVelocityX(curr.speed);
-
-          this.time.addEvent({
-            delay: curr.lifespan,
-            repeat: 0,
-            callbackScope: this,
-            callback: function () {
-              flame.destroy();
-            },
-          });
-        },
-      });
-    }
-  }
 
   // sets up all the elements in the level
   level() {
     this.platforms = this.add.group();
 
     // parse json data
-    this.levelDataHard = this.cache.json.get("levelDataHard");
+    this.levelData = this.cache.json.get("levelData");
 
     // create all the platforms
-    for (let i = 0; i < this.levelDataHard.platforms.length; i++) {
-      let platform = this.levelDataHard.platforms[i];
+    for (let i = 0; i < this.levelData.platforms.length; i++) {
+      let platform = this.levelData.platforms[i];
 
       let newObj;
 
@@ -340,8 +259,8 @@ export default class GameScene extends Phaser.Scene {
 
     // create goal/boss
     this.goal = this.add.sprite(
-      this.levelDataHard.goal.x,
-      this.levelDataHard.goal.y,
+      this.levelData.goal.x,
+      this.levelData.goal.y,
       "goal"
     );
     this.goal.anims.play("boss");
@@ -349,8 +268,8 @@ export default class GameScene extends Phaser.Scene {
     this.physics.add.existing(this.goal);
 
     // create minions
-    for (let i = 0; i < this.levelDataHard.minions.length; i++) {
-      let curr = this.levelDataHard.minions[i];
+    for (let i = 0; i < this.levelData.minions.length; i++) {
+      let curr = this.levelData.minions[i];
       let newObj = this.minions.create(curr.x, curr.y, "minion").setOrigin(0);
       if (curr.flipX === true) {
         newObj.flipX = true;
@@ -358,8 +277,8 @@ export default class GameScene extends Phaser.Scene {
       newObj.anims.play("floating");
       this.minions.add(newObj);
     }
-    for (let i = 0; i < this.levelDataHard.fires.length; i++) {
-      let curr = this.levelDataHard.fires[i];
+    for (let i = 0; i < this.levelData.fires.length; i++) {
+      let curr = this.levelData.fires[i];
       let newObj = this.fires
         .create(curr.x, curr.y, "fire")
         .setOrigin(0)
