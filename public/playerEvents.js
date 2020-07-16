@@ -2,6 +2,7 @@ import { waitingRoom } from "./theGame";
 
 const events = (self) => {
   self.otherPlayers = self.physics.add.group();
+  self.powerups = self.physics.add.group();
   //* Player attributes
 
   self.socket.on("currentPlayers", (players) => {
@@ -77,9 +78,16 @@ const events = (self) => {
     //self.scene.pause();
   });
 
-  self.socket.on("createPowerups", (powerUp, x, y) => {
-    console.log("listening on create powerups ", powerUp, x, y);
-    createPowerups(self, powerUp, x, y);
+  self.socket.on("createPowerups", (type, x, y) => {
+    createPowerups(self, type, x, y);
+  });
+
+  self.socket.on("destroyPowerup", (x, y) => {
+    self.powerups.getChildren().forEach((powerup) => {
+      if (powerup.x === x && powerup.y === y) {
+        powerup.destroy();
+      }
+    });
   });
 
   const username = document.getElementById("player-name");
@@ -138,16 +146,6 @@ export function addPlayer(self, playerInfo) {
     null,
     self
   );
-
-  self.physics.add.overlap(self.player, self.potion, invincible, null, self);
-  self.physics.add.overlap(
-    self.player,
-    self.speedPower,
-    speedBoost,
-    null,
-    self
-  );
-
   //player wins overlap
   self.physics.add.overlap(self.player, [self.goal], self.winGame, null, self);
   // self.cameras.main.startFollow(self.player);
@@ -198,6 +196,7 @@ export function addOtherPlayers(self, playerInfo) {
 
 export function spawnPowerUps(self, powerUp, x, y) {
   let powerUpSpawn = self.physics.add.sprite(x, y, powerUp);
+  self.powerups.add(powerUpSpawn);
   powerUpSpawn.body.allowGravity = false;
   if (powerUp === "speed") {
     powerUpSpawn.func = speedBoost;
@@ -217,7 +216,9 @@ function speedBoost(sourceSprite, targetSprite) {
   this.jumpSpeed = -1000;
   this.time.delayedCall(8000, speedNormal, [], this);
   targetSprite.destroy();
+  this.socket.emit("powerupTaken", targetSprite.x, targetSprite.y);
 }
+
 function notInvincible() {
   this.playerDamage.active = true;
 }
@@ -225,11 +226,13 @@ function invincible(sourceSprite, targetSprite) {
   this.playerDamage.active = false;
   this.time.delayedCall(8000, notInvincible, [], this);
   targetSprite.destroy();
+  this.socket.emit("powerupTaken", targetSprite.x, targetSprite.y);
 }
 
 function createPowerups(self, powerUp, x, y) {
   let power = spawnPowerUps(self, powerUp, x, y);
   self.physics.add.overlap(self.player, power, power.func, null, self);
+  return power;
 }
 
 export default events;

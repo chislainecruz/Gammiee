@@ -15,7 +15,8 @@ let wRPlayers = {};
 let winner = "";
 let selectedScene = "Easy";
 let platforms;
-const powerups = ["speed", "immune"];
+const powerKeys = ["speed", "immune"];
+let powerUps = [];
 let createdPowerup = false;
 
 app.use(express.static(__dirname + "/public"));
@@ -96,8 +97,9 @@ io.on("connection", function (socket) {
         const maxX = platform.x + platform.numTiles * 36;
         const y = platform.y - 20;
         const x = Math.random() * (maxX - minX) + minX;
-        const powerup = powerups[Math.floor(Math.random() * powerups.length)];
+        const powerup = powerKeys[Math.floor(Math.random() * powerKeys.length)];
         console.log("powerup in server ", powerup, x, y);
+        powerUps.push({ key: powerup, x: x, y: y });
         socket.broadcast.emit("createPowerups", powerup, x, y);
         socket.emit("createPowerups", powerup, x, y);
       }, 5000);
@@ -106,6 +108,10 @@ io.on("connection", function (socket) {
     createdPowerup = true;
 
     //destruction
+  });
+
+  socket.on("powerupTaken", (x, y) => {
+    socket.broadcast.emit("destroyPowerup", x, y);
   });
 
   //update all other players of the new player
@@ -180,7 +186,7 @@ io.on("connection", function (socket) {
         socket.emit("disconnectPlayer");
       },
       //if player goes a minute without moving, they will be disconnected
-      1000 * 30
+      1000 * 60
     );
 
     players[socket.id].x = data.x;
