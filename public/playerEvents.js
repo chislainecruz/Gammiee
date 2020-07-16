@@ -157,8 +157,8 @@ export function addPlayer(self, playerInfo) {
   );
   //player wins overlap
   self.physics.add.overlap(self.player, [self.goal], self.winGame, null, self);
-  // self.cameras.main.startFollow(self.player);
-  // self.cameras.main.setZoom(1.6);
+  self.cameras.main.startFollow(self.player);
+  self.cameras.main.setZoom(1.6);
 
   if (!playerInfo.name) {
     playerInfo.name = "";
