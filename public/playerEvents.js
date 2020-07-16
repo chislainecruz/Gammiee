@@ -231,8 +231,12 @@ function speedBoost(sourceSprite, targetSprite) {
 
 function notInvincible() {
   this.playerDamage.active = true;
+  this.minionDamage.active = true;
+  this.bossDamage.active = true;
 }
 function invincible(sourceSprite, targetSprite) {
+  this.minionDamage.active = false;
+  this.bossDamage.active = false;
   this.playerDamage.active = false;
   this.time.delayedCall(8000, notInvincible, [], this);
   targetSprite.destroy();
@@ -275,7 +279,7 @@ function minionAttack(self) {
     });
   }
   self.physics.add.collider(self.platforms, self.flames);
-  self.physics.add.overlap(self.player, self.flames, self.restartGame, null, self)
+  self.minionDamage = self.physics.add.overlap(self.player, self.flames, self.restartGame, null, self)
 
 }
 
@@ -299,7 +303,7 @@ function bossAttack(self) {
   });
 
   self.physics.add.collider(self.platforms, self.bossAttack);
-  self.physics.add.overlap(self.player, self.bossAttack, self.restartGame, null, self)
+  self.bossDamage = self.physics.add.overlap(self.player, self.bossAttack, self.restartGame, null, self)
 }
 
 export default events;
