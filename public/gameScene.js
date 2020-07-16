@@ -19,11 +19,11 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("background", "./assets/testback.png");
     this.load.image("platform", "./assets/platform.png");
     this.load.image("block", "./assets/block.png");
-    this.load.spritesheet('speed', './assets/speed.png', {
+    this.load.spritesheet("speed", "./assets/speed.png", {
       frameWidth: 50,
       frameHeight: 50,
     });
-    this.load.spritesheet('immune', './assets/immune.png', {
+    this.load.spritesheet("immune", "./assets/immune.png", {
       frameWidth: 50,
       frameHeight: 50,
     });
@@ -77,7 +77,7 @@ export default class GameScene extends Phaser.Scene {
     this.gameOverSprite.depth = 100;
     this.gameOverSprite.visible = true;
     this.cameras.add().setScroll(0, 10);
-    this.music.pause()
+    this.music.pause();
     this.scene.pause();
     this.scene.switch("WinningScene");
   }
@@ -188,25 +188,7 @@ export default class GameScene extends Phaser.Scene {
     this.level();
     this.bossAttack();
     this.minionAttack();
-    this.powerUps = ['immune', 'speed']
 
-    this.time.addEvent({
-      delay: 10000,
-      loop: true,
-      callbackScope: this,
-      callback: function (){
-        this.powerUps.forEach(powerUp => {
-          let power = spawnPowerUps(powerUp, this)
-          let test = this.physics.add.overlap(
-            this.player,
-            power,
-            power.func,
-            null,
-            this
-          )
-        })
-      }
-    })
     events(this);
   }
 

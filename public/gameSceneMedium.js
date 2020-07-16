@@ -19,11 +19,11 @@ export default class GameSceneMedium extends Phaser.Scene {
     this.load.image("mediumbackground", "./assets/mediumBackground.png");
     this.load.image("platform", "./assets/platform.png");
     this.load.image("block", "./assets/block.png");
-    this.load.spritesheet('speed', './assets/speed.png', {
+    this.load.spritesheet("speed", "./assets/speed.png", {
       frameWidth: 50,
       frameHeight: 50,
     });
-    this.load.spritesheet('immune', './assets/immune.png', {
+    this.load.spritesheet("immune", "./assets/immune.png", {
       frameWidth: 50,
       frameHeight: 50,
     });
@@ -52,7 +52,7 @@ export default class GameSceneMedium extends Phaser.Scene {
     this.load.spritesheet("goal", "./assets/Dog.png", {
       frameWidth: 172.5,
       frameHeight: 137,
-      margin: 1
+      margin: 1,
     });
 
     this.load.spritesheet("minion", "./assets/puppy.png", {
@@ -95,10 +95,10 @@ export default class GameSceneMedium extends Phaser.Scene {
     bg.setOrigin(0, 0);
     bg.setScale(6);
     this.soundConfig = {
-      volume: 0.1
-    }
+      volume: 0.1,
+    };
     this.jump = this.sound.add("jump");
-    this.music = this.sound.add('battleMusic')
+    this.music = this.sound.add("battleMusic");
     //creates ground blocks
 
     //the first 2 nums are the position on the screen
@@ -189,25 +189,7 @@ export default class GameSceneMedium extends Phaser.Scene {
     this.level();
     this.bossAttack();
     this.minionAttack();
-    this.powerUps = ['immune', 'speed']
 
-    this.time.addEvent({
-      delay: 10000,
-      loop: true,
-      callbackScope: this,
-      callback: function (){
-        this.powerUps.forEach(powerUp => {
-          let power = spawnPowerUps(powerUp, this)
-          let test = this.physics.add.overlap(
-            this.player,
-            power,
-            power.func,
-            null,
-            this
-          )
-        })
-      }
-    })
     //* Player attributes
     events(this);
   }

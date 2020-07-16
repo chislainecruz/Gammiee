@@ -77,6 +77,11 @@ const events = (self) => {
     //self.scene.pause();
   });
 
+  self.socket.on("createPowerups", (powerUp, x, y) => {
+    console.log("listening on create powerups ", powerUp, x, y);
+    createPowerups(self, powerUp, x, y);
+  });
+
   const username = document.getElementById("player-name");
   const button = document.getElementById("player-button");
 
@@ -145,8 +150,8 @@ export function addPlayer(self, playerInfo) {
 
   //player wins overlap
   self.physics.add.overlap(self.player, [self.goal], self.winGame, null, self);
-  self.cameras.main.startFollow(self.player);
-  self.cameras.main.setZoom(1.6);
+  // self.cameras.main.startFollow(self.player);
+  // self.cameras.main.setZoom(1.6);
 
   if (!playerInfo.name) {
     playerInfo.name = "";
@@ -190,33 +195,16 @@ export function addOtherPlayers(self, playerInfo) {
   );
   self.otherPlayers.add(otherPlayer);
 }
-function randomPlatform(self) {
-  const maxPlat = self.platforms.getChildren();
-  return maxPlat[Math.floor(Math.random() * maxPlat.length)];
-}
 
-export function spawnPowerUps(powerUp, self) {
-  let platform = randomPlatform(self);
-  let minX = platform.getTopLeft().x;
-  let maxX = platform.getTopRight().x;
-  let y = platform.y - 20;
-
-  let powerUpSpawn = self.physics.add.sprite(
-    Math.random() * (maxX - minX) + minX,
-    y,
-    powerUp
-  );
+export function spawnPowerUps(self, powerUp, x, y) {
+  let powerUpSpawn = self.physics.add.sprite(x, y, powerUp);
   powerUpSpawn.body.allowGravity = false;
   if (powerUp === "speed") {
-    console.log("sped");
     powerUpSpawn.func = speedBoost;
   } else {
     powerUpSpawn.func = invincible;
   }
-
   return powerUpSpawn;
-  // self.physics.add.collider(powerUpSpawn, self.ground);
-  // self.physics.add.collider(powerUpSpawn, self.platforms);
 }
 
 function speedNormal() {
@@ -237,6 +225,11 @@ function invincible(sourceSprite, targetSprite) {
   this.playerDamage.active = false;
   this.time.delayedCall(8000, notInvincible, [], this);
   targetSprite.destroy();
+}
+
+function createPowerups(self, powerUp, x, y) {
+  let power = spawnPowerUps(self, powerUp, x, y);
+  self.physics.add.overlap(self.player, power, power.func, null, self);
 }
 
 export default events;

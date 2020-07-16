@@ -4,6 +4,9 @@ var server = require("http").Server(app);
 const PORT = process.env.PORT || 8080;
 var io = require("socket.io").listen(server, {});
 let spritesArray = require("./public/json/spriteData.json").sprites;
+const easyPlatforms = require("./public/json/levelDataEasy").platforms;
+const mediumPlatforms = require("./public/json/levelDataMedium").platforms;
+const hardPlatforms = require("./public/json/levelDataHard").platforms;
 
 //We will use this object to keep track of all the players that are currently in the games
 let players = {};
@@ -11,6 +14,9 @@ let gSPlayers = {};
 let wRPlayers = {};
 let winner = "";
 let selectedScene = "Easy";
+let platforms;
+const powerups = ["speed", "immune"];
+let createdPowerup = false;
 
 app.use(express.static(__dirname + "/public"));
 
@@ -29,7 +35,7 @@ io.on("connection", function (socket) {
   let sprite = spritesArray[index];
 
   players[socket.id] = {
-    x: Math.random() * (1400 - 830) + 830,
+    x: Math.random() * (1400 - 1000) + 1000,
     y: 2300,
     playerId: socket.id,
     ready: false,
@@ -43,7 +49,7 @@ io.on("connection", function (socket) {
   });
 
   console.log("a user connected");
-  // send the players object to the new player 
+  // send the players object to the new player
   socket.on("WR", () => {
     for (let player in players) {
       if (players[player].scene === "WaitingRoom") {
@@ -66,6 +72,40 @@ io.on("connection", function (socket) {
     console.log("changing scenes...");
     players[socket.id].scene = ourScene;
     socket.broadcast.emit("updateScene", socket.id);
+
+    if (!createdPowerup) {
+      switch (ourScene) {
+        case "Easy":
+          platforms = easyPlatforms;
+          break;
+        case "Medium":
+          platforms = mediumPlatforms;
+          break;
+
+        case "Hard":
+          platforms = hardPlatforms;
+          break;
+        default:
+          break;
+      }
+
+      setInterval(() => {
+        const platform =
+          platforms[Math.floor(Math.random() * platforms.length)];
+        const minX = platform.x;
+        const maxX = platform.x + platform.numTiles * 36;
+        const y = platform.y - 20;
+        const x = Math.random() * (maxX - minX) + minX;
+        const powerup = powerups[Math.floor(Math.random() * powerups.length)];
+        console.log("powerup in server ", powerup, x, y);
+        socket.broadcast.emit("createPowerups", powerup, x, y);
+        socket.emit("createPowerups", powerup, x, y);
+      }, 5000);
+    }
+
+    createdPowerup = true;
+
+    //destruction
   });
 
   //update all other players of the new player
