@@ -106,6 +106,12 @@ const events = (self) => {
       }
     });
   });
+  self.socket.on('minionAttack', () => {
+    minionAttack.call(self)
+  })
+  self.socket.on('bossAttack', () => {
+    bossAttack.call(self)
+  })
 };
 
 export function addPlayer(self, playerInfo) {
@@ -122,7 +128,7 @@ export function addPlayer(self, playerInfo) {
       self.minion,
     ]);
     self.physics.add.collider(
-      [self.player, self.goal, self.flames, self.minion],
+      [self.player, self.goal, self.minion],
       self.platforms
     );
   } else {
@@ -233,6 +239,63 @@ function createPowerups(self, powerUp, x, y) {
   let power = spawnPowerUps(self, powerUp, x, y);
   self.physics.add.overlap(self.player, power, power.func, null, self);
   return power;
+}
+
+//minion attack
+function minionAttack() {
+  this.fireballs = this.physics.add.group({
+    bounceY: 0.1,
+    bounceX: 1,
+    collideWorldBounds: true,
+  });
+
+  for (let i = 0; i < this.levelData.minions.length; i++) {
+    let curr = this.levelData.minions[i];
+    
+    
+        let flame = this.fireballs
+          .create(curr.x, curr.y, "flame")
+          .setSize(35, 35);
+
+        flame.anims.play("flaming");
+
+        if (curr.flipX === true) {
+          flame.flipX = true;
+        }
+        flame.setVelocityX(curr.speed);
+
+        this.time.addEvent({
+          delay: curr.lifespan,
+          repeat: 0,
+          callbackScope: this,
+          callback: function () {
+            flame.destroy();
+          }
+        });
+  }
+  this.physics.add.collider(this.platforms, this.fireballs)
+}
+
+function bossAttack() {
+  this.bossAttack = this.physics.add.group({
+    bounceY: 0.1,
+    bounceX: 1,
+    collideWorldBounds: true,
+  });
+
+      let flame = this.bossAttack.create(this.goal.x, this.goal.y, "bossAttack");
+      flame.anims.play("bossAttacking");
+      flame.setVelocityX(-this.levelData.spawner.speed);
+      this.time.addEvent({
+        delay: this.levelData.spawner.lifespan,
+        repeat: 0,
+        callbackScope: this,
+        callback: function () {
+          flame.destroy();
+        },
+      });
+    
+      this.physics.add.collider(this.platforms, this.bossAttack)
 }
 
 export default events;

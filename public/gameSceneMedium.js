@@ -72,7 +72,7 @@ export default class GameSceneMedium extends Phaser.Scene {
       spacing: 1,
     });
 
-    this.load.json("levelDataMedium", "./json/levelDataMedium.json");
+    this.load.json("levelData", "./json/levelDataMedium.json");
   }
   endGame() {
     this.gameOverSprite.depth = 100;
@@ -187,8 +187,7 @@ export default class GameSceneMedium extends Phaser.Scene {
     });
     //* Level Setup
     this.level();
-    this.bossAttack();
-    this.minionAttack();
+
 
     //* Player attributes
     events(this);
@@ -205,81 +204,16 @@ export default class GameSceneMedium extends Phaser.Scene {
     this.player.y = 2300;
   }
 
-  // boss attack
-  bossAttack() {
-    this.flames = this.physics.add.group({
-      bounceY: 0.1,
-      bounceX: 1,
-      collideWorldBounds: true,
-    });
-    this.time.addEvent({
-      delay: this.levelDataMedium.spawner.interval,
-      loop: true,
-      callbackScope: this,
-      callback: function () {
-        let flame = this.flames.create(this.goal.x, this.goal.y, "bossAttack");
-        flame.anims.play("bossAttacking");
-        flame.setVelocityX(-this.levelDataMedium.spawner.speed);
-        this.time.addEvent({
-          delay: this.levelDataMedium.spawner.lifespan,
-          repeat: 0,
-          callbackScope: this,
-          callback: function () {
-            flame.destroy();
-          },
-        });
-      },
-    });
-  }
-
-  //minion attack
-  minionAttack() {
-    for (let i = 0; i < this.levelDataMedium.minions.length; i++) {
-      let curr = this.levelDataMedium.minions[i];
-      this.flames = this.physics.add.group({
-        bounceY: 0.1,
-        bounceX: 1,
-        collideWorldBounds: true,
-      });
-      this.time.addEvent({
-        delay: curr.interval,
-        loop: true,
-        callbackScope: this,
-        callback: function () {
-          let flame = this.flames
-            .create(curr.x, curr.y, "flame")
-            .setSize(35, 35);
-
-          flame.anims.play("flaming");
-
-          if (curr.flipX === true) {
-            flame.flipX = true;
-          }
-          flame.setVelocityX(curr.speed);
-
-          this.time.addEvent({
-            delay: curr.lifespan,
-            repeat: 0,
-            callbackScope: this,
-            callback: function () {
-              flame.destroy();
-            },
-          });
-        },
-      });
-    }
-  }
-
   // sets up all the elements in the level
   level() {
     this.platforms = this.add.group();
 
     // parse json data
-    this.levelDataMedium = this.cache.json.get("levelDataMedium");
+    this.levelData = this.cache.json.get("levelData");
 
     // create all the platforms
-    for (let i = 0; i < this.levelDataMedium.platforms.length; i++) {
-      let platform = this.levelDataMedium.platforms[i];
+    for (let i = 0; i < this.levelData.platforms.length; i++) {
+      let platform = this.levelData.platforms[i];
 
       let newObj;
 
@@ -324,8 +258,8 @@ export default class GameSceneMedium extends Phaser.Scene {
 
     // create goal/boss
     this.goal = this.add.sprite(
-      this.levelDataMedium.goal.x,
-      this.levelDataMedium.goal.y,
+      this.levelData.goal.x,
+      this.levelData.goal.y,
       "goal"
     );
     this.goal.anims.play("boss");
@@ -333,8 +267,8 @@ export default class GameSceneMedium extends Phaser.Scene {
     this.physics.add.existing(this.goal);
 
     // create minions
-    for (let i = 0; i < this.levelDataMedium.minions.length; i++) {
-      let curr = this.levelDataMedium.minions[i];
+    for (let i = 0; i < this.levelData.minions.length; i++) {
+      let curr = this.levelData.minions[i];
       let newObj = this.minions.create(curr.x, curr.y, "minion").setOrigin(0);
       if (curr.flipX === true) {
         newObj.flipX = true;
@@ -342,8 +276,8 @@ export default class GameSceneMedium extends Phaser.Scene {
       newObj.anims.play("floating");
       this.minions.add(newObj);
     }
-    for (let i = 0; i < this.levelDataMedium.fires.length; i++) {
-      let curr = this.levelDataMedium.fires[i];
+    for (let i = 0; i < this.levelData.fires.length; i++) {
+      let curr = this.levelData.fires[i];
       let newObj = this.fires
         .create(curr.x, curr.y, "fire")
         .setOrigin(0)

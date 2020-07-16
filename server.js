@@ -75,6 +75,16 @@ io.on("connection", function (socket) {
     socket.broadcast.emit("updateScene", socket.id);
 
     if (!createdPowerup) {
+
+      setInterval(() => {
+        socket.emit('minionAttack')
+        socket.broadcast.emit('minionAttack')
+      }, 8000)
+
+      setInterval(() => {
+        socket.emit('bossAttack')
+        socket.broadcast.emit('bossAttack')
+      }, 6700)
       switch (ourScene) {
         case "Easy":
           platforms = easyPlatforms;
