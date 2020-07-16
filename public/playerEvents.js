@@ -106,12 +106,15 @@ const events = (self) => {
       }
     });
   });
-  self.socket.on('minionAttack', () => {
-    minionAttack.call(self)
-  })
-  self.socket.on('bossAttack', () => {
-    bossAttack.call(self)
-  })
+
+  if (self.scene.key !== "WaitingRoom") {
+    self.socket.on("minionAttack", () => {
+      minionAttack.call(self);
+    });
+    self.socket.on("bossAttack", () => {
+      bossAttack.call(self);
+    });
+  }
 };
 
 export function addPlayer(self, playerInfo) {
@@ -251,29 +254,26 @@ function minionAttack() {
 
   for (let i = 0; i < this.levelData.minions.length; i++) {
     let curr = this.levelData.minions[i];
-    
-    
-        let flame = this.fireballs
-          .create(curr.x, curr.y, "flame")
-          .setSize(35, 35);
 
-        flame.anims.play("flaming");
+    let flame = this.fireballs.create(curr.x, curr.y, "flame").setSize(35, 35);
 
-        if (curr.flipX === true) {
-          flame.flipX = true;
-        }
-        flame.setVelocityX(curr.speed);
+    flame.anims.play("flaming");
 
-        this.time.addEvent({
-          delay: curr.lifespan,
-          repeat: 0,
-          callbackScope: this,
-          callback: function () {
-            flame.destroy();
-          }
-        });
+    if (curr.flipX === true) {
+      flame.flipX = true;
+    }
+    flame.setVelocityX(curr.speed);
+
+    this.time.addEvent({
+      delay: curr.lifespan,
+      repeat: 0,
+      callbackScope: this,
+      callback: function () {
+        flame.destroy();
+      },
+    });
   }
-  this.physics.add.collider(this.platforms, this.fireballs)
+  this.physics.add.collider(this.platforms, this.fireballs);
 }
 
 function bossAttack() {
@@ -283,19 +283,19 @@ function bossAttack() {
     collideWorldBounds: true,
   });
 
-      let flame = this.bossAttack.create(this.goal.x, this.goal.y, "bossAttack");
-      flame.anims.play("bossAttacking");
-      flame.setVelocityX(-this.levelData.spawner.speed);
-      this.time.addEvent({
-        delay: this.levelData.spawner.lifespan,
-        repeat: 0,
-        callbackScope: this,
-        callback: function () {
-          flame.destroy();
-        },
-      });
-    
-      this.physics.add.collider(this.platforms, this.bossAttack)
+  let flame = this.bossAttack.create(this.goal.x, this.goal.y, "bossAttack");
+  flame.anims.play("bossAttacking");
+  flame.setVelocityX(-this.levelData.spawner.speed);
+  this.time.addEvent({
+    delay: this.levelData.spawner.lifespan,
+    repeat: 0,
+    callbackScope: this,
+    callback: function () {
+      flame.destroy();
+    },
+  });
+
+  this.physics.add.collider(this.platforms, this.bossAttack);
 }
 
 export default events;
