@@ -77,10 +77,11 @@ const events = (self) => {
     self.scene.stop();
     //self.scene.pause();
   });
-
-  self.socket.on("createPowerups", (type, x, y) => {
-    createPowerups(self, type, x, y);
-  });
+  if (self.scene.key !== "WaitingRoom") {
+    self.socket.on("createPowerups", (type, x, y) => {
+      createPowerups(self, type, x, y);
+    });
+  }
 
   self.socket.on("destroyPowerup", (x, y) => {
     self.powerups.getChildren().forEach((powerup) => {
