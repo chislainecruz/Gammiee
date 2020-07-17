@@ -29,6 +29,9 @@ export default class WaitingRoom extends Phaser.Scene {
   playerReady() {
     this.ready = true;
     this.socket.emit("playerReady");
+    this.socket.emit("displayCheck")
+    this.player.check = this.add.sprite(this.player.name.x, this.player.name.y - 10, "readyCheck")
+    this.player.check.setScale(0.35)
   }
   playerNotReady() {
     this.ready = false;
@@ -41,6 +44,7 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   preload() {
+    this.load.image("readyCheck", "./assets/readyCheck.png")
     this.load.image("waitingBg", "./assets/waitingBG.png");
     this.load.image("tiles", "./assets/tiles.png");
     this.load.audio("waitingMusic", "./assets/TimeTemple.mp3");
@@ -205,6 +209,8 @@ export default class WaitingRoom extends Phaser.Scene {
 
   update() {
     playerMoves(this);
+
+
 
     if (this.gameInSession) {
       this.text.setText("GAME IN SESSION");

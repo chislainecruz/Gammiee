@@ -162,7 +162,7 @@ export function addPlayer(self, playerInfo) {
   self.cameras.main.setZoom(1.6);
 
   if (!playerInfo.name) {
-    playerInfo.name = "";
+    playerInfo.name = "Anonymous";
   }
   self.player.name = self.add.text(
     self.player.x - 50,
@@ -194,7 +194,7 @@ export function addOtherPlayers(self, playerInfo) {
   otherPlayer.playerId = playerInfo.playerId;
 
   if (!playerInfo.name) {
-    playerInfo.name = "";
+    playerInfo.name = "Anonymous";
   }
   otherPlayer.name = self.add.text(
     otherPlayer.x - 50,

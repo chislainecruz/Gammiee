@@ -59,6 +59,11 @@ const playerMoves = (self) => {
       self.player.name.x =
         self.player.x - 25 - self.player.name.text.length * 2;
       self.player.name.y = self.player.y - 50;
+
+      if (self.player.check) {
+        self.player.check.x = self.player.name.x
+        self.player.check.y = self.player.name.y - 10
+      }
     }
 
     self.player.oldPosition = {
