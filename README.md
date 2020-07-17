@@ -13,7 +13,6 @@ Try to avoid the fire and demons while you race your friends to the top. The fir
 ### Tech Stack
 - Phaser
 - Socket.IO
-- Axios
 - Express
 - Webpack
 
