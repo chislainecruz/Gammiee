@@ -51,7 +51,11 @@ const events = (self) => {
         otherPlayer.name.x =
           otherPlayer.x - 25 - otherPlayer.name.text.length * 2;
         otherPlayer.name.y = otherPlayer.y - 50;
+        if (otherPlayer.check) {
+          otherPlayer.check.x = otherPlayer.name.x
+          otherPlayer.check.y = otherPlayer.name.y - 10
 
+        }
         if (playerInfo.frame) {
           otherPlayer.setFrame(playerInfo.frame);
         }
@@ -99,6 +103,8 @@ const events = (self) => {
 
     self.socket.emit("usernameAdded", self.player.name.text);
   });
+
+
 
   self.socket.on("displayUsername", (username, socketId) => {
     self.otherPlayers.getChildren().forEach((otherPlayer) => {
@@ -162,7 +168,7 @@ export function addPlayer(self, playerInfo) {
   self.cameras.main.setZoom(1.6);
 
   if (!playerInfo.name) {
-    playerInfo.name = "";
+    playerInfo.name = "Anonymous";
   }
   self.player.name = self.add.text(
     self.player.x - 50,
@@ -194,7 +200,7 @@ export function addOtherPlayers(self, playerInfo) {
   otherPlayer.playerId = playerInfo.playerId;
 
   if (!playerInfo.name) {
-    playerInfo.name = "";
+    playerInfo.name = "Anonymous";
   }
   otherPlayer.name = self.add.text(
     otherPlayer.x - 50,

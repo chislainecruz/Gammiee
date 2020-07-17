@@ -129,16 +129,18 @@ io.on("connection", function (socket) {
 
   socket.on("playerNotReady", () => {
     players[socket.id].ready = false;
+    socket.broadcast.emit("notReadyCheck", socket.id)
   });
 
   socket.on("playerReady", () => {
     players[socket.id].ready = true;
-    // socket.broadcast.emit('readyCheck', socket.id);
+    socket.broadcast.emit('readyCheck', socket.id);
     let everyoneReady = true;
     for (let player in players) {
       if (players[player].ready === false) {
         everyoneReady = false;
       }
+
     }
     if (everyoneReady) {
       console.log("everyone is ready");
