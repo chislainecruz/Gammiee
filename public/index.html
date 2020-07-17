@@ -1,26 +1,67 @@
 <!DOCTYPE html>
-<html style="background-color: black;">
-  <head>
-    <meta charset="utf-8" />
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/phaser@3.23.0/dist/phaser.min.js"
-    ></script>
-    <script type="module" defer src="bundle.js"></script>
-    <style>
-      canvas {
-        display: block;
-        margin: auto;
-        height: 43%;
-        width: 53%;
-      }
-    </style>
-  </head>
+<div class="container center">
+  <html class="grey darken-3">
+  <div>
 
-  <body>
-    <p style="color: white">Please enter your name</p>
-      <input type="text" id="player-name" />
-      <input type="button" id="player-button" value="Change Name" />
-    <script src="/socket.io/socket.io.js"></script>
-  </body>
-</html>
+    <head class="container row">
+      <meta charset="utf-8" />
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser@3.23.0/dist/phaser.min.js"></script>
+      <script type="module" defer src="bundle.js"></script>
+      <!-- Compiled and minified CSS -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+      <style>
+        canvas {
+          display: block;
+          margin: auto;
+          height: 53%;
+          width: 53%;
+        }
+      </style>
+
+    </head>
+  </div>
+  &nbsp;
+  &nbsp;
+  &nbsp;
+
+  <div style=" position: absolute;
+bottom: 870px; right:30px;">
+
+    <div class=" card right grey darken-2">
+      <div class="valign-wrapper ">
+
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+
+        <body>
+
+          <p class="label white-text">SET NAME</p>
+          &nbsp;
+          &nbsp;
+          &nbsp;
+          &nbsp;
+          <div>
+            <div class="input-field inline">
+              <input type="text" id="player-name" class="white-text" />
+            </div>
+          </div>
+
+          &nbsp;
+          &nbsp;
+          &nbsp;
+          &nbsp;
+          <input type="button" class=" red waves-effect waves-light btn" id="player-button" value="Set" />
+          &nbsp;
+          &nbsp;
+          &nbsp;
+          <script src="/socket.io/socket.io.js"></script>
+        </body>
+      </div>
+    </div>
+  </div>
+
+
+  </html>
+</div>
