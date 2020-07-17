@@ -29,13 +29,14 @@ export default class WaitingRoom extends Phaser.Scene {
   playerReady() {
     this.ready = true;
     this.socket.emit("playerReady");
-    this.socket.emit("displayCheck")
     this.player.check = this.add.sprite(this.player.name.x, this.player.name.y - 10, "readyCheck")
     this.player.check.setScale(0.35)
   }
   playerNotReady() {
     this.ready = false;
     this.socket.emit("playerNotReady");
+    this.player.check.destroy()
+
   }
 
   startGame() {
@@ -161,6 +162,26 @@ export default class WaitingRoom extends Phaser.Scene {
       .sprite(800, 2000, "notReadyButton")
       .setInteractive();
     this.notReadyButton.setScale(0.2);
+
+    //ready Check
+    this.socket.on("readyCheck", (socketId) => {
+      this.otherPlayers.getChildren().forEach(player => {
+        if (player.playerId === socketId) {
+
+          player.check = this.add.sprite(player.name.x, player.name.y - 10, "readyCheck")
+          player.check.setScale(0.35)
+        }
+      })
+    })
+
+    // not ready check
+    this.socket.on("notReadyCheck", (socketId) => {
+      this.otherPlayers.getChildren().forEach(player => {
+        if (player.playerId === socketId) {
+          player.check.destroy()
+        }
+      })
+    })
 
     // im ready
     this.notReadyButton.on("pointerdown", () => {
