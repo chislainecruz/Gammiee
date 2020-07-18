@@ -24,9 +24,9 @@ export const config = {
     },
     scale: {
       mode: Phaser.DOM.FIT,
-      autoCenter: Phaser.DOM.CENTER,
+      autoCenter: Phaser.DOM.CENTER_HORIZONTALLY,
       width: 900,
-      height: 1000,
+      height: 900,
     },
   },
 };
