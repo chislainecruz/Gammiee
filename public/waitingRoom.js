@@ -51,7 +51,7 @@ export default class WaitingRoom extends Phaser.Scene {
     this.load.audio("waitingMusic", "./assets/TimeTemple.mp3");
     this.load.audio("jump", "./assets/jump-sfx.mp3");
     this.load.spritesheet("alien", "assets/alien.png", {
-      frameWidth: 90,
+      frameWidth: 87,
       frameHeight: 120,
       margin: 1,
       spacing: 1,

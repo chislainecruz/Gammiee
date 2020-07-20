@@ -195,6 +195,8 @@ export default class GameSceneMedium extends Phaser.Scene {
 
   // eslint-disable-next-line complexity
   update() {
+
+
     playerMoves(this);
   }
 

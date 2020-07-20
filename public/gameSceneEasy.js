@@ -14,6 +14,7 @@ export default class GameSceneEasy extends Phaser.Scene {
   }
 
   preload() {
+
     this.load.audio("battleMusic", "./assets/battleMusic.mp3");
     this.load.audio("jump", "./assets/jump-sfx.mp3");
     this.load.image("easybackground", "./assets/easyBackground.png");
@@ -206,7 +207,6 @@ export default class GameSceneEasy extends Phaser.Scene {
 
   // this runs when player gets hit by object
   restartGame(sourceSprite, targetSprite) {
-    console.log('hi')
     this.player.x = 1100;
     this.player.y = 2300;
   }
