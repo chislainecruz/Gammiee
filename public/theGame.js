@@ -31,18 +31,9 @@ export const config = {
   },
 };
 
-export const createNewGame = () => {
-  let game = new Phaser.Game(config);
+let game = new Phaser.Game(config);
 
-  game.scene.add(waitingRoom);
-  return game;
-};
-
-let game = createNewGame();
-
-//load scenes
-
-//start waiting room
+//start waiting room scene
 game.scene.start("WaitingRoom");
 
 export default game;

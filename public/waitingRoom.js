@@ -26,17 +26,22 @@ export default class WaitingRoom extends Phaser.Scene {
     this.socket.emit("changeScenes", this.sceneSelect);
     this.scene.switch(this.sceneSelect);
   }
+
   playerReady() {
     this.ready = true;
     this.socket.emit("playerReady");
-    this.player.check = this.add.sprite(this.player.name.x, this.player.name.y - 10, "readyCheck")
-    this.player.check.setScale(0.35)
+    this.player.check = this.add.sprite(
+      this.player.name.x,
+      this.player.name.y - 10,
+      "readyCheck"
+    );
+    this.player.check.setScale(0.35);
   }
+
   playerNotReady() {
     this.ready = false;
     this.socket.emit("playerNotReady");
-    this.player.check.destroy()
-
+    this.player.check.destroy();
   }
 
   startGame() {
@@ -45,7 +50,7 @@ export default class WaitingRoom extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("readyCheck", "./assets/readyCheck.png")
+    this.load.image("readyCheck", "./assets/readyCheck.png");
     this.load.image("waitingBg", "./assets/waitingBG.png");
     this.load.image("tiles", "./assets/tiles.png");
     this.load.audio("waitingMusic", "./assets/TimeTemple.mp3");
@@ -165,32 +170,35 @@ export default class WaitingRoom extends Phaser.Scene {
 
     //ready Check
     this.socket.on("readyCheck", (socketId) => {
-      this.otherPlayers.getChildren().forEach(player => {
+      this.otherPlayers.getChildren().forEach((player) => {
         if (player.playerId === socketId) {
-
-          player.check = this.add.sprite(player.name.x, player.name.y - 10, "readyCheck")
-          player.check.setScale(0.35)
+          player.check = this.add.sprite(
+            player.name.x,
+            player.name.y - 10,
+            "readyCheck"
+          );
+          player.check.setScale(0.35);
         }
-      })
-    })
+      });
+    });
 
     // not ready check
     this.socket.on("notReadyCheck", (socketId) => {
-      this.otherPlayers.getChildren().forEach(player => {
+      this.otherPlayers.getChildren().forEach((player) => {
         if (player.playerId === socketId) {
-          player.check.destroy()
+          player.check.destroy();
         }
-      })
-    })
+      });
+    });
 
-    // im ready
+    // I am ready
     this.notReadyButton.on("pointerdown", () => {
       if (!this.gameInSession) {
         this.notReadyButton.visible = false;
         this.readyButton.visible = true;
         this.playerReady();
       }
-      //im not ready
+      //I am not ready
       this.readyButton.on("pointerdown", () => {
         if (!this.gameInSession) {
           this.readyButton.visible = false;
@@ -202,7 +210,6 @@ export default class WaitingRoom extends Phaser.Scene {
     this.easyButton = this.add.sprite(500, 1800, "easybutton").setInteractive();
     this.easyButton.setScale(0.2);
     this.easyButton.on("pointerdown", () => {
-      // this.sceneChangeValue = "Easy"
       this.sceneSelect = "Easy";
       socket.emit("selecting", this.sceneSelect);
     });
@@ -212,7 +219,6 @@ export default class WaitingRoom extends Phaser.Scene {
       .setInteractive();
     this.mediumButton.setScale(0.2);
     this.mediumButton.on("pointerdown", () => {
-      // this.sceneChangeValue = "Medium"
       this.sceneSelect = "Medium";
       socket.emit("selecting", this.sceneSelect);
     });
@@ -222,7 +228,6 @@ export default class WaitingRoom extends Phaser.Scene {
       .setInteractive();
     this.hardButton.setScale(0.2);
     this.hardButton.on("pointerdown", () => {
-      // this.sceneChangeValue = "Hard"
       this.sceneSelect = "Hard";
       socket.emit("selecting", this.sceneSelect);
     });
@@ -230,9 +235,6 @@ export default class WaitingRoom extends Phaser.Scene {
 
   update() {
     playerMoves(this);
-
-
-
     if (this.gameInSession) {
       this.text.setText("GAME IN SESSION");
     } else {
@@ -246,8 +248,8 @@ export default class WaitingRoom extends Phaser.Scene {
     if (this.start) {
       this.text.setText(
         `THE GAME WILL START IN   ${
-        10 -
-        Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
+          10 -
+          Math.trunc(this.timedEvent.getProgress().toString().substr(0, 4) * 10)
         }`
       );
     }

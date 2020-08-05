@@ -1,5 +1,5 @@
 // Linted with standardJS - https://standardjs.com/
-import events, { spawnPowerUps } from "./playerEvents";
+import events from "./playerEvents";
 import playerMoves from "./playerMoves";
 import socket from "./socket";
 
@@ -88,7 +88,6 @@ export default class GameScene extends Phaser.Scene {
   }
   create() {
     this.socket = socket;
-    // let ourMusic = this.sound.add("music");
     this.socket.emit("GS");
     let bg = this.add.sprite(-600, 0, "background");
     bg.setOrigin(0, 0);
@@ -160,10 +159,6 @@ export default class GameScene extends Phaser.Scene {
 
     this.cursors = this.input.keyboard.addKeys("up, down, left, right");
 
-    this.input.on("pointerdown", function (pointer) {
-      console.log(pointer.x, pointer.y);
-    });
-
     this.socket.on("endGame", () => {
       this.endGame();
     });
@@ -200,10 +195,6 @@ export default class GameScene extends Phaser.Scene {
     this.player.x = 1100;
     this.player.y = 2300;
   }
-
-  // boss attack
-  
-
 
   // sets up all the elements in the level
   level() {

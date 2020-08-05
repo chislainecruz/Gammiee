@@ -88,17 +88,15 @@ io.on("connection", function (socket) {
         break;
     }
     if (!createdPowerup) {
+      setInterval(() => {
+        socket.emit("minionAttack");
+        socket.broadcast.emit("minionAttack");
+      }, 8000);
 
       setInterval(() => {
-        socket.emit('minionAttack')
-        socket.broadcast.emit('minionAttack')
-      }, 8000)
-
-      setInterval(() => {
-        socket.emit('bossAttack')
-        socket.broadcast.emit('bossAttack')
-      }, 6700)
-
+        socket.emit("bossAttack");
+        socket.broadcast.emit("bossAttack");
+      }, 6700);
 
       setInterval(() => {
         const platform =
@@ -108,7 +106,6 @@ io.on("connection", function (socket) {
         const y = platform.y - 20;
         const x = Math.random() * (maxX - minX) + minX;
         const powerup = powerKeys[Math.floor(Math.random() * powerKeys.length)];
-        console.log("powerup in server ", powerup, x, y);
         powerUps.push({ key: powerup, x: x, y: y });
         socket.broadcast.emit("createPowerups", powerup, x, y);
         socket.emit("createPowerups", powerup, x, y);
@@ -116,10 +113,9 @@ io.on("connection", function (socket) {
     }
 
     createdPowerup = true;
-
-    //destruction
   });
 
+  //destroy a powerup after a player has taken it
   socket.on("powerupTaken", (x, y) => {
     socket.broadcast.emit("destroyPowerup", x, y);
   });
@@ -129,18 +125,17 @@ io.on("connection", function (socket) {
 
   socket.on("playerNotReady", () => {
     players[socket.id].ready = false;
-    socket.broadcast.emit("notReadyCheck", socket.id)
+    socket.broadcast.emit("notReadyCheck", socket.id);
   });
 
   socket.on("playerReady", () => {
     players[socket.id].ready = true;
-    socket.broadcast.emit('readyCheck', socket.id);
+    socket.broadcast.emit("readyCheck", socket.id);
     let everyoneReady = true;
     for (let player in players) {
       if (players[player].ready === false) {
         everyoneReady = false;
       }
-
     }
     if (everyoneReady) {
       console.log("everyone is ready");
@@ -198,7 +193,7 @@ io.on("connection", function (socket) {
         socket.emit("disconnectPlayer");
       },
       //if player goes a minute without moving, they will be disconnected
-      1000 * 60
+      1000 * 120
     );
 
     players[socket.id].x = data.x;
