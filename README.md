@@ -4,7 +4,7 @@ Phaser multiplayer game inspired by the arcade-style Donkey Kong game 🦍. Demo
 
 ### How to play:
 
-Click here to play online: https://demon-dash.herokuapp.com/
+Click [here](https://demon-dash.herokuapp.com/) to play online!
 Try to avoid the fire and demons while you race your friends to the top. The first one who touches the boss at the top wins.
 
 `git clone`
