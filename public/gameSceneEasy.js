@@ -1,5 +1,4 @@
-// Linted with standardJS - https://standardjs.com/
-import events, { spawnPowerUps } from "./playerEvents";
+import events from "./playerEvents";
 import playerMoves from "./playerMoves";
 import socket from "./socket";
 
@@ -14,7 +13,6 @@ export default class GameSceneEasy extends Phaser.Scene {
   }
 
   preload() {
-
     this.load.audio("battleMusic", "./assets/battleMusic.mp3");
     this.load.audio("jump", "./assets/jump-sfx.mp3");
     this.load.image("easybackground", "./assets/easyBackground.png");
@@ -85,11 +83,10 @@ export default class GameSceneEasy extends Phaser.Scene {
   }
 
   winGame(sourceSprite, targetSprite) {
-    console.log("this ", this.player.name);
     this.socket.emit("playerWins", this.player.name.text);
-
     this.endGame();
   }
+
   create() {
     this.socket = socket;
     // let ourMusic = this.sound.add("music");
@@ -166,10 +163,6 @@ export default class GameSceneEasy extends Phaser.Scene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    this.input.on("pointerdown", function (pointer) {
-      console.log(pointer.x, pointer.y);
-    });
-
     this.socket.on("endGame", () => {
       this.endGame();
     });
@@ -192,9 +185,6 @@ export default class GameSceneEasy extends Phaser.Scene {
     });
     //* Level Setup
     this.level();
-
-
-
 
     //* Player attributes
     events(this);

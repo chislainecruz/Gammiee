@@ -1,4 +1,3 @@
-// Linted with standardJS - https://standardjs.com/
 import events from "./playerEvents";
 import playerMoves from "./playerMoves";
 import socket from "./socket";

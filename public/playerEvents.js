@@ -1,17 +1,17 @@
 import { waitingRoom } from "./theGame";
 
 const events = (self) => {
+  //groups for other players and powerups
   self.otherPlayers = self.physics.add.group();
   self.powerups = self.physics.add.group();
-  //* Player attributes
 
+  //listen for socket events from the server
   self.socket.on("currentPlayers", (players) => {
     addPlayer(self, players[self.socket.id]);
     delete players[self.socket.id];
 
     Object.keys(players).forEach(function (id) {
       if (self.scene.key === players[id].scene) {
-        console.log("test");
         addOtherPlayers(self, players[id]);
       }
     });
@@ -27,7 +27,6 @@ const events = (self) => {
 
   self.socket.on("newPlayer", (playerInfo) => {
     if (self.scene.key === "WaitingRoom") {
-      console.log("creating new player...");
       addOtherPlayers(self, playerInfo);
     }
   });
@@ -52,9 +51,8 @@ const events = (self) => {
           otherPlayer.x - 25 - otherPlayer.name.text.length * 2;
         otherPlayer.name.y = otherPlayer.y - 50;
         if (otherPlayer.check) {
-          otherPlayer.check.x = otherPlayer.name.x
-          otherPlayer.check.y = otherPlayer.name.y - 10
-
+          otherPlayer.check.x = otherPlayer.name.x;
+          otherPlayer.check.y = otherPlayer.name.y - 10;
         }
         if (playerInfo.frame) {
           otherPlayer.setFrame(playerInfo.frame);
@@ -70,16 +68,12 @@ const events = (self) => {
   });
 
   self.socket.on("disconnectPlayer", () => {
-    console.log("stopping scene...");
     //destroys the game instance so other players can join
     self.music.pause();
-    //self.sys.game.destroy();
-
     alert(
       "You have been disconnected due to inactivity. Press OK to re-connect"
     );
     self.scene.stop();
-    //self.scene.pause();
   });
   if (self.scene.key !== "WaitingRoom") {
     self.socket.on("createPowerups", (type, x, y) => {
@@ -103,8 +97,6 @@ const events = (self) => {
 
     self.socket.emit("usernameAdded", self.player.name.text);
   });
-
-
 
   self.socket.on("displayUsername", (username, socketId) => {
     self.otherPlayers.getChildren().forEach((otherPlayer) => {
@@ -148,9 +140,6 @@ export function addPlayer(self, playerInfo) {
   self.player.body.bounce.y = 0.1;
   self.player.body.gravity.y = 800;
   self.player.body.collideWorldBounds = true;
-  //were wolf scale y 0.5, scalex 0.4
-  //lizzy scaley 0.55 scalex 0.375
-  //mushroom scaley 0.65 scalex 0.5
   self.player.scaleX = playerInfo.sprite.scaleX;
   self.player.scaleY = playerInfo.sprite.scaleY;
   //player damage overlaps
@@ -285,8 +274,13 @@ function minionAttack(self) {
     });
   }
   self.physics.add.collider(self.platforms, self.flames);
-  self.minionDamage = self.physics.add.overlap(self.player, self.flames, self.restartGame, null, self)
-
+  self.minionDamage = self.physics.add.overlap(
+    self.player,
+    self.flames,
+    self.restartGame,
+    null,
+    self
+  );
 }
 
 function bossAttack(self) {
@@ -309,7 +303,13 @@ function bossAttack(self) {
   });
 
   self.physics.add.collider(self.platforms, self.bossAttack);
-  self.bossDamage = self.physics.add.overlap(self.player, self.bossAttack, self.restartGame, null, self)
+  self.bossDamage = self.physics.add.overlap(
+    self.player,
+    self.bossAttack,
+    self.restartGame,
+    null,
+    self
+  );
 }
 
 export default events;

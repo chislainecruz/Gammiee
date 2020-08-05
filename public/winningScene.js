@@ -1,5 +1,4 @@
 import socket from "./socket";
-import { createNewGame } from "./theGame";
 
 export default class WinningScene extends Phaser.Scene {
   constructor() {
@@ -31,5 +30,4 @@ export default class WinningScene extends Phaser.Scene {
       });
     });
   }
-  update() { }
 }

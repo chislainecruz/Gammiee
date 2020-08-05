@@ -1,5 +1,4 @@
-// Linted with standardJS - https://standardjs.com/
-import events, { spawnPowerUps } from "./playerEvents";
+import events from "./playerEvents";
 import playerMoves from "./playerMoves";
 import socket from "./socket";
 
@@ -88,7 +87,6 @@ export default class GameSceneMedium extends Phaser.Scene {
   }
   create() {
     this.socket = socket;
-    // let ourMusic = this.sound.add("music");
     this.socket.emit("GS");
     this.otherPlayers = this.physics.add.group();
     let bg = this.add.sprite(-600, -500, "mediumbackground");
@@ -161,10 +159,6 @@ export default class GameSceneMedium extends Phaser.Scene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    this.input.on("pointerdown", function (pointer) {
-      console.log(pointer.x, pointer.y);
-    });
-
     this.socket.on("endGame", () => {
       this.endGame();
     });
@@ -188,15 +182,12 @@ export default class GameSceneMedium extends Phaser.Scene {
     //* Level Setup
     this.level();
 
-
     //* Player attributes
     events(this);
   }
 
   // eslint-disable-next-line complexity
   update() {
-
-
     playerMoves(this);
   }
 
