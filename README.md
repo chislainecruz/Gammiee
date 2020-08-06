@@ -2,7 +2,7 @@
 
 Phaser multiplayer game inspired by the arcade-style Donkey Kong game 🦍. Demon Dash uses web sockets for real-time connection with other players. 👾
 
-### How to play:
+### How to play
 
 Click [here](https://demon-dash.herokuapp.com/) to play online!
 Try to avoid the fire and demons while you race your friends to the top. The first one who touches the boss at the top wins.
